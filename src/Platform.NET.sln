@@ -1,0 +1,25 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Platform", "Platform\Platform.csproj", "{31199C34-A7F0-4D69-B2CF-E9CE05262618}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Platform.Xml.Serialization", "Platform.Xml.Serialization\Platform.Xml.Serialization.csproj", "{CBB73076-7381-4FDD-907F-7097A8AB04E6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{31199C34-A7F0-4D69-B2CF-E9CE05262618}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31199C34-A7F0-4D69-B2CF-E9CE05262618}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31199C34-A7F0-4D69-B2CF-E9CE05262618}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31199C34-A7F0-4D69-B2CF-E9CE05262618}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBB73076-7381-4FDD-907F-7097A8AB04E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBB73076-7381-4FDD-907F-7097A8AB04E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBB73076-7381-4FDD-907F-7097A8AB04E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBB73076-7381-4FDD-907F-7097A8AB04E6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
