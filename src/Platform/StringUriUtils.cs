@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Specialized;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
@@ -323,6 +324,16 @@ namespace Platform
 		public static string UrlEncode(string instring)
 		{
 			return TextConversion.ToEscapedHexString(instring, TextConversion.IsStandardUrlEscapedChar);
+		}
+
+		public static string BuildQuery(NameValueCollection nameValueCollection)
+		{
+			return BuildQuery(Pair<string, string>.FromNameValueCollection(nameValueCollection), PredicateUtils<Pair<string, string>>.AlwaysTrue);
+		}
+
+		public static string BuildQuery(NameValueCollection nameValueCollection, Predicate<Pair<string, string>> acceptPair)
+		{
+			return BuildQuery(Pair<string, string>.FromNameValueCollection(nameValueCollection), acceptPair);
 		}
 
 		public static string BuildQuery(System.Collections.Generic.IEnumerable<KeyValuePair<string, string>> pairs)

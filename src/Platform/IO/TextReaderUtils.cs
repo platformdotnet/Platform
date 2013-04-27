@@ -13,6 +13,14 @@ namespace Platform.IO
 	{
 		private static readonly char[] discardBuffer = new char[1024];
 
+		public static string ReadToEndThenClose(this TextReader reader)
+		{
+			using (reader)
+			{
+				return reader.ReadToEnd();
+			}
+		}
+
 		public static void DiscardToEnd(this TextReader reader)
 		{
 			while (reader.Read(discardBuffer, 0, discardBuffer.Length) != 0) ;

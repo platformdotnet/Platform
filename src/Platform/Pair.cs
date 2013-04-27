@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 
@@ -308,6 +309,14 @@ namespace Platform
 		public static IEnumerable<Pair<A, B>> FromKeyValuePairs(IEnumerable<KeyValuePair<A, B>> enumerable)
 		{
 			return enumerable.Convert<KeyValuePair<A, B>, Pair<A, B>>(FromKeyValuePair);
+		}
+
+		public static IEnumerable<Pair<string, string>> FromNameValueCollection(NameValueCollection nameValueCollection)
+		{
+			foreach (string key in nameValueCollection)
+			{
+				yield return new Pair<string, string>(key, nameValueCollection[(string)key]);
+			}
 		}
 
 		/// <summary>

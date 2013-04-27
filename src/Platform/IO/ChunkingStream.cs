@@ -12,7 +12,7 @@ namespace Platform.IO
 {
 	/// <summary>
 	/// A stream that maintains an internal buffer and is capable of returning
-	/// data read in chunks seperated by bytes.
+	/// data read in chunks separated by bytes.
 	/// </summary>
 	/// <remarks>
 	/// <para>

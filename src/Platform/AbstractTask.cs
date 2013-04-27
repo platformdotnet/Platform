@@ -359,7 +359,7 @@ namespace Platform
                 {
                     if (waitForStart && timeout != TimeSpan.Zero)
                     {
-                        TaskUtils.WaitForTaskState
+                        TaskUtils.WaitForAnyTaskState
                             (
                             task,
                             timeout,

@@ -162,7 +162,7 @@ namespace Platform
 			return new Pair<string, string>(String.Empty, s);
 		}
 
-		public static bool IsNullOrEmpty(string s)
+		public static bool IsNullOrEmpty(this string s)
 		{
 			return string.IsNullOrEmpty(s);
 		}
@@ -812,6 +812,26 @@ namespace Platform
 			}
 
 			return true;
+		}
+
+		public static bool EndsWith(this string s, char value)
+		{
+			if (s.Length == 0)
+			{
+				return false;
+			}
+
+			return s[s.Length - 1] == value;
+		}
+
+		public static bool StartsWith(this string s, char value)
+		{
+			if (s.Length == 0)
+			{
+				return false;
+			}
+
+			return s[0] == value;
 		}
 	}
 }

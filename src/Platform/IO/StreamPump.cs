@@ -305,7 +305,7 @@ namespace Platform.IO
 
 					ProcessTaskStateRequest();
 
-					for (; ; )
+					while (true)
 					{
 						read = source.Read(buffer, 0, buffer.Length);
 
