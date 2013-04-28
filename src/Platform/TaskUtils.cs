@@ -1,7 +1,5 @@
 using System;
 using System.Threading;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Platform
 {
@@ -55,14 +53,12 @@ namespace Platform
 		/// <param name="timeout">A timeout</param>
 		public static bool WaitForAnyTaskState(this ITask task, TimeSpan timeout, Predicate<TaskState> acceptState)
 		{
-			object obj;
-
 			if (acceptState(task.TaskState))
 			{
 				return true;
 			}
 
-			obj = new object();
+			var obj = new object();
 
 			task.TaskStateChanged += delegate
 			{
@@ -72,7 +68,7 @@ namespace Platform
 				}
 			};
 
-			for (;;)
+			while (true)
 			{
 				lock (obj)
 				{
