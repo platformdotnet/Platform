@@ -168,9 +168,9 @@ namespace Platform
 
                 oldValue = requestedTaskState;
 
-                if (oldValue != value)
+				if (oldValue != value)
                 {
-                    requestedTaskState = value;
+					requestedTaskState = value;
 
                     OnRequestedTaskStateChanged(new TaskEventArgs(oldValue, value));
                 }
@@ -391,7 +391,7 @@ namespace Platform
             {
                 lock (TaskStateLock)
                 {
-                    switch (RequestedTaskState)
+                    switch (this.RequestedTaskState)
                     {
                         case TaskState.Paused:
 
@@ -427,7 +427,7 @@ namespace Platform
 
                         case TaskState.Stopped:
 
-                            SetRequestedTaskState(TaskState.Unknown);
+							SetRequestedTaskState(TaskState.Unknown);
 
                             throw new StopRequestedException();
 
