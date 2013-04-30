@@ -312,7 +312,7 @@
     <Compile Include="References\WeakReference.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Security\Cryptography\InteractiveCryptoStream.cs">
+    <Compile Include="IO\InteractiveCryptoStream.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StringUtils.cs">
