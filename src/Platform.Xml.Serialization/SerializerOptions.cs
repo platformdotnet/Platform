@@ -1,4 +1,3 @@
-using System;
 using Platform.Collections;
 
 namespace Platform.Xml.Serialization
@@ -7,8 +6,7 @@ namespace Platform.Xml.Serialization
 		: DictionaryWrapper<string, object>
 	{
 		public static readonly string WriteXmlheader = "WriteXmlheader";
-
-		private static SerializerOptions empty = new SerializerOptions();
+		private static readonly SerializerOptions empty = new SerializerOptions();
 
 		public static SerializerOptions Empty
 		{
@@ -23,7 +21,7 @@ namespace Platform.Xml.Serialization
 		{
 			var dictionary = new LinearHashDictionary<string, object>();
 
-			for (int i = 0; i < options.Length; i += 2)
+			for (var i = 0; i < options.Length; i += 2)
 			{
 				dictionary[options[i].ToString()] = options[i + 1];
 			}

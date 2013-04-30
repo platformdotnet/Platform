@@ -27,7 +27,7 @@ namespace Platform.Text
 			return Uri.UnescapeDataString(s);
 		}
 
-		public static readonly char[] soundexValues =
+		public static readonly char[] SoundexValues =
 		{
 			//A  B   C   D   E   F   G   H   I   J   K   L   M
 			'0','1','2','3','0','1','2','0','0','2','2','4','5',
@@ -50,7 +50,7 @@ namespace Platform.Text
 
 					if (currentChar >= 'A' && currentChar <= 'Z' && currentChar != previousChar)
 					{
-						var soundexChar = soundexValues[currentChar - 'A'];
+						var soundexChar = SoundexValues[currentChar - 'A'];
 
 						if (soundexChar != '0')
 						{
@@ -85,7 +85,7 @@ namespace Platform.Text
 
 					if (currentChar >= 'A' && currentChar <= 'Z' && currentChar != previousChar)
 					{
-						var soundexChar = soundexValues[currentChar - 'A'];
+						var soundexChar = SoundexValues[currentChar - 'A'];
 
 						if (soundexChar != '0')
 						{
@@ -108,14 +108,12 @@ namespace Platform.Text
 		public static TextWriter WriteUnescapedHexString(StringReader reader, StringWriter writer)
 		{
 			int x, y;
-			int charcount;
-			Decoder decoder;
-			byte[] bytes = new byte[1];
-			char[] chars = new char[1];
+			var bytes = new byte[1];
+			var chars = new char[1];
 			
-			decoder = Encoding.UTF8.GetDecoder();
+			var decoder = Encoding.UTF8.GetDecoder();
 			
-			for (;;)
+			while (true)
 			{
 				x = reader.Read();
 
@@ -162,7 +160,7 @@ namespace Platform.Text
 
 				bytes[0] = (byte)(IntUtils.FromHexNoCheck((char)x) * 0x10 + IntUtils.FromHexNoCheck((char)y));
 
-				charcount = decoder.GetChars(bytes, 0, 1, chars, 0);
+				var charcount = decoder.GetChars(bytes, 0, 1, chars, 0);
 
 				if (charcount > 0)
 				{
@@ -173,11 +171,11 @@ namespace Platform.Text
 			return writer;
 		}
 
-		private static readonly Predicate<char> c_IsAsciiLetterOrDigit = PredicateUtils.Not<char>(CharUtils.IsAsciiLetterOrDigit);
+		private static readonly Predicate<char> isAsciiLetterOrDigit = PredicateUtils.Not<char>(CharUtils.IsAsciiLetterOrDigit);
 
 		public static string ToEscapedHexString(string s)
 		{
-			return ToEscapedHexString(s, c_IsAsciiLetterOrDigit);
+			return ToEscapedHexString(s, isAsciiLetterOrDigit);
 		}
 
 		public static string ToEscapedHexString(string s, string charsToEscape)
@@ -220,15 +218,13 @@ namespace Platform.Text
 
 		public static string ToReEscapedHexString(string s, Predicate<char> shouldEscape)
 		{
-			int skip = 0;
+			var skip = 0;
 
 			return ToEscapedHexString
 			(
 				s,
-				delegate(Pair<string, int> context)
+				context =>
 				{
-					char c;
-
 					if (skip > 0)
 					{
 						skip--;
@@ -236,7 +232,7 @@ namespace Platform.Text
 						return false;
 					}
 
-					c = context.Left[context.Right];
+					var c = context.Left[context.Right];
 
 					if (Uri.IsHexEncoding(context.Left, context.Right))
 					{
@@ -259,22 +255,19 @@ namespace Platform.Text
 
 		public static string ToEscapedHexString(string s, Predicate<Pair<string, int>> shouldEscapeChar)
 		{
-			byte[] buffer;
-			char[] chars = new char[1];
-			Encoding encoding = Encoding.UTF8;
-			StringBuilder builder = new StringBuilder((int)(s.Length * 1.5));
+			var chars = new char[1];
+			var encoding = Encoding.UTF8;
+			var builder = new StringBuilder((int)(s.Length * 1.5));
 
-			buffer = new byte[encoding.GetMaxByteCount(1)];
+			var buffer = new byte[encoding.GetMaxByteCount(1)];
 						
-			for (int i = 0; i < s.Length; i++)
+			for (var i = 0; i < s.Length; i++)
 			{			
 				if (shouldEscapeChar(new Pair<string, int>(s, i)))
 				{
-					int bytecount;
-
 					chars[0] = s[i];
 
-					bytecount = encoding.GetBytes(chars, 0, 1, buffer, 0);
+					var bytecount = encoding.GetBytes(chars, 0, 1, buffer, 0);
 
 					for (int j = 0; j < bytecount; j++)
 					{
@@ -297,66 +290,57 @@ namespace Platform.Text
 			return ToEscapedHexString
 			(
 				s,
-				delegate(Pair<string, int> stringInt)
-				{
-					return shouldEscapeChar(stringInt.Key[stringInt.Value]);
-				}
+				stringInt => shouldEscapeChar(stringInt.Key[stringInt.Value])
 			);
 		}
 
 		public static TextWriter WriteEscapedHexString(TextReader reader, TextWriter writer)
 		{
 			return WriteEscapedHexString
-				(
-					reader,
-					writer,
-					c_IsAsciiLetterOrDigit
-				);
+			(
+				reader,
+				writer,
+				isAsciiLetterOrDigit
+			);
 		}
 
 		public static TextWriter WriteEscapedHexString(TextReader reader, TextWriter writer, Predicate<char> shouldEscapeChar)
 		{
-			byte[] buffer;
-			char[] chars = new char[1];
-			Encoding encoding = Encoding.UTF8;
+			var chars = new char[1];
+			var encoding = Encoding.UTF8;
 			
-			buffer = new byte[encoding.GetMaxByteCount(1)];
+			var buffer = new byte[encoding.GetMaxByteCount(1)];
 
-			return reader.ConvertAndDump(writer,
-			                delegate(char c, TextWriter w)
-			                	{
-			                		if (c == '%' || shouldEscapeChar(c))
-			                		{
-			                			int bytecount;
+			return reader.ConvertAndDump(writer, (c, w) =>
+			{
+				if (c == '%' || shouldEscapeChar(c))
+				{
+					chars[0] = c;
 
-			                			chars[0] = c;
+					var bytecount = encoding.GetBytes(chars, 0, 1, buffer, 0);
 
-			                			bytecount = encoding.GetBytes(chars, 0, 1, buffer, 0);
-
-			                			for (int j = 0; j < bytecount; j++)
-			                			{
-			                				w.Write('%');
-			                				w.Write(HexValues[(buffer[j] & '\x00f0') >> 4]);
-			                				w.Write(HexValues[(buffer[j] & '\x00f0') >> 4]);								
-			                			}
-			                		}
-			                		else
-			                		{
-			                			w.Write(c);
-			                		}
-			                	});
+					for (int j = 0; j < bytecount; j++)
+					{
+						w.Write('%');
+						w.Write(HexValues[(buffer[j] & '\x00f0') >> 4]);
+						w.Write(HexValues[(buffer[j] & '\x00f0') >> 4]);
+					}
+				}
+				else
+				{
+					w.Write(c);
+				}
+			});
 		}
 
 		public static string ToString(string s, Converter<char, char> convert)
 		{
-			return StringUtils.Convert(s, convert);
+			return s.Convert(convert);
 		}
 
 		public static string ToString<I, O>(System.Collections.Generic.IEnumerable<I> input, Converter<I, O> convert)
 		{
-			StringBuilder builder;
-
-			builder = new StringBuilder();
+			var builder = new StringBuilder();
 
 			foreach (I value in input)
 			{
@@ -435,16 +419,13 @@ namespace Platform.Text
 
 		public static byte[] FromHexString(string s)
 		{
-			byte[] bytes;
-
-			bytes = new byte[s.Length / 2];
+			var bytes = new byte[s.Length / 2];
 
 			for (int i = 0; i < s.Length; i += 2)
 			{
 				int x, y;
 		
-				if (!IsHexChar(s[i])
-					|| !IsHexChar(s[i + 1]))
+				if (!IsHexChar(s[i]) || !IsHexChar(s[i + 1]))
 				{
 					throw new ArgumentException("Contains invlaid hexadecimal values", "s");
 				}
@@ -469,7 +450,7 @@ namespace Platform.Text
 
 		public static string ToHexString(long value)
 		{
-			byte[] bytes = new byte[8];
+			var bytes = new byte[8];
 
 			bytes[7] = (byte)((value) >> 0 & 0xf);
 			bytes[6] = (byte)((value) >> 8 & 0xf);
@@ -485,7 +466,7 @@ namespace Platform.Text
 		
 		public static string ToHexString(int value)
 		{
-			byte[] bytes = new byte[4];
+			var bytes = new byte[4];
 
 			bytes[2] = (byte)((value >> 0) & 0xf);
 			bytes[3] = (byte)((value >> 8) & 0xf);
@@ -507,9 +488,7 @@ namespace Platform.Text
 
 		private static string ToHexString(byte[] bytes, char[] hexValues)
 		{
-			StringBuilder builder;
-	
-			builder = new StringBuilder(bytes.Length * 2);
+			var builder = new StringBuilder(bytes.Length * 2);
 
 			foreach (byte b in bytes)
 			{
@@ -522,9 +501,7 @@ namespace Platform.Text
 
 		public static string ToBase32String(long x)
 		{
-			byte[] data;
-
-			data = new byte[8];
+			var data = new byte[8];
 
 			data[0] = (byte)((x & 0xff));
 			data[1] = (byte)((x >> 8) & 0xff);
@@ -540,14 +517,13 @@ namespace Platform.Text
 
 		public static string ToBase32String(int x)
 		{
-			byte b0, b1, b2, b3, b4;
-			char[] out_block = new char[8];
+			var out_block = new char[8];
 
-			b0 = (byte)((x & 0xff));
-			b1 = (byte)((x & 0xff00) >> 8);
-			b2 = (byte)((x & 0xff0000) >> 16);
-			b3 = (byte)((x & 0xff000000) >> 24);
-			b4 = 0;
+			var b0 = (byte)((x & 0xff));
+			var b1 = (byte)((x & 0xff00) >> 8);
+			var b2 = (byte)((x & 0xff0000) >> 16);
+			var b3 = (byte)((x & 0xff000000) >> 24);
+			var b4 = 0;
 					
 			out_block[0] = Base32Alphabet[((b0 & 0xF8) >> 3)];
 			out_block[1] = Base32Alphabet[((b0 & 0x7) << 2) | ((b1 & 0xc0) >> 6)];
@@ -588,7 +564,7 @@ namespace Platform.Text
 
 		public static int ToBase32CharArray(byte[] input, int offsetIn, int length, char[] outArray, int offsetOut)
 		{
-			string value = ToBase32String(input, offsetIn, length);
+			var value = ToBase32String(input, offsetIn, length);
 
 			value.CopyTo(0, outArray, offsetOut, value.Length);
 
@@ -602,10 +578,10 @@ namespace Platform.Text
 
 		public static string ToBase32String(byte[] input, int offset, int length)
 		{
-			int ex = -1;
+			var ex = -1;
 			byte b0, b1, b2, b3, b4;
-			char[] out_block = new char[8];
-			StringBuilder buffer = new StringBuilder(input.Length * 2);
+			var out_block = new char[8];
+			var buffer = new StringBuilder(input.Length * 2);
 
 			for (int i = offset; i < offset + input.Length; i += 5)
 			{

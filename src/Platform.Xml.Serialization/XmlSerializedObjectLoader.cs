@@ -30,7 +30,7 @@ namespace Platform.Xml.Serialization
  		public event EventHandler ObjectUpdated;
  		private readonly Timer loadTimer;
  		private bool tryingToLoad;
-		private FileSystemWatcher fileSystemWatcher;
+		private readonly FileSystemWatcher fileSystemWatcher;
 		
 		public static readonly Encoding DefaultEncoding = new UTF8Encoding(false);
 
@@ -280,39 +280,35 @@ namespace Platform.Xml.Serialization
  			{
  				if (currentObject != null)
  				{
- 					TextWriter writer;
- 					
- 					writer = 
- 						new StreamWriter
- 						(
- 							new FileStream
-							(
-								fileInfo.FullName, 
-								FileMode.Create, 
-								FileAccess.Write,
-								FileShare.None
-							),
- 							encoding
- 						);
+ 					var writer = new StreamWriter(new FileStream(fileInfo.FullName, FileMode.Create, FileAccess.Write, FileShare.None), encoding);
 
  					using (writer)
  					{
+ 						if (LockObjectBeforeSerializing)
+ 						{
+ 							lock ((object)currentObject)
+ 							{
+ 								try
+ 								{
+ 									serializer.Serialize(currentObject, writer);
+ 								}
+ 								catch (XmlSerializerException)
+ 								{
+ 								}
+ 							}
+ 						}
+ 						else
+ 						{
+							try
+							{
+								serializer.Serialize(currentObject, writer);
+							}
+							catch (XmlSerializerException)
+							{
+							}
+ 						}
 						
-						if (LockObjectBeforeSerializing)
-						{
-							Monitor.Enter(currentObject);
-						}
-
-						try
-						{
-							serializer.Serialize(currentObject, writer);
-						}
-						catch (XmlSerializerException e)
-						{
-							Console.WriteLine(e.StackTrace);
-						}
-						
-						if (LockObjectBeforeSerializing)
+ 						if (LockObjectBeforeSerializing)
 						{
 							Monitor.Exit(currentObject);
 						}

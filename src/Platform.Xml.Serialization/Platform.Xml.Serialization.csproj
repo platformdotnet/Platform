@@ -106,15 +106,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractGetterSetter.cs" />
     <Compile Include="AbstractXmlConfigurationSectionHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CachingXmlSerializerFactory.cs" />
+    <Compile Include="FieldGetterSetter.cs" />
+    <Compile Include="IGetterSetter.cs" />
+    <Compile Include="IVariableSubstitutor.cs" />
+    <Compile Include="IXmlDeserializationStartListener.cs" />
+    <Compile Include="IXmlListElementDynamicTypeProvider.cs" />
+    <Compile Include="IXmlSerializationEndListener.cs" />
+    <Compile Include="IXmlSerializationShouldSerializeProvider.cs" />
+    <Compile Include="IXmlSerializationStartListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ComplexTypeTypeSerializer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PropertyGetterSetter.cs" />
     <Compile Include="SerializeMembers.cs" />
     <Compile Include="TextResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -134,7 +145,7 @@
     <Compile Include="EnumTypeSerializer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ISerializationListeners.cs">
+    <Compile Include="IXmlDeserializationEndListener.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ISerializationUnhandledMarkupListener.cs">
@@ -178,9 +189,13 @@
     <Compile Include="TypeSerializerWithSimpleTextSupport.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XmlDateTimeFormatAttribute.cs" />
     <Compile Include="XmlDictionaryElementTypeAttribute.cs" />
     <Compile Include="XmlElementAttribute.cs" />
+    <Compile Include="XmlEnvironmentVariableSubstitutor.cs" />
     <Compile Include="XmlExcludeAttribute.cs" />
+    <Compile Include="XmlListElementAttribute.cs" />
+    <Compile Include="XmlListElementDynamicTypeProviderAttribute.cs" />
     <Compile Include="XmlNodeNodeTypeSerializer.cs" />
     <Compile Include="XmlPolymorphicTypeAttribute.cs" />
     <Compile Include="XmlReaderHelper.cs">

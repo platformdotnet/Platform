@@ -5,85 +5,12 @@ using System.Collections;
 
 namespace Platform.Xml.Serialization
 {
-	public interface IGetterSetter
-	{
-		object GetValue(object obj);
-		void SetValue(object obj, object val);
-	}
-
-	public abstract class AbstractGetterSetter
-		: IGetterSetter
-	{
-		protected MemberInfo memberInfo;
-
-		protected AbstractGetterSetter(MemberInfo memberInfo)
-		{
-			this.memberInfo = memberInfo;
-		}
-
-		public abstract object GetValue(object obj);
-		public abstract void SetValue(object obj, object val);
-	}
-
-	public class FieldGetterSetter
-		: AbstractGetterSetter
-	{
-		public FieldGetterSetter(MemberInfo memberInfo)
-			: base(memberInfo)
-		{
-		}
-
-		public override object GetValue(object obj)
-		{
-			return ((FieldInfo)memberInfo).GetValue(obj);
-		}
-
-		public override void SetValue(object obj, object val)
-		{
-			if (!((FieldInfo)memberInfo).IsInitOnly)
-			{
-				((FieldInfo)memberInfo).SetValue(obj, val);
-			}
-		}
-	}
-
-	public class PropertyGetterSetter
-		: AbstractGetterSetter
-	{
-		public PropertyGetterSetter(MemberInfo memberInfo)
-			: base(memberInfo)
-		{
-		}
-
-		public override object GetValue(object obj)
-		{
-			if (((PropertyInfo)memberInfo).CanRead)
-			{
-				return ((PropertyInfo)memberInfo).GetValue(obj, null);
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		public override void SetValue(object obj, object val)
-		{
-			if (((PropertyInfo)memberInfo).CanWrite)
-			{
-				((PropertyInfo)memberInfo).SetValue(obj, val, null);
-			}
-		}
-	}
-
 	/// <summary>
 	/// Stores pre calculated information about a member or type that is used when serializing that member.
 	/// </summary>
 	public class SerializationMemberInfo
 		: IGetterSetter
 	{
-		#region Fields
-
 		protected MemberInfo memberInfo;
 		protected Type returnType = null;
 		protected IGetterSetter getterSetter;
@@ -99,105 +26,59 @@ namespace Platform.Xml.Serialization
 		protected IXmlDynamicTypeProvider polymorphicTypeProvider;
 		protected XmlNodeType serializedNodeType = XmlNodeType.None;
 
-		public IVariableSubstitutor Substitutor
-		{
-			get;
-			private set;
-		}
+		public IVariableSubstitutor Substitutor { get; private set; }
 
-		public virtual XmlApproachAttribute ApproachAttribute
-		{
-			get;
-			set;
-		}
-
-		#endregion
-
-		#region Properties
+		public virtual XmlApproachAttribute ApproachAttribute { get; set; }
 
 		public virtual Type ReturnType
 		{
-			get
-			{
-				return returnType;
-			}
+			get { return returnType; }
 		}
 
 		public virtual bool TreatAsNullIfEmpty
 		{
-			get
-			{
-				return treatAsNullIfEmpty;
-			}
+			get { return treatAsNullIfEmpty; }
 		}
 
 		public virtual string SerializeAsValueNodeAttributeName
 		{
-			get
-			{
-				return serializeAsValueNodeAttributeName;
-			}
+			get { return serializeAsValueNodeAttributeName; }
 		}
 
 		public virtual bool SerializeAsCData
 		{
-			get
-			{
-				return serializeAsCData;
-			}
+			get { return serializeAsCData; }
 		}
 
 		public virtual MemberInfo MemberInfo
 		{
-			get
-			{
-				return memberInfo;
-			}
+			get { return memberInfo; }
 		}
 
 		public virtual XmlNodeType SerializedNodeType
 		{
-			get
-			{
-				return serializedNodeType;
-			}
+			get { return serializedNodeType; }
 		}
-		
+
 		public virtual string SerializedName
 		{
-			get
-			{
-				return serializedName;
-			}
+			get { return serializedName; }
 		}
-		
+
 		public virtual string Namespace
 		{
-			get
-			{
-				return serializedNamespace;
-			}
+			get { return serializedNamespace; }
 		}
 
 		public virtual bool Serializable
 		{
-			get
-			{
-				return serializedNodeType != XmlNodeType.None;
-			}
+			get { return serializedNodeType != XmlNodeType.None; }
 		}
 
 		public virtual IXmlDynamicTypeProvider PolymorphicTypeProvider
 		{
-			get
-			{
-				return polymorphicTypeProvider;
-			}
+			get { return polymorphicTypeProvider; }
 		}
-
-		#endregion
-
-		#region Constructor
 
 		public SerializationMemberInfo(MemberInfo memberInfo, SerializerOptions options, TypeSerializerCache cache)
 			: this(memberInfo, options, cache, false)
@@ -206,17 +87,12 @@ namespace Platform.Xml.Serialization
 
 		public virtual bool IncludeIfUnattributed
 		{
-			get
-			{
-				return includeIfUnattributed;
-			}
-			set
-			{
-				includeIfUnattributed = value;
-			}
+			get { return includeIfUnattributed; }
+			set { includeIfUnattributed = value; }
 		}
+
 		private bool includeIfUnattributed;
-	
+
 		public SerializationMemberInfo(MemberInfo memberInfo, SerializerOptions options, TypeSerializerCache cache, bool includeIfUnattributed)
 		{
 			typeSerializerCache = cache;
@@ -226,10 +102,6 @@ namespace Platform.Xml.Serialization
 
 			Scan(options, includeIfUnattributed);
 		}
-
-		#endregion
-
-		#region Scan
 
 		/// <summary>
 		/// Prescans the type.
@@ -242,29 +114,29 @@ namespace Platform.Xml.Serialization
 			// Get the applicable attributes
 
 			LoadAttributes(options);
-							
+
 			// Get the setter/getter and serializer
 
 			if (memberInfo is FieldInfo)
 			{
 				getterSetter = new FieldGetterSetter(memberInfo);
- 				
-				returnType = ((FieldInfo)memberInfo).FieldType;
+
+				returnType = ((FieldInfo) memberInfo).FieldType;
 			}
 			else if (memberInfo is PropertyInfo)
 			{
-				PropertyInfo propertyInfo = (PropertyInfo)memberInfo;
- 
+				var propertyInfo = (PropertyInfo) memberInfo;
+
 				getterSetter = new PropertyGetterSetter(memberInfo);
 
-				returnType = ((PropertyInfo)memberInfo).PropertyType;
+				returnType = ((PropertyInfo) memberInfo).PropertyType;
 			}
 			else if (memberInfo is Type)
 			{
 				getterSetter = null;
 
 				serializedName = memberInfo.Name;
-				returnType = (Type)memberInfo;
+				returnType = (Type) memberInfo;
 			}
 			else
 			{
@@ -273,7 +145,7 @@ namespace Platform.Xml.Serialization
 
 			// Get the [XmlExclude] [XmlAttribute] or [XmlElement] attribute
 
-			var attribute = GetFirstApplicableAttribute(false, typeof(XmlExcludeAttribute), typeof(XmlAttributeAttribute), typeof(XmlElementAttribute));
+			var attribute = GetFirstApplicableAttribute(false, typeof (XmlExcludeAttribute), typeof (XmlAttributeAttribute), typeof (XmlElementAttribute));
 
 			if (attribute != null)
 			{
@@ -300,7 +172,7 @@ namespace Platform.Xml.Serialization
 					serializedNamespace = approach.Namespace;
 
 					if ((elementAttribute = approach as XmlElementAttribute) != null)
-					{						
+					{
 						if (elementAttribute.SerializeAsValueNode)
 						{
 							serializeAsValueNodeAttributeName = elementAttribute.ValueNodeAttributeName;
@@ -334,18 +206,18 @@ namespace Platform.Xml.Serialization
 
 			// Check if the member should be serialized as CDATA
 
-			attribute = GetFirstApplicableAttribute(typeof(XmlCDataAttribute));
+			attribute = GetFirstApplicableAttribute(typeof (XmlCDataAttribute));
 
 			if (attribute != null)
 			{
-				serializeAsCData  = ((XmlCDataAttribute)attribute).Enabled;
+				serializeAsCData = ((XmlCDataAttribute) attribute).Enabled;
 			}
 
-			attribute = GetFirstApplicableAttribute(typeof(XmlVariableSubstitutionAttribute));
+			attribute = GetFirstApplicableAttribute(typeof (XmlVariableSubstitutionAttribute));
 
 			if (attribute != null)
 			{
-				Substitutor = (IVariableSubstitutor)Activator.CreateInstance(((XmlVariableSubstitutionAttribute)attribute).SubstitutorType);
+				Substitutor = (IVariableSubstitutor) Activator.CreateInstance(((XmlVariableSubstitutionAttribute) attribute).SubstitutorType);
 			}
 
 			// Set the serialized (element or attribute) name to the name of the member if it hasn't already been set
@@ -354,7 +226,7 @@ namespace Platform.Xml.Serialization
 			{
 				if (approach != null && approach.UseNameFromAttributedType && memberInfo.MemberType == MemberTypes.TypeInfo)
 				{
-					serializedName = GetAttributeDeclaringType((Type)memberInfo, approach).Name;
+					serializedName = GetAttributeDeclaringType((Type) memberInfo, approach).Name;
 				}
 				else
 				{
@@ -365,26 +237,26 @@ namespace Platform.Xml.Serialization
 			// Make the serialized (element or attribute) name lowercase if requested
 
 			if (approach != null)
-			{				
+			{
 				if (approach.MakeNameLowercase)
-				{												 
+				{
 					serializedName = serializedName.ToLower();
 				}
 			}
 
 			// Get the explicitly specified TypeSerializer if requested
 
-			attribute = GetFirstApplicableAttribute(typeof(XmlTypeSerializerTypeAttribute));
+			attribute = GetFirstApplicableAttribute(typeof (XmlTypeSerializerTypeAttribute));
 
 			if (attribute != null)
 			{
-				if (((XmlTypeSerializerTypeAttribute)attribute).SerializerType != null)
+				if (((XmlTypeSerializerTypeAttribute) attribute).SerializerType != null)
 				{
-					typeSerializer = typeSerializerCache.GetTypeSerializerBySerializerType(((XmlTypeSerializerTypeAttribute)attribute).SerializerType, this);
+					typeSerializer = typeSerializerCache.GetTypeSerializerBySerializerType(((XmlTypeSerializerTypeAttribute) attribute).SerializerType, this);
 
 					if (!returnType.IsAssignableFrom(typeSerializer.SupportedType))
 					{
-						throw new InvalidOperationException(String.Format("Explicitly specified serializer ({0}) doesn't support serializing of associated program element.", ((XmlTypeSerializerTypeAttribute)attribute).SerializerType.Name));
+						throw new InvalidOperationException(String.Format("Explicitly specified serializer ({0}) doesn't support serializing of associated program element.", ((XmlTypeSerializerTypeAttribute) attribute).SerializerType.Name));
 					}
 				}
 			}
@@ -395,21 +267,17 @@ namespace Platform.Xml.Serialization
 
 			// Check if the member should be treated as a null value if it is empty
 
-			treatAsNullIfEmpty = HasApplicableAttribute(typeof(XmlTreatAsNullIfEmptyAttribute));
+			treatAsNullIfEmpty = HasApplicableAttribute(typeof (XmlTreatAsNullIfEmptyAttribute));
 
 			// Check if the member's declared type is polymorphic
 
-			var polymorphicTypeAttribute = (XmlPolymorphicTypeAttribute)GetFirstApplicableAttribute(typeof(XmlPolymorphicTypeAttribute));
+			var polymorphicTypeAttribute = (XmlPolymorphicTypeAttribute) GetFirstApplicableAttribute(typeof (XmlPolymorphicTypeAttribute));
 
 			if (polymorphicTypeAttribute != null)
 			{
-				polymorphicTypeProvider = (IXmlDynamicTypeProvider)Activator.CreateInstance(polymorphicTypeAttribute.PolymorphicTypeProvider);
+				polymorphicTypeProvider = (IXmlDynamicTypeProvider) Activator.CreateInstance(polymorphicTypeAttribute.PolymorphicTypeProvider);
 			}
 		}
-
-		#endregion
-
-		#region Get/SetSerializer
 
 		public virtual Type GetReturnType(object obj)
 		{
@@ -444,7 +312,7 @@ namespace Platform.Xml.Serialization
 		public virtual TypeSerializer GetSerializer(XmlReader reader)
 		{
 			Type type;
-		
+
 			if (polymorphicTypeProvider == null)
 			{
 				return typeSerializer;
@@ -462,19 +330,19 @@ namespace Platform.Xml.Serialization
 		{
 			if (memberInfo is FieldInfo)
 			{
-				return ((FieldInfo)memberInfo).FieldType;
+				return ((FieldInfo) memberInfo).FieldType;
 			}
 			else if (memberInfo is MethodInfo)
 			{
-				return ((MethodInfo)memberInfo).ReturnType;
+				return ((MethodInfo) memberInfo).ReturnType;
 			}
 			else if (memberInfo is PropertyInfo)
 			{
-				return ((PropertyInfo)memberInfo).PropertyType;
+				return ((PropertyInfo) memberInfo).PropertyType;
 			}
 			else if (memberInfo is EventInfo)
 			{
-				return ((EventInfo)memberInfo).EventHandlerType;
+				return ((EventInfo) memberInfo).EventHandlerType;
 			}
 			else
 			{
@@ -482,17 +350,11 @@ namespace Platform.Xml.Serialization
 			}
 		}
 
-		#endregion
-
-		#region Attribute Query Methods
-
 		private static Type GetAttributeDeclaringType(Type type, Attribute attribute)
 		{
-			object[] attributes;
-
-			for (;;)
+			while (true)
 			{
-				attributes = type.GetCustomAttributes(attribute.GetType(), false);
+				var attributes = type.GetCustomAttributes(attribute.GetType(), false);
 
 				foreach (Attribute a in attributes)
 				{
@@ -515,16 +377,14 @@ namespace Platform.Xml.Serialization
 
 		private static object[] GetCustomAttributes(MemberInfo memberInfo, Type type, bool inherit)
 		{
-			PropertyInfo propertyInfo;
-
 			if (memberInfo.MemberType == MemberTypes.Property && inherit)
 			{
-				ArrayList list = new ArrayList();
+				var list = new ArrayList();
 
-				propertyInfo = (PropertyInfo)memberInfo;
+				var propertyInfo = (PropertyInfo) memberInfo;
 
-				for (;;)
-				{										
+				while (true)
+				{
 					// LAMESPEC: Why the hell isn't AddRange part of ArrayList and not IList?
 
 					list.AddRange(propertyInfo.GetCustomAttributes(type, false));
@@ -535,14 +395,14 @@ namespace Platform.Xml.Serialization
 					}
 
 					//if (propertyInfo.GetGetMethod().IsVirtual || propertyInfo.GetSetMethod().IsVirtual)
-				{
-					propertyInfo = propertyInfo.DeclaringType.BaseType.GetProperty(propertyInfo.Name);
-
-					if (propertyInfo == null)
 					{
-						break;
+						propertyInfo = propertyInfo.DeclaringType.BaseType.GetProperty(propertyInfo.Name);
+
+						if (propertyInfo == null)
+						{
+							break;
+						}
 					}
-				}
 				}
 
 				return list.ToArray();
@@ -633,7 +493,7 @@ namespace Platform.Xml.Serialization
 				}
 			}
 
-			return (XmlSerializationAttribute[])list.ToArray(typeof(XmlSerializationAttribute));
+			return (XmlSerializationAttribute[]) list.ToArray(typeof (XmlSerializationAttribute));
 		}
 
 		public virtual XmlSerializationAttribute[] GetApplicableAttributes(Type[] types)
@@ -643,15 +503,15 @@ namespace Platform.Xml.Serialization
 
 		public virtual XmlSerializationAttribute[] GetApplicableAttributes(bool includeTypeAttributes, Type type)
 		{
-			return GetApplicableAttributes(includeTypeAttributes, new Type[] { type });
+			return GetApplicableAttributes(includeTypeAttributes, new Type[] {type});
 		}
 
 		public virtual XmlSerializationAttribute[] GetApplicableAttributes(Type type)
 		{
-			return GetApplicableAttributes(true, new Type[] { type });
+			return GetApplicableAttributes(true, new Type[] {type});
 		}
 
-		private static XmlSerializationAttribute [] ExtractApplicableAttributes(object[] attributes, SerializerOptions options)
+		private static XmlSerializationAttribute[] ExtractApplicableAttributes(object[] attributes, SerializerOptions options)
 		{
 			ArrayList list = new ArrayList();
 
@@ -663,12 +523,12 @@ namespace Platform.Xml.Serialization
 				}
 			}
 
-			return (XmlSerializationAttribute[])list.ToArray(typeof(XmlSerializationAttribute));
+			return (XmlSerializationAttribute[]) list.ToArray(typeof (XmlSerializationAttribute));
 		}
 
 		private void LoadAttributes(SerializerOptions options)
 		{
-			applicableMemberAttributes = ExtractApplicableAttributes(GetCustomAttributes(memberInfo, typeof(XmlSerializationAttribute), true), options);
+			applicableMemberAttributes = ExtractApplicableAttributes(GetCustomAttributes(memberInfo, typeof (XmlSerializationAttribute), true), options);
 
 			if (memberInfo is Type)
 			{
@@ -676,7 +536,7 @@ namespace Platform.Xml.Serialization
 			}
 			else
 			{
-				applicableTypeAttributes = ExtractApplicableAttributes(GetCustomAttributes(GetDeclaredType(memberInfo), typeof(XmlSerializationAttribute), true), options);
+				applicableTypeAttributes = ExtractApplicableAttributes(GetCustomAttributes(GetDeclaredType(memberInfo), typeof (XmlSerializationAttribute), true), options);
 			}
 		}
 
@@ -698,7 +558,7 @@ namespace Platform.Xml.Serialization
 
 		public XmlSerializationAttribute GetFirstApplicableAttribute(bool includeTypeAttributes, Type type)
 		{
-			return GetFirstApplicableAttribute(includeTypeAttributes, new Type[] { type });
+			return GetFirstApplicableAttribute(includeTypeAttributes, new Type[] {type});
 		}
 
 		public XmlSerializationAttribute GetFirstApplicableAttribute(Type type)
@@ -716,10 +576,6 @@ namespace Platform.Xml.Serialization
 			return GetFirstApplicableAttribute(attributeType) != null;
 		}
 
-		#endregion
-
-		#region GetterSetter
-
 		public virtual object GetValue(object obj)
 		{
 			return getterSetter.GetValue(obj);
@@ -729,10 +585,6 @@ namespace Platform.Xml.Serialization
 		{
 			getterSetter.SetValue(obj, val);
 		}
-
-		#endregion
-
-		#region Object Overrides
 
 		public override int GetHashCode()
 		{
@@ -752,10 +604,8 @@ namespace Platform.Xml.Serialization
 			{
 				return false;
 			}
-			
+
 			return this.memberInfo == localSerializationMemberInfo.memberInfo;
 		}
-
-		#endregion
 	}
 }

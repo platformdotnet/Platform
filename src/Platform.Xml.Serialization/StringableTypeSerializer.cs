@@ -1,9 +1,5 @@
 using System;
 using System.Drawing;
-using System.Text.RegularExpressions;
-using System.Xml;
-using System.Reflection;
-using System.Collections;
 
 namespace Platform.Xml.Serialization
 {

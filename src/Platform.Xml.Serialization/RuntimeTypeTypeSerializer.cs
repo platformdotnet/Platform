@@ -1,5 +1,4 @@
 using System;
-using Platform;
 
 namespace Platform.Xml.Serialization
 {
@@ -23,7 +22,7 @@ namespace Platform.Xml.Serialization
 
 		public override string Serialize(object obj, SerializationContext state)
 		{
-			bool ok = verifyAttributes.Length == 0;
+			var ok = verifyAttributes.Length == 0;
 
 			foreach (XmlVerifyRuntimeTypeAttribute attribute in verifyAttributes)
 			{

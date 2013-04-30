@@ -58,14 +58,11 @@ namespace Platform.Xml.Serialization
 		/// <param name="options">The options</param>
 		internal XmlSerializer(Type type, SerializerOptions options)
 		{
-			TypeSerializerCache cache;
-			TypeSerializerFactory factory;		
-
 			this.Options = options;
 			
-			factory = new StandardTypeSerializerFactory(options);
+			var factory = new StandardTypeSerializerFactory(options);
 			
-			cache = new TypeSerializerCache(factory);
+			var cache = new TypeSerializerCache(factory);
 
 			rootMemberInfo = new SerializationMemberInfo(type, options, cache);
 
@@ -356,12 +353,6 @@ namespace Platform.Xml.Serialization
 			return new DynamicallyTypedXmlSerializer<U>(this);
 		}
 
-		#region DynamicallyTypedXmlSerializer
-
-		/// <summary>
-		/// Used to support the <see cref="XmlSerializer{T}.ChangeType{U}<>"/> method
-		/// </summary>
-		/// <typeparam name="U"></typeparam>
 		private class DynamicallyTypedXmlSerializer<U>
 			: XmlSerializer<U>
 		{
@@ -435,7 +426,5 @@ namespace Platform.Xml.Serialization
 				return (U)(object)serializer.Deserialize(xml);
 			}
 		}
-
-		#endregion
 	}
 }

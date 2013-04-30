@@ -40,11 +40,6 @@ namespace Platform.Xml.Serialization
 			cache[new Pair<Type, object>(serializer.SupportedType, key)] = serializer;			
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="serializer"></param>
-		/// <param name="memberInfo"></param>
 		public virtual void Add(TypeSerializer serializer, SerializationMemberInfo memberInfo)
 		{
 			if (serializer.MemberBound)
@@ -59,21 +54,13 @@ namespace Platform.Xml.Serialization
 
 		public TypeSerializer GetTypeSerializerBySerializerType(Type type)
 		{
-			TypeSerializer serializer;
-
-			serializer = typeSerializerFactory.NewTypeSerializerBySerializerType(type, this);
+			var serializer = this.typeSerializerFactory.NewTypeSerializerBySerializerType(type, this);
 
 			Add(serializer);
 
 			return serializer;
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="type"></param>
-		/// <param name="memberInfo"></param>
-		/// <returns></returns>
 		public TypeSerializer GetTypeSerializerBySerializerType(Type type, SerializationMemberInfo memberInfo)
 		{
 			var serializer = typeSerializerFactory.NewTypeSerializerBySerializerType(type, memberInfo, this);

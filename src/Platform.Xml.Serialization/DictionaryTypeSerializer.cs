@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using System.Xml;
 using System.Reflection;
 using System.Collections.Generic;
@@ -57,9 +58,6 @@ namespace Platform.Xml.Serialization
 	public class DictionaryTypeSerializer
 		: ComplexTypeTypeSerializer
 	{
-		/// <summary>
-		/// Returns true.
-		/// </summary>
 		public override bool MemberBound
 		{
 			get
@@ -68,9 +66,6 @@ namespace Platform.Xml.Serialization
 			}
 		}
 
-		/// <summary>
-		/// Returns <c>typeof(IDictionary)</c>.
-		/// </summary>
 		public override Type SupportedType
 		{
 			get
@@ -84,17 +79,11 @@ namespace Platform.Xml.Serialization
 
 		private class DictionaryItem
 		{
-			public string TypeAlias;
-			public XmlDictionaryElementTypeAttribute Attribute;
-			public TypeSerializer Serializer;			
+			public string typeAlias;
+			public XmlDictionaryElementTypeAttribute attribute;
+			public TypeSerializer serializer;			
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="memberInfo"></param>
-		/// <param name="cache"></param>
-		/// <param name="options"></param>
 		public DictionaryTypeSerializer(SerializationMemberInfo memberInfo, TypeSerializerCache cache, SerializerOptions options)
 			: base(memberInfo, memberInfo.ReturnType, cache, options)
 		{
@@ -106,18 +95,16 @@ namespace Platform.Xml.Serialization
 
 		private void Scan(SerializationMemberInfo memberInfo, TypeSerializerCache cache, SerializerOptions options)
 		{
-			IList<Attribute> attributes;
-			SerializationMemberInfo smi;
 			XmlSerializationAttribute[] attribs;
 
-			attributes = new List<Attribute>();
+			var attributes = new List<Attribute>();
 
 			// Get the ElementType attributes specified on the type itself as long
 			// as we're not the type itself!
 
 			if (memberInfo.MemberInfo != memberInfo.ReturnType)
 			{
-				smi = new SerializationMemberInfo(memberInfo.ReturnType, options, cache);
+				var smi = new SerializationMemberInfo(memberInfo.ReturnType, options, cache);
 
 				attribs = smi.GetApplicableAttributes(typeof(XmlDictionaryElementTypeAttribute));
 
@@ -138,18 +125,17 @@ namespace Platform.Xml.Serialization
 
 			foreach (XmlDictionaryElementTypeAttribute attribute in attributes)
 			{
-				SerializationMemberInfo smi2;
 				var dictionaryItem = new DictionaryItem();
 								
-				smi2 = new SerializationMemberInfo(attribute.ElementType, options, cache);
+				var smi2 = new SerializationMemberInfo(attribute.ElementType, options, cache);
 				
 				if (attribute.TypeAlias == null)
 				{
 					attribute.TypeAlias = smi2.SerializedName;
 				}
 				
-				dictionaryItem.Attribute = attribute;
-				dictionaryItem.TypeAlias = attribute.TypeAlias;
+				dictionaryItem.attribute = attribute;
+				dictionaryItem.typeAlias = attribute.TypeAlias;
 
 				// Check if a specific type of serializer is specified.
 
@@ -157,13 +143,13 @@ namespace Platform.Xml.Serialization
 				{
 					// Figure out the serializer based on the type of the element.
 
-					dictionaryItem.Serializer = cache.GetTypeSerializerBySupportedType(attribute.ElementType, smi2);
+					dictionaryItem.serializer = cache.GetTypeSerializerBySupportedType(attribute.ElementType, smi2);
 				}
 				else
 				{
 					// Get the type of serializer they specify.
 
-					dictionaryItem.Serializer = cache.GetTypeSerializerBySerializerType(attribute.SerializerType, smi2);
+					dictionaryItem.serializer = cache.GetTypeSerializerBySerializerType(attribute.SerializerType, smi2);
 				}
 
 				primaryDictionaryItem = dictionaryItem;
@@ -182,37 +168,57 @@ namespace Platform.Xml.Serialization
 
 		protected override void SerializeElements(object obj, XmlWriter writer, SerializationContext state)
 		{
-			DictionaryItem item;			
 			var dicObj = (IDictionary)obj;
 						
 			foreach (var key in dicObj.Keys)
 			{
-				if (primaryDictionaryItem == null)
-				{
-					item = typeToItemMap[obj.GetType()];
-				}
-				else
-				{
-					item = primaryDictionaryItem;
-				}
+				var item = this.primaryDictionaryItem ?? this.typeToItemMap[obj.GetType()];
 
 				writer.WriteStartElement(key.ToString());
 
-				if (item.Attribute != null
-						&& item.Attribute.SerializeAsValueNode
-						&& item.Attribute.ValueNodeAttributeName != null
-						&& item.Serializer is TypeSerializerWithSimpleTextSupport)
+				if (aliasToItemMap.Count > 1)
 				{
-					writer.WriteAttributeString(item.Attribute.ValueNodeAttributeName,
-						((TypeSerializerWithSimpleTextSupport)item.Serializer).Serialize(dicObj[key], state));
+					writer.WriteAttributeString("typealias", item.typeAlias);
+				}
+
+				if (item.attribute != null
+						&& item.attribute.SerializeAsValueNode
+						&& item.attribute.ValueNodeAttributeName != null
+						&& item.serializer is TypeSerializerWithSimpleTextSupport)
+				{
+					writer.WriteAttributeString(item.attribute.ValueNodeAttributeName, ((TypeSerializerWithSimpleTextSupport)item.serializer).Serialize(dicObj[key], state));
 				}
 				else
 				{
-					item.Serializer.Serialize(dicObj[key], writer, state);
+					item.serializer.Serialize(dicObj[key], writer, state);
 				}
 
 				writer.WriteEndElement();
 			}
+		}
+
+		protected override void DeserializeElement(object obj, XmlReader reader, SerializationContext state)
+		{
+			DictionaryItem dictionaryItem;
+
+			var typeAlias = reader.GetAttribute("typealias");
+
+			if (!string.IsNullOrEmpty(typeAlias))
+			{
+				if (!aliasToItemMap.TryGetValue(reader.GetAttribute("typealias"), out dictionaryItem))
+				{
+					dictionaryItem = primaryDictionaryItem;
+				}
+			}
+			else
+			{
+				dictionaryItem = primaryDictionaryItem;
+			}
+
+			var key = reader.LocalName;
+			var value = dictionaryItem.serializer.Deserialize(reader, state);
+
+			((IDictionary)obj)[key] = value;
 		}
 	}
 }

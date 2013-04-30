@@ -14,44 +14,17 @@ namespace Platform.Xml.Serialization
 	public abstract class TypeSerializerWithSimpleTextSupport
 		: TypeSerializer
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="obj"></param>
-		/// <param name="state"></param>
-		/// <returns></returns>
 		public abstract string Serialize(object obj, SerializationContext state);
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="value"></param>
-		/// <param name="state"></param>
-		/// <returns></returns>
 		public abstract object Deserialize(string value, SerializationContext state);
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="obj"></param>
-		/// <param name="writer"></param>
-		/// <param name="state"></param>
 		public override void Serialize(object obj, XmlWriter writer, SerializationContext state)
 		{
 			writer.WriteString(Serialize(obj, state));
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="reader"></param>
-		/// <param name="state"></param>
-		/// <returns></returns>
 		public override object Deserialize(XmlReader reader, SerializationContext state)
 		{
-			string s;
-
-			s = XmlReaderHelper.ReadCurrentNodeValue(reader);
+			var s = XmlReaderHelper.ReadCurrentNodeValue(reader);
 
 			if (state.GetCurrentMemberInfo().Substitutor != null)
 			{

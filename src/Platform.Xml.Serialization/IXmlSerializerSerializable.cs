@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Platform.Xml.Serialization
+﻿namespace Platform.Xml.Serialization
 {
 	public interface IXmlSerializerSerializable
 	{

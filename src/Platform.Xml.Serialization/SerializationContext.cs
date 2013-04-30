@@ -63,7 +63,7 @@ namespace Platform.Xml.Serialization
 				}
 			}
 
-			for (int i = 0; i < stack.Count; i++)
+			for (var i = 0; i < stack.Count; i++)
 			{
 				if (stack[i] == obj)
 				{
@@ -91,10 +91,6 @@ namespace Platform.Xml.Serialization
 			return (SerializationMemberInfo)serializationMemberInfoStack.Peek();
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="obj"></param>
 		public void DeserializationStart(object obj)
 		{
 			var listener = obj as IXmlDeserializationStartListener;
@@ -105,10 +101,6 @@ namespace Platform.Xml.Serialization
 			}
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="obj"></param>
 		public void DeserializationEnd(object obj)
 		{
 			IXmlDeserializationEndListener listener;

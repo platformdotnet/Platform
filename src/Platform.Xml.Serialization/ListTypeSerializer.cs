@@ -5,115 +5,6 @@ using System.Collections.Generic;
 
 namespace Platform.Xml.Serialization
 {
-	#region Attributes
-
-	public interface IXmlListElementDynamicTypeProvider
-		: IXmlDynamicTypeProvider
-	{
-		string GetName(object instance);
-	}
-
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Field | AttributeTargets.Property, Inherited = true, AllowMultiple = true)]
-	public class XmlListElementDynamicTypeProviderAttribute
-		: XmlSerializationAttribute
-	{
-		public Type ProviderType
-		{
-			get;
-			set;
-		}
-
-		public XmlListElementDynamicTypeProviderAttribute(Type providerType)
-		{
-			ProviderType = providerType;
-		}
-	}
-
-	/// <summary>
-	/// Describes the types of the items in a list to be serialized.
-	/// </summary>
-	/// <remarks>
-	/// <p>
-	/// You need to mark any IList field or property to be serialized with this attribute
-	/// at least once.  The attribute is used to map an element name to the type
-	/// of object contained in the list.
-	/// </p>
-	/// </remarks>
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Field | AttributeTargets.Property, Inherited = true, AllowMultiple = true)]
-	public class XmlListElementAttribute
-		: XmlElementAttribute
-	{
-		/// <summary>
-		///
-		/// </summary>
-		public virtual string Alias
-		{
-			get
-			{
-				return this.Name;
-			}
-			
-			set
-			{
-				this.Name = value;
-			}
-		}
-
-		/// <summary>
-		///
-		/// </summary>
-		public virtual Type ItemType
-		{
-			get
-			{
-				return this.Type;
-			}
-			
-			set
-			{
-				this.Type = value;
-			}
-		}
-
-		/// <summary>
-		/// Specifies a list item's type.
-		/// </summary>
-		/// <remarks>
-		/// The type's name will be used as the alias for all elements with the type.
-		/// If the type has been attributed with an XmlElement attribute then the alias
-		/// specified in that attribute will be used.
-		/// </remarks>
-		/// <param name="itemType">The type of element the list can contain.</param>
-		public XmlListElementAttribute(Type itemType)
-			: this(itemType, itemType.Name)
-		{			
-		}
-
-		/// <summary>
-		/// Specifies a list item's type.
-		/// </summary>
-		/// <remarks>
-		/// The supplied alias will be used to map the actual element <c>Type</c> with
-		/// an XML element.
-		/// </remarks>
-		/// <param name="itemType"></param>
-		/// <param name="alias"></param>
-		public XmlListElementAttribute(Type itemType, string alias)
-			: base(alias, itemType)
-		{
-		}
-
-		public XmlListElementAttribute(string alias)
-			: base(alias, null)
-		{
-		}
-	}
-
-	#endregion
-
-	/// <summary>
-	/// 
-	/// </summary>
 	public class ListTypeSerializer
 		: ComplexTypeTypeSerializer
 	{
@@ -133,10 +24,10 @@ namespace Platform.Xml.Serialization
 			}
 		}
 
-		private IDictionary<Type, ListItem> typeToItemMap;
-		private IDictionary<string, ListItem> aliasToItemMap;		
-		private Type listType;
-
+		private Type listType; 
+		private readonly IDictionary<Type, ListItem> typeToItemMap;
+		private readonly IDictionary<string, ListItem> aliasToItemMap;		
+	
 		private class ListItem
 		{
 			public string Alias;
@@ -144,8 +35,8 @@ namespace Platform.Xml.Serialization
 			public TypeSerializer Serializer;			
 		}
 
-		private TypeSerializerCache cache;
-		IXmlListElementDynamicTypeProvider dynamicTypeResolver;
+		private readonly TypeSerializerCache cache;
+		private readonly IXmlListElementDynamicTypeProvider dynamicTypeResolver;
 		
 		public ListTypeSerializer(SerializationMemberInfo memberInfo, TypeSerializerCache cache, SerializerOptions options)
 			: base(memberInfo, memberInfo.ReturnType, cache, options)
@@ -153,9 +44,7 @@ namespace Platform.Xml.Serialization
 			typeToItemMap = new Dictionary<Type, ListItem>();
 			aliasToItemMap = new Dictionary<string, ListItem>();
 
-			XmlListElementDynamicTypeProviderAttribute attribute;
-
-			attribute = (XmlListElementDynamicTypeProviderAttribute)memberInfo.GetFirstApplicableAttribute(typeof(XmlListElementDynamicTypeProviderAttribute));
+			var attribute = (XmlListElementDynamicTypeProviderAttribute)memberInfo.GetFirstApplicableAttribute(typeof(XmlListElementDynamicTypeProviderAttribute));
 
 			if (attribute != null)
 			{
@@ -187,7 +76,6 @@ namespace Platform.Xml.Serialization
 
 		protected virtual void Scan(SerializationMemberInfo memberInfo, TypeSerializerCache cache, SerializerOptions options)
 		{
-			SerializationMemberInfo smi;
 			XmlSerializationAttribute[] attribs;
 
 			var attributes = new List<Attribute>();
@@ -197,7 +85,7 @@ namespace Platform.Xml.Serialization
 
 			if (memberInfo.MemberInfo != memberInfo.ReturnType)
 			{
-				smi = new SerializationMemberInfo(memberInfo.ReturnType, options, cache);
+				var smi = new SerializationMemberInfo(memberInfo.ReturnType, options, cache);
 
 				attribs = smi.GetApplicableAttributes(typeof(XmlListElementAttribute));
 
@@ -310,10 +198,10 @@ namespace Platform.Xml.Serialization
 
 			foreach (var item in (System.Collections.IEnumerable)obj)
 			{
-				ListItem listItem;
-
 				if (state.ShouldSerialize(item))
 				{
+					ListItem listItem;
+
 					if (typeToItemMap.TryGetValue(item.GetType(), out listItem))
 					{
 						writer.WriteStartElement(listItem.Alias);
@@ -379,10 +267,6 @@ namespace Platform.Xml.Serialization
 			}
 
 			return base.CanDeserializeElement (obj, reader, state);
-		}
-
-		private void GenericAdd(object obj, object item)
-		{
 		}
 
 		protected override void DeserializeElement(object obj, XmlReader reader, SerializationContext state)
@@ -477,13 +361,6 @@ namespace Platform.Xml.Serialization
 			}
 		}
 
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="reader"></param>
-		/// <param name="state"></param>
-		/// <returns></returns>
 		public override object Deserialize(XmlReader reader, SerializationContext state)
 		{
 			var retval = base.Deserialize(reader, state);

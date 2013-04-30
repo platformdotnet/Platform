@@ -12,7 +12,7 @@ namespace Platform.Xml.Serialization
 
 		protected AbstractXmlConfigurationSectionHandler(Type type)
 			: this(XmlSerializer<T>.New())
-		{			
+		{
 		}
 
 		protected AbstractXmlConfigurationSectionHandler(XmlSerializer<T> serializer)
@@ -20,13 +20,9 @@ namespace Platform.Xml.Serialization
 			this.serializer = serializer;
 		}
 
-		#region IConfigurationSectionHandler Members
-
 		public virtual object Create(object parent, object configContext, System.Xml.XmlNode section)
 		{
 			return serializer.Deserialize(new XmlNodeReader(section));
 		}
-
-		#endregion
 	}
 }

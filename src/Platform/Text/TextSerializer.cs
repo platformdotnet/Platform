@@ -23,9 +23,8 @@ namespace Platform.Text
 		internal static readonly MethodInfo ReadDictionaryMethod = typeof(TextSerializer).GetMethod("ReadDictionary", BindingFlags.Static | BindingFlags.Public, null, new[] { typeof(string) }, null);
 		internal static readonly MethodInfo TextConversionFromEscapedHexStringMethod = typeof(TextConversion).GetMethod("FromEscapedHexString", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
 		internal static readonly string GuidFormat = "N";
-		internal const char LiteralChar = '|';
-		internal const string CharsToEscapeInKey = "%=`";
-		internal const string CharsToEscapeInValue = "[%;]";
+		internal const string CharsToEscapeInKey = "=";
+		internal const string CharsToEscapeInValue = ";']";
 		internal const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fffffff";
 		internal static readonly MethodInfo GetSerializerMethod = typeof(TextSerializer).GetMethod("GetSerializer");
 		internal static readonly MethodInfo TextWriterWrite = typeof(TextWriter).GetMethod("Write", BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(string) }, null);
@@ -73,55 +72,42 @@ namespace Platform.Text
 
 			var len = text.Length;
 
-			if (len >= 2 && text[0] == '|' && text[len - 1] == '|')
+			StringBuilder builder = null;
+
+			for (var i = 0; i < len; i++)
 			{
-				StringBuilder builder = null;
+				var c1 = text[i];
 
-				for (var i = 1; i < len - 1; i++)
+				if (c1 == '\\')
 				{
-					var c1 = text[i];
+					var c2 = text[++i];
 
-					if (c1 == '|')
+					if (builder == null)
 					{
-						var c2 = text[++i];
-
-						if (c2 == '|')
-						{
-							if (builder == null)
-							{
-								builder = new StringBuilder(text.Length);
-								builder.Append(text, 1, i - 1);
-							}
-							else
-							{
-								builder.Append('|');
-							}
-						}
-						else
-						{
-							break;
-						}
+						builder = new StringBuilder(text.Length);
+						builder.Append(text, 0, i - 1);
 					}
-					else if (builder != null)
-					{
-						builder.Append(c1);
-					}
+							
+					builder.Append(c2);
 				}
-
-				return builder == null ? text.Substring(1, text.Length - 2) : builder.ToString();
+				else if (builder != null)
+				{
+					builder.Append(c1);
+				}
 			}
 
-			return TextConversion.FromEscapedHexString(text);
+			return builder == null ? text : builder.ToString();
 		}
 
 		internal static int GetNextOffset(string s, int offset, char endChar)
 		{
 			var depth = 0;
 
+			/*
 			if (s[offset] == '|')
 			{
 				return GetNextOffsetLiteral(s, offset);
-			}
+			}*/
 
 			for (var i = offset; i < s.Length; i++)
 			{
@@ -302,9 +288,9 @@ namespace Platform.Text
 			var i = 0;
 			var foundInvalidChar = false;
 
-			foreach (char c in value)
+			foreach (var c in value)
 			{
-				if (c == '%' || CharsToEscapeInValue.IndexOf(c) >= 0 || (c == '|' && i == 0))
+				if (c == '\\' || CharsToEscapeInValue.IndexOf(c) >= 0)
 				{
 					if (!foundInvalidChar)
 					{
@@ -313,11 +299,11 @@ namespace Platform.Text
 						writer.Write(value.Substring(0, i));
 					}
 
-					writer.Write('%');
-					writer.Write(TextConversion.HexValues[(c & '\x00f0') >> 4]);
-					writer.Write(TextConversion.HexValues[c & '\x000f']);
+					writer.Write('\\');
+					writer.Write(c);
 
 					i++;
+
 					continue;
 				}
 
@@ -348,7 +334,7 @@ namespace Platform.Text
 
 				return;
 			}
-
+			
 			if (value.IndexOf('`') >= 0)
 			{
 				writer.Write('`');
@@ -370,11 +356,7 @@ namespace Platform.Text
 			}
 			else
 			{
-				writer.Write('|');
-
-				writer.Write(value);
-
-				writer.Write('|');
+				WriteValue(value, writer);
 			}
 		}
 
@@ -498,7 +480,8 @@ namespace Platform.Text
 	}
 
 	/// <summary>
-	/// A serializer that serializes objects to strings
+	/// A serializer that serializes objects to human friendly strings.
+	/// This was written a long time ago. One day it will be updated to use JSON.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	public class TextSerializer<T>
@@ -803,7 +786,7 @@ namespace Platform.Text
 			else if (type.IsEnum)
 			{
 				var parseMethod = typeof(Enum).GetMethod("Parse", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(Type), typeof(string) }, null);
-				body = Expression.Convert(Expression.Call(Expression.Constant(null), parseMethod, Expression.Constant(type), text), type);
+				body = Expression.Convert(Expression.Call(null, parseMethod, Expression.Constant(type), text), type);
 			}
 			else if (type == typeof(DateTime))
 			{
@@ -817,7 +800,7 @@ namespace Platform.Text
 			}
 			else if (type.IsArray)
 			{
-				body = Expression.Call(Expression.Constant(null), TextSerializer.ReadArrayMethod.MakeGenericMethod(type.GetElementType()), text);
+				body = Expression.Call(null, TextSerializer.ReadArrayMethod.MakeGenericMethod(type.GetElementType()), text);
 			}
 			else if (typeof(IList<>).IsAssignableFromIgnoreGenericParameters(type))
 			{
@@ -828,20 +811,18 @@ namespace Platform.Text
 					type = typeof(List<>).MakeGenericType(argType);
 				}
 
-				body = Expression.Call(Expression.Constant(null), TextSerializer.ReadListMethod.MakeGenericMethod(type, type.GetSequenceElementType()), text);
+				body = Expression.Call(null, TextSerializer.ReadListMethod.MakeGenericMethod(type, type.GetSequenceElementType()), text);
 			}
 			else if (typeof(IDictionary<,>).IsAssignableFromIgnoreGenericParameters(type))
 			{
 				var idictionaryi = type.GetInterfaces().FirstOrDefault(c => typeof(IDictionary<,>).IsAssignableFromIgnoreGenericParameters(c));
 
-				body = Expression.Call(Expression.Constant(null), TextSerializer.ReadDictionaryMethod.MakeGenericMethod(type, idictionaryi.GetGenericArguments()[0], idictionaryi.GetGenericArguments()[1]), text);
+				body = Expression.Call(null, TextSerializer.ReadDictionaryMethod.MakeGenericMethod(type, idictionaryi.GetGenericArguments()[0], idictionaryi.GetGenericArguments()[1]), text);
 			}
 			else
 			{
 				if (type == typeof(string))
 				{
-					var attribute = memberInfo.GetFirstCustomAttribute<TextLiteralAttribute>(true);
-
 					body = Expression.Call(null, TextSerializer.ReadStringMethod, text);
 				}
 				else
@@ -850,10 +831,9 @@ namespace Platform.Text
 				}
 			}
 
-			Expression ifTrue;
 			var test = Expression.Equal(Expression.Constant(""), text);
 
-			ifTrue = Expression.Constant(originalType.GetDefaultValue(), originalType);
+			var ifTrue = Expression.Constant(originalType.GetDefaultValue(), originalType);
 			body = Expression.Condition(test, ifTrue, originalType != type ? Expression.Convert(body, originalType) : body);
 
 			return body;
@@ -948,16 +928,17 @@ namespace Platform.Text
 				generator.Emit(OpCodes.Ldloc, unwrappedLocal);
 				generator.Emit(OpCodes.Ldarg_1);
 
-				var attrib = memberInfo.GetFirstCustomAttribute<TextLiteralAttribute>(true);
+				//var attrib = memberInfo.GetFirstCustomAttribute<TextLiteralAttribute>(true);
 
-				if (attrib == null || !attrib.IsLiteral || (memberInfo.MemberType == MemberTypes.Property || memberInfo.MemberType == MemberTypes.Field))
+				//if (attrib == null || !attrib.IsLiteral || (memberInfo.MemberType == MemberTypes.Property || memberInfo.MemberType == MemberTypes.Field))
 				{
-					//generator.Emit(OpCodes.Call, TextSerializer.WriteStringValueMethod);
-					generator.Emit(OpCodes.Call, TextSerializer.WriteLiteralStringValueMethod);
+					generator.Emit(OpCodes.Call, TextSerializer.WriteStringValueMethod);
 				}
-				else
+				//else
 				{
-					generator.Emit(OpCodes.Call, TextSerializer.WriteLiteralStringValueMethod);
+
+					//generator.Emit(OpCodes.Call, TextSerializer.WriteStringValueMethod);
+					//generator.Emit(OpCodes.Call, TextSerializer.WriteLiteralStringValueMethod);
 				}
 			}
 			else if (writeMethod != null)

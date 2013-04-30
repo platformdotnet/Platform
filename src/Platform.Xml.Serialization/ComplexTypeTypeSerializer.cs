@@ -12,8 +12,6 @@ namespace Platform.Xml.Serialization
 	public class ComplexTypeTypeSerializer
 		: TypeSerializer
 	{
-		#region Fields
-
 		/// <summary>
 		/// Dictiopnary of all the elements in this type.
 		/// </summary>
@@ -23,10 +21,6 @@ namespace Platform.Xml.Serialization
 		/// Dictionary of all the attributes in this type.
 		/// </summary>
 		protected IDictionary attributeMembersMap;
-
-		#endregion
-
-		#region Properties
 
 		/// <summary>
 		/// <see cref="TypeSerializer.SupportedType"/>
@@ -49,11 +43,7 @@ namespace Platform.Xml.Serialization
 		}
 		private readonly bool memberBound = false;
 
-		#endregion
-
 		private readonly SerializationMemberInfo serializationMemberInfo;
-
-		#region Constructors
 
 		public ComplexTypeTypeSerializer(SerializationMemberInfo memberInfo, Type type, TypeSerializerCache cache, SerializerOptions options)
 		{
@@ -74,10 +64,6 @@ namespace Platform.Xml.Serialization
 			Scan(cache, options);
 		}
 
-		#endregion
-
-		#region Scan
-
 		/// <summary>
 		/// Scan the tyoe for properties and fields to serialize.
 		/// </summary>
@@ -92,12 +78,12 @@ namespace Platform.Xml.Serialization
 				var fields = supportedType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
 				var properties = supportedType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
 
-				foreach (FieldInfo field in fields)
+				foreach (var field in fields)
 				{
 					AddMember(field, cache, options);
 				}
 
-				foreach (PropertyInfo property in properties)
+				foreach (var property in properties)
 				{
 					AddMember(property, cache, options);
 				}
@@ -121,10 +107,6 @@ namespace Platform.Xml.Serialization
 				type = type.BaseType;
 			}
 		}
-
-		#endregion
-
-		#region AddMember
 
 		protected virtual void AddMember(MemberInfo memberInfo, TypeSerializerCache cache, SerializerOptions options)
 		{
@@ -190,12 +172,8 @@ namespace Platform.Xml.Serialization
 			}
 		}
 
-		#endregion
-
 		protected virtual void SerializeAttributes(object obj, XmlWriter writer, SerializationContext state)
 		{
-			TypeSerializerWithSimpleTextSupport simpleSerializer;
-
 			foreach (SerializationMemberInfo memberInfo in attributeMembersMap.Values)
 			{
 				object val;
@@ -223,7 +201,7 @@ namespace Platform.Xml.Serialization
 						state.PushCurrentMemberInfo(memberInfo);
 
 						// Get the TypeSerializerWithSimpleTextSupport
-						simpleSerializer = memberInfo.GetSerializer(obj) as TypeSerializerWithSimpleTextSupport;
+						var simpleSerializer = memberInfo.GetSerializer(obj) as TypeSerializerWithSimpleTextSupport;
 
 						// Make sure the serializer supports SimpleText
 						if (simpleSerializer == null)
@@ -250,9 +228,6 @@ namespace Platform.Xml.Serialization
 
 		protected virtual void SerializeElements(object obj, XmlWriter writer, SerializationContext state)
 		{
-			TypeSerializer serializer;
-			TypeSerializerWithSimpleTextSupport serializerWithSimpleText;
-
 			foreach (SerializationMemberInfo memberInfo in elementMembersMap.Values)
 			{
 				state.PushCurrentMemberInfo(memberInfo);
@@ -274,8 +249,9 @@ namespace Platform.Xml.Serialization
 						}
 					}
 
-					serializer = memberInfo.GetSerializer(val);
-					serializerWithSimpleText = serializer as TypeSerializerWithSimpleTextSupport;
+					var serializer = memberInfo.GetSerializer(val);
+
+					var serializerWithSimpleText = serializer as TypeSerializerWithSimpleTextSupport;
 
 					if (state.ShouldSerialize(val))
 					{
@@ -463,7 +439,7 @@ namespace Platform.Xml.Serialization
 
 			if (reader.AttributeCount > 0)
 			{
-				for (int i = 0; i < reader.AttributeCount; i++)
+				for (var i = 0; i < reader.AttributeCount; i++)
 				{
 					reader.MoveToAttribute(i);
 
@@ -488,8 +464,7 @@ namespace Platform.Xml.Serialization
 
 			while (true)
 			{
-				XmlReaderHelper.ReadUntilAnyTypesReached(reader,
-					new XmlNodeType[] { XmlNodeType.Element, XmlNodeType.EndElement });
+				XmlReaderHelper.ReadUntilAnyTypesReached(reader, new XmlNodeType[] { XmlNodeType.Element, XmlNodeType.EndElement });
 
 				if (reader.NodeType == XmlNodeType.Element)
 				{

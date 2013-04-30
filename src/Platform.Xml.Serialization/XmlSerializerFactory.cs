@@ -3,7 +3,6 @@ using System.IO;
 using System.Xml;
 using System.Collections;
 using System.Collections.Specialized;
-using Platform.Collections;
 
 namespace Platform.Xml.Serialization
 {
@@ -55,101 +54,5 @@ namespace Platform.Xml.Serialization
 		/// <param name="options">The options for the serializer</param>
 		/// <returns>A new <see cref="XmlSerializer{T}"/></returns>
 		public abstract XmlSerializer<object> NewXmlSerializer(Type type, SerializerOptions options);
-	}
-
-	/// <summary>
-	/// An <see cref="XmlSerializerFactory"/> that supports caching of serializers
-	/// </summary>
-	public class CachingXmlSerializerFactory
-		: XmlSerializerFactory
-	{
-		private ILDictionary<Pair<Type, SerializerOptions>, object> cache;
-		private ILDictionary<Pair<Type, SerializerOptions>, object> cacheForDynamic;
-
-		/// <summary>
-		/// <see cref="XmlSerializerFactory.NewXmlSerializer{T}()<>"/>
-		/// </summary>
-		public override XmlSerializer<T> NewXmlSerializer<T>()
-		{
-			return NewXmlSerializer<T>(null);
-		}
-
-		/// <summary>
-		/// <see cref="XmlSerializerFactory.NewXmlSerializer(Type)"/>
-		/// </summary>
-		public override XmlSerializer<object> NewXmlSerializer(Type type)
-		{
-			return NewXmlSerializer(type, null);
-		}
-
-		/// <summary>
-		/// <see cref="XmlSerializerFactory.NewXmlSerializer(Type, SerializerOptions)"/>
-		/// </summary>
-		public override XmlSerializer<object> NewXmlSerializer(Type type, SerializerOptions options)
-		{
-			object value;
-			XmlSerializer<object> serializer;
-			Pair<Type, SerializerOptions> key;
-
-			key = new Pair<Type, SerializerOptions>(type, options);
-
-			if (cacheForDynamic == null)
-			{
-				cacheForDynamic = new LinearHashDictionary<Pair<Type, SerializerOptions>, object>();
-			}
-
-			if (cacheForDynamic.TryGetValue(key, out value))
-			{
-				return (XmlSerializer<object>)value;
-			}
-
-			if (options == null)
-			{
-				serializer = new XmlSerializer<object>(type);
-			}
-			else
-			{
-				serializer = new XmlSerializer<object>(type, options);
-			}
-
-			cacheForDynamic[key] = serializer;
-
-			return serializer;
-		}
-
-		/// <summary>
-		/// <see cref="XmlSerializerFactory.NewXmlSerializer{T}(SerializerOptions)"/>
-		/// </summary>
-		public override XmlSerializer<T> NewXmlSerializer<T>(SerializerOptions options)
-		{
-			object value;
-			XmlSerializer<T> serializer;
-			Pair<Type, SerializerOptions> key;
-
-			key = new Pair<Type, SerializerOptions>(typeof(T), options);
-
-			if (cache == null)
-			{
-				 cache = new LinearHashDictionary<Pair<Type, SerializerOptions>, object>();
-			}
-
-			if (cache.TryGetValue(key, out value))
-			{
-				return (XmlSerializer<T>)value;
-			}
-
-			if (options == null)
-			{
-				serializer = new XmlSerializer<T>();
-			}
-			else
-			{
-				serializer = new XmlSerializer<T>(options);
-			}
-
-			cache[key] = serializer;
-
-			return serializer;
-		}
 	}
 }

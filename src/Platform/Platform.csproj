@@ -174,7 +174,6 @@
     <Compile Include="StopRequestedException.cs" />
     <Compile Include="Text\CharArrayReader.cs" />
     <Compile Include="ISyncLocked.cs" />
-    <Compile Include="Text\TextLiteralAttribute.cs" />
     <Compile Include="Text\RegularExpressions\RegexCache.cs" />
     <Compile Include="Text\TextFieldAttribute.cs" />
     <Compile Include="Text\TextReaderConverter.cs" />

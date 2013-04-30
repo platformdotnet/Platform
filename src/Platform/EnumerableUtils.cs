@@ -31,7 +31,7 @@ namespace Platform
 		{
 			var rightEnumerator = right.GetEnumerator();
 
-			foreach (object value in left)
+			foreach (var value in left)
 			{
 				if (!rightEnumerator.MoveNext())
 				{
@@ -89,19 +89,19 @@ namespace Platform
 			var builder = new StringBuilder();
 
 			return enumerable.Convert<T, string>(ObjectUtils.ToString).ComplexFold
-				(
-					delegate(string value)
+			(
+				delegate(string value)
+				{
+					if (builder.Length != 0)
 					{
-						if (builder.Length != 0)
-						{
-							builder.Append(binder);
-						}
-
-						builder.Append(value);
-
-						return () => builder.ToString();
+						builder.Append(binder);
 					}
-				);
+
+					builder.Append(value);
+
+					return builder.ToString;
+				}
+			);
 		}
 
 		/// <summary>
@@ -123,7 +123,7 @@ namespace Platform
 		{
 			Func<T> retval = null;
 
-			foreach (T value in enumerable)
+			foreach (var value in enumerable)
 			{
 				retval = combiner(value);
 			}
@@ -140,7 +140,6 @@ namespace Platform
 
 		public static T Fold<T>(this IEnumerable<T> enumerable, Func<T, T, T> operation)
 		{
-			T retval;
 			var enumerator = enumerable.GetEnumerator();
 
 			if (!enumerator.MoveNext())
@@ -148,7 +147,7 @@ namespace Platform
 				return default(T);
 			}
 
-			retval = enumerator.Current;
+			var retval = enumerator.Current;
 
 			while (enumerator.MoveNext())
 			{
@@ -187,7 +186,6 @@ namespace Platform
 
 		public static U Fold<T, U>(this IEnumerable<T> enumerable, Converter<T, U> converter, Func<U, U, U> operation)
 		{
-			U retval;
 			var enumerator = enumerable.GetEnumerator();
 
 			if (!enumerator.MoveNext())
@@ -195,7 +193,7 @@ namespace Platform
 				return default(U);
 			}
 
-			retval = converter(enumerator.Current);
+			var retval = converter(enumerator.Current);
 
 			while (enumerator.MoveNext())
 			{
@@ -304,7 +302,7 @@ namespace Platform
 		/// <param name="enumerables">The array of enumerable objects to chain</param>		
 		public static IEnumerable<T> Chain<T>(params IEnumerable<T>[] enumerables)
 		{
-			foreach(IEnumerable<T> enumerable in enumerables)
+			foreach(var enumerable in enumerables)
 			{
 				foreach (T value in enumerable)
 				{
@@ -325,7 +323,7 @@ namespace Platform
 				yield return eValue;
 			}
 
-			foreach (IEnumerable<T> enumerable in enumerables)
+			foreach (var enumerable in enumerables)
 			{
 				foreach (T value in enumerable)
 				{
@@ -454,7 +452,7 @@ namespace Platform
 		/// </summary>
 		public static IEnumerable<T> Sorted<T>(this IEnumerable<T> enumerable, Comparison<T> comparison)
 		{
-			List<T> list = new List<T>(enumerable);
+			var list = new List<T>(enumerable);
 
 			list.Sort(comparison);
 
@@ -470,7 +468,7 @@ namespace Platform
 		/// </summary>
 		public static IEnumerable<T> Sorted<T>(this IEnumerable<T> enumerable, IComparer<T> comparer)
 		{
-			List<T> list = new List<T>(enumerable);
+			var list = new List<T>(enumerable);
 
 			list.Sort(comparer);
 
@@ -617,7 +615,7 @@ namespace Platform
 		/// <returns>A new enumerable</returns>
 		public static IEnumerable<T> Range<T>(T[] array, int startOffset, int count)
 		{
-			for (int i = startOffset; i < startOffset + count; i++)
+			for (var i = startOffset; i < startOffset + count; i++)
 			{
 				yield return array[i];
 			}
@@ -636,9 +634,7 @@ namespace Platform
 		/// <returns>A new enumerable</returns>
 		public static IEnumerable<T> Range<T>(this IEnumerable<T> enumerable, int startOffset, int count)
 		{
-			IEnumerator<T> enumerator;
-
-			enumerator = enumerable.GetEnumerator();
+			var enumerator = enumerable.GetEnumerator();
 
 			using (enumerator)
 			{

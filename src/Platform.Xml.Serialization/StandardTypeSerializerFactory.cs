@@ -1,7 +1,6 @@
 using System;
 using System.Drawing;
 using System.Xml;
-using System.Reflection;
 using System.Collections;
 
 namespace Platform.Xml.Serialization
@@ -136,18 +135,14 @@ namespace Platform.Xml.Serialization
 			}
 			else
 			{
-				bool implementsList = false;
-				bool implementsGenericList = false;
+				var implementsList = false;
+				var implementsGenericList = false;
 
 				implementsList = typeof(IList).IsAssignableFrom(supportedType);
 				
 				implementsGenericList = supportedType.FindInterfaces
 				(
-					delegate(Type type, object criterea)
-					{
-						return type.IsGenericType
-							&& type.GetGenericTypeDefinition() == typeof(System.Collections.Generic.IList<>);
-					},
+					(type, criterea) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof (System.Collections.Generic.IList<>),
 					null
 				).Length > 0;
 
@@ -159,13 +154,6 @@ namespace Platform.Xml.Serialization
 					}
 
 					return new ListTypeSerializer(memberInfo, cache, options);
-				}
-
-				if (supportedType.Name.Contains("list"))
-				{
-					Console.WriteLine("OOPS: " + supportedType);
-					Console.WriteLine(implementsList);
-					Console.WriteLine(implementsGenericList);
 				}
 
 				return new ComplexTypeTypeSerializer(memberInfo, supportedType, cache, options);
@@ -181,17 +169,14 @@ namespace Platform.Xml.Serialization
 		{
 			TypeSerializer retval = null;			
 
-			if (retval == null)
+			try
 			{
-				try
-				{
-					retval = (TypeSerializer)Activator.CreateInstance(serializerType, new object[] { cache, options });
-				}
-				catch (Exception)
-				{
-				}
+				retval = (TypeSerializer)Activator.CreateInstance(serializerType, new object[] { cache, options });
 			}
-
+			catch (Exception)
+			{
+			}
+		
 			if (retval == null && memberInfo != null)
 			{
 				try
