@@ -8,7 +8,7 @@ namespace Platform
 	public class HighPerformanceClock
 		: Clock
 	{
-		public static HighPerformanceClock Default = new HighPerformanceClock();
+		public static HighPerformanceClock Default;
 
 		[DllImport("Kernel32.dll")]
 		private static extern bool QueryPerformanceCounter( out long lpPerformanceCount);
@@ -18,7 +18,14 @@ namespace Platform
 
 		private readonly double frequency;
 
-		private static readonly PlatformID[] windowsPlatforms = new[] { PlatformID.Win32NT, PlatformID.Win32S, PlatformID.Win32Windows, PlatformID.WinCE, PlatformID.Xbox };
+		private static readonly PlatformID[] windowsPlatforms;
+
+		static HighPerformanceClock()
+		{
+			 windowsPlatforms = new[] { PlatformID.Win32NT, PlatformID.Win32S, PlatformID.Win32Windows, PlatformID.WinCE, PlatformID.Xbox };
+
+			 HighPerformanceClock.Default = new HighPerformanceClock();
+		}
 		
 		public HighPerformanceClock()
 		{
