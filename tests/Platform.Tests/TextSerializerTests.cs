@@ -276,7 +276,7 @@ namespace Platform.Tests
 			Assert.AreEqual(nx, nserializer.Deserialize(s));
 		}
 
-		[Test]
+		[Test, Category("IgnoreOnMono")]
 		public void TestSerializePerson()
 		{
 			var person = new Person()
