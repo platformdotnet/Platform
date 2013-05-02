@@ -6,7 +6,7 @@ using Platform.Text;
 
 namespace Platform.Tests
 {
-	[TestFixture]
+	[TestFixture, Category("IgnoreOnMono")]
 	public class TextSerializerTests
 	{
 		[TextRecord]

@@ -17,10 +17,17 @@ namespace Platform
 		private static extern bool QueryPerformanceFrequency(out long lpFrequency);
 
 		private readonly double frequency;
+
+		private static readonly PlatformID[] windowsPlatforms = new[] { PlatformID.Win32NT, PlatformID.Win32S, PlatformID.Win32Windows, PlatformID.WinCE, PlatformID.Xbox };
 		
 		public HighPerformanceClock()
 		{
 			long f;
+
+			if (!windowsPlatforms.Contains(Environment.OSVersion.Platform))
+			{
+				throw new InvalidOperationException("Windows required");
+			}
 
 			if (QueryPerformanceFrequency(out f) == false)
 			{
