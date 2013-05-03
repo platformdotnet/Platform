@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Platform.NET System Library")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A cross-platform libary with useful utility classes for .NET")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Thong Nguyen")]
 [assembly: AssemblyProduct("Platform.NET")]

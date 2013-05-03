@@ -194,5 +194,22 @@ namespace Platform.IO
 
 			return new string(t_CharBuffer, 0, charCount);
 		}
+
+		public static void CopyTo(this Stream stream, Stream destination)
+		{
+			var buffer = new byte[4096];
+
+			while (true)
+			{
+				var read = stream.Read(buffer, 0, buffer.Length);
+
+				if (read == 0)
+				{
+					break;
+				}
+
+				destination.Write(buffer, 0, read);
+			}
+		}
 	}
 }
