@@ -4,7 +4,7 @@ Platform.NET
 
 A cross-platform library of useful classes and extensions for C# and .NET.
 
-This library was developed by myself from 2003-2008 and used for various projects before I moved primarly to iOS development. The library updated to use modern C# syntax and released as open source under the BSD license. It is the foundation of my other C# projects including the projects located at the GitHub [Platform.NET](https://github.com/platformdotnet) organisation.
+This library was initially developed between 2003-2008. The library updated to use modern C# syntax and released as open source under the BSD license. It is the foundation of my other C# projects including the projects located at the GitHub [Platform.NET](https://github.com/platformdotnet) organisation.
 
 Notable classes:
 
@@ -12,7 +12,7 @@ Notable classes:
  
  	A dictionary where the values are weakly references but guaranteed to not become weak for a set period of time after they were last touched.
  	
- * `Platform.Linq.ExpressionVistor`
+ * `Platform.Linq.ExpressionVisitor`
  
  	A class for building Linq providers.
  	
@@ -32,7 +32,7 @@ Notable classes:
  
  	A reference that becomes weak when it has not been used for a specified period of time.
  	
- * `Platform.Referecnes.ReferenceQueue`
+ * `Platform.References.ReferenceQueue`
  
  	Java style reference queues
  	
