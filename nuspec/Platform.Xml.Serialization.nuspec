@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Platform.Xml.Serialization</id>
+    <version>$version$</version>
+    <title>Platform.NET XmlSerializatiom Library</title>
+    <summary></summary>
+    <authors>Thong Nguyen</authors>
+    <owners>Thong Nguyen</owners>
+    <licenseUrl>https://raw.github.com/platformdotnet/Platform/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/platformdotnet/Platform</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A cross-platform, clean and extensible XML serializer for .NET</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright (c) 2003-2013 Thong Nguyen (tumtumtum@gmail.com)</copyright>
+    <tags>platform xml serialization serializer</tags>
+  </metadata>
+</package>
