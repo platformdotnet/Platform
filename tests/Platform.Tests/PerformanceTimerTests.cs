@@ -22,7 +22,7 @@ namespace Platform.Tests
 			Assert.IsTrue(timer.TimeElapsed > (period - TimeSpan.FromMilliseconds(100)) && (timer.TimeElapsed < period + TimeSpan.FromMilliseconds(100)));
 		}
 
-		[Test]
+		[Test, Category("IgnoreOnMono")]
 		public void Test_Timer_With_HighPerformanceClock()
 		{
 			PerformanceTimer timer;

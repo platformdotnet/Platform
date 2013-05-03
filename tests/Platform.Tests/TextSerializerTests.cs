@@ -6,7 +6,7 @@ using Platform.Text;
 
 namespace Platform.Tests
 {
-	[TestFixture]
+	[TestFixture, Category("IgnoreOnMono")]
 	public class TextSerializerTests
 	{
 		[TextRecord]
@@ -276,7 +276,7 @@ namespace Platform.Tests
 			Assert.AreEqual(nx, nserializer.Deserialize(s));
 		}
 
-		[Test]
+		[Test, Category("IgnoreOnMono")]
 		public void TestSerializePerson()
 		{
 			var person = new Person()

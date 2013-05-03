@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Platform.NET</id>
+    <version>$version$</version>
+    <title>Platform.NET Core System Library</title>
+    <authors>Thong Nguyen</authors>
+    <owners>Thong Nguyen</owners>
+    <licenseUrl>https://raw.github.com/platformdotnet/Platform/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/platformdotnet/Platform</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+Platform.NET
+
+A cross-platform library of useful classes and extensions for C# and .NET.
+
+This library was initially developed between 2003-2008. It has been updated to use modern C# syntax and released as open source under the BSD license. It is the foundation of my other C# projects including the projects located at the GitHub [Platform.NET](https://github.com/platformdotnet) organisation.
+
+Some notable classes provided are: TimedReferenceDictionary, ExpressionVisitor, NetworkTimeClient, NotifyingWeakReference, TimedReference, ReferenceQueue, ITask, IMeter, InteractiveCryptoStream, TextConversion, InvocationQueue, XmlSerializer
+</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright (c) 2003-2013 Thong Nguyen (tumtumtum@gmail.com)</copyright>
+    <tags>task text utility string extensions base64 ntp invocationqueue utility weakreference meteringstream expressionvisitor linq</tags>
+  </metadata>
+</package>
