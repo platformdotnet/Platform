@@ -14,5 +14,8 @@
     <releaseNotes>Initial release</releaseNotes>
     <copyright>Copyright (c) 2003-2013 Thong Nguyen (tumtumtum@gmail.com)</copyright>
     <tags>platform xml serialization serializer</tags>
+    <dependencies>
+      <dependency id="Platform.NET"/>
+    </dependencies>
   </metadata>
 </package>
