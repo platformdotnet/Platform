@@ -11,7 +11,7 @@
     <projectUrl>https://github.com/platformdotnet/Platform</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A cross-platform, clean and extensible XML serializer for .NET</description>
-    <releaseNotes>Initial release</releaseNotes>
+    <releaseNotes></releaseNotes>
     <copyright>Copyright (c) 2003-2013 Thong Nguyen (tumtumtum@gmail.com)</copyright>
     <tags>platform xml serialization serializer</tags>
     <dependencies>

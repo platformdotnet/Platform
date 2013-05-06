@@ -19,7 +19,7 @@ This library was initially developed between 2003-2008. It has been updated to u
 
 Some notable classes provided are: TimedReferenceDictionary, ExpressionVisitor, NetworkTimeClient, NotifyingWeakReference, TimedReference, ReferenceQueue, ITask, IMeter, InteractiveCryptoStream, TextConversion, InvocationQueue, XmlSerializer
 </description>
-    <releaseNotes>Initial release</releaseNotes>
+    <releaseNotes></releaseNotes>
     <copyright>Copyright (c) 2003-2013 Thong Nguyen (tumtumtum@gmail.com)</copyright>
     <tags>task text utility string extensions base64 ntp invocationqueue utility weakreference meteringstream expressionvisitor linq</tags>
   </metadata>
