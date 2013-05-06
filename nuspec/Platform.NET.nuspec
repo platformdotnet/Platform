@@ -3,7 +3,7 @@
   <metadata>
     <id>Platform.NET</id>
     <version>$version$</version>
-    <title>Platform.NET Core System Library</title>
+    <title>Platform.NET System Library</title>
     <summary>A cross-platform library of useful classes and extensions for C# and .NET</summary>
     <authors>Thong Nguyen</authors>
     <owners>Thong Nguyen</owners>
