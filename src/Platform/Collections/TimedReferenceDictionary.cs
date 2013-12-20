@@ -232,8 +232,6 @@ namespace Platform.Collections
 			{
 				CheckMaximumCount();
 
-				GC.Collect();
-			
 				foreach (var reference in dictionary.Values)
 				{
 					if (DateTime.Now - reference.LastAccess > this.TimeOut)
@@ -243,9 +241,6 @@ namespace Platform.Collections
 						cleanOnNext = true;
 					}
 				}
-
-				GC.Collect();
-				GC.WaitForPendingFinalizers();
 
 				base.CleanDeadReferences();
 			}
@@ -361,9 +356,6 @@ namespace Platform.Collections
 						};
 
 						routine();
-
-						GC.Collect();
-						GC.WaitForPendingFinalizers();
 
 						base.CleanDeadReferences();
 
