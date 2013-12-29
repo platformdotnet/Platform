@@ -207,28 +207,33 @@ namespace Platform.Linq
 
 			if (original == null)
 			{
-				return original;
+				return null;
 			}
 
 			for (int i = 0, n = original.Count; i < n; i++)
 			{
-				Expression p = Visit(original[i]);
+				var p = Visit(original[i]);
 
 				if (list != null)
 				{
-					list.Add(p);
+					if (p != null)
+					{
+						list.Add(p);
+					}
 				}
-
 				else if (p != original[i])
 				{
 					list = new List<Expression>(n);
 
-					for (int j = 0; j < i; j++)
+					for (var j = 0; j < i; j++)
 					{
 						list.Add(original[j]);
 					}
 
-					list.Add(p);
+					if (p != null)
+					{
+						list.Add(p);
+					}
 				}
 			}
 
