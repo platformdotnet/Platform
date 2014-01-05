@@ -10,10 +10,8 @@ namespace Platform.Validation
 	public class SizeConstraintAttribute
 		: ValidationAttribute
 	{
-		public const int DefaultMaximumLength = 256;
-
-		private int minimumLength;
-		private int maximumLength = DefaultMaximumLength;
+		private int minimumLength = Int32.MinValue;
+		private int maximumLength = Int32.MaxValue;
 
 		public SizeFlexibility SizeFlexibility
 		{
