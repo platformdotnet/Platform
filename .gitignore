@@ -146,3 +146,7 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
+
+# NuGet Packages
+lib/Packages/
+src/packages/
