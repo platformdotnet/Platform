@@ -479,33 +479,6 @@ namespace Platform
 		}
 
 		/// <summary>
-		/// Creates a new IEnumerable where duplicate items are removed
-		/// </summary>
-		public static IEnumerable<T> Distinct<T>(this IEnumerable<T> enumerable)
-		{
-			return DistinctSorted(enumerable, Comparer<T>.Default);
-		}
-
-		/// <summary>
-		/// Creates a new IEnumerable where duplicate items are removed.
-		/// Elements are generated on the fly (calculated lazily).
-		/// </summary>
-		public static IEnumerable<T> Distinct<T>(this IEnumerable<T> enumerable, IEqualityComparer<T> comparer)
-		{
-			IDictionary<T, T> dictionary = new Dictionary<T, T>(comparer);
-
-			foreach (T value in enumerable)
-			{
-				if (!dictionary.ContainsKey(value))
-				{
-					dictionary[value] = value;
-
-					yield return value;
-				}
-			}
-		}
-
-		/// <summary>
 		/// Creates a new sorted IEnumerable where duplicate items are removed.
 		/// Elements will not be calculated lazily.
 		/// </summary>
