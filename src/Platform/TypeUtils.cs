@@ -132,7 +132,7 @@ namespace Platform
 		/// </summary>
 		public static bool IsNumericType(this Type type)
 		{
-			return IsIntegerType(type) && IsRealType(type);
+			return IsIntegerType(type) || IsRealType(type);
 		}
 
 		/// <summary>
