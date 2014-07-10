@@ -23,6 +23,11 @@ namespace Platform
 			return retval ?? sequenceType;
 		}
 
+		public static Type GetUnwrappedNullableType(this Type type)
+		{
+			return Nullable.GetUnderlyingType(type) ?? type;
+		}
+
 		private static Type FindSequenceElementType(this Type sequenceType)
 		{
 			if (sequenceType == null || sequenceType == typeof(string))
@@ -126,13 +131,21 @@ namespace Platform
 			}
 		}
 
+
 		/// <summary>
-		/// Returns true if the type is a numeric type (by default does not
-		/// return true if it is a nullable numeric type).
+		/// Returns true if the type is a numeric type (by default does not return true if it is a nullable numeric type).
 		/// </summary>
 		public static bool IsNumericType(this Type type)
 		{
-			return IsIntegerType(type) || IsRealType(type);
+			return IsIntegerType(type, false) || IsRealType(type, false);
+		}
+
+		/// <summary>
+		/// Returns true if the type is a numeric type (or nullable numeric type if checkNullable is True).
+		/// </summary>
+		public static bool IsNumericType(this Type type, bool checkNullable)
+		{
+			return IsIntegerType(type, checkNullable) || IsRealType(type, checkNullable);
 		}
 
 		/// <summary>
