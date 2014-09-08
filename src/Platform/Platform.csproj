@@ -124,7 +124,7 @@
     <Compile Include="Collections\BufferOverflowException.cs" />
     <Compile Include="Collections\BufferUnderflowException.cs" />
     <Compile Include="Collections\CircularFifoBuffer.cs" />
-    <Compile Include="Collections\IListUtils.cs" />
+    <Compile Include="Collections\ListUtils.cs" />
     <Compile Include="Collections\ReadOnlyList.cs" />
     <Compile Include="Collections\DictionaryEventArgs.cs" />
     <Compile Include="Collections\ItemNotFoundException.cs" />

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Platform.Collections
 {
-	public static class IListUtils
+	public static class ListUtils
 	{
 		public static void MergeSort<T>(this IList<T> list)
 		{
