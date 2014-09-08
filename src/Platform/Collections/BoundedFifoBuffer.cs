@@ -86,7 +86,7 @@ namespace Platform.IO
 
 			if (this.Length == 0)
 			{
-				throw new BufferUnderflowException();
+				return 0;
 			}
 			else
 			{
