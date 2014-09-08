@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnumerableUtilsTests.cs" />
+    <Compile Include="ListUtilsTests.cs" />
     <Compile Include="InvocationQueueTests.cs" />
     <Compile Include="PerformanceTimerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

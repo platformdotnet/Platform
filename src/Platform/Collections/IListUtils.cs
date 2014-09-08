@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Platform.Collections
@@ -74,6 +73,71 @@ namespace Platform.Collections
 			}
 
 			return retval;
+		}
+
+		public static int FastIndexOf<T>(this IList<T> data, IList<T> pattern)
+		{
+			return data.FastIndexOf(0, pattern, EqualityComparer<T>.Default);
+		}
+
+		public static int FastIndexOf<T>(this IList<T> data, int offset, IList<T> pattern)
+		{
+			return data.FastIndexOf(offset, pattern, EqualityComparer<T>.Default);
+		}
+
+		public static int FastIndexOf<T>(this IList<T> data, int offset, IList<T> pattern, IEqualityComparer<T> comparer)
+		{
+			if (data.Count < pattern.Count)
+			{
+				return -1;
+			}
+
+			var failure = ComputeFailureTable(pattern, comparer);
+
+			var j = 0;
+
+			for (var i = offset; i < data.Count; i++)
+			{
+				while (j > 0 && !comparer.Equals(pattern[j], data[i]))
+				{
+					j = failure[j - 1];
+				}
+
+				if (comparer.Equals(pattern[j], data[i]))
+				{
+					j++;
+				}
+
+				if (j == pattern.Count)
+				{
+					return i - pattern.Count + 1;
+				}
+			}
+
+			return -1;
+		}
+
+		private static int[] ComputeFailureTable<T>(IList<T> pattern, IEqualityComparer<T> comparer)
+		{
+			var j = 0;
+			var failure = new int[pattern.Count];
+
+			for (var i = 1; i < pattern.Count; i++)
+			{
+				while (j > 0 && comparer.Equals(pattern[j], pattern[i]))
+				{
+					j = failure[j - 1];
+				}
+
+				if (!comparer.Equals(pattern[j], pattern[i]))
+				{
+					j++;
+				}
+
+				failure[i] = j;
+			}
+
+			return failure;
 		}
 	}
 }
