@@ -1,7 +1,6 @@
 ﻿using System;
-using Platform.Collections;
 
-namespace Platform.IO
+namespace Platform.Collections
 {
 	public class BoundedFifoBuffer<T>
 	{
@@ -46,7 +45,7 @@ namespace Platform.IO
 
 			if (start > end)
 			{
-				Array.Copy(buffer, offset, bytes, end, length);
+				Array.Copy(buffer, offset, this.bytes, end, length);
 
 				this.Length += length;
 			}
@@ -55,12 +54,12 @@ namespace Platform.IO
 				var y = 0;
 				var x = Math.Min(capacity - end, length);
 
-				Array.Copy(buffer, offset, bytes, end, x);
+				Array.Copy(buffer, offset, this.bytes, end, x);
 
 				if (x < length)
 				{
 					y = length - x;
-					Array.Copy(buffer, offset + x, bytes, 0, y);
+					Array.Copy(buffer, offset + x, this.bytes, 0, y);
 				}
 
 				this.Length += x + y;
