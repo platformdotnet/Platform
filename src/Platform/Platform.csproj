@@ -120,6 +120,10 @@
     <Compile Include="BigEndianByteQuad.cs" />
     <Compile Include="CachedValue.cs" />
     <Compile Include="Clock.cs" />
+    <Compile Include="Collections\BoundedFifoBuffer.cs" />
+    <Compile Include="Collections\BufferOverflowException.cs" />
+    <Compile Include="Collections\BufferUnderflowException.cs" />
+    <Compile Include="Collections\CircularFifoBuffer.cs" />
     <Compile Include="Collections\IListUtils.cs" />
     <Compile Include="Collections\ReadOnlyList.cs" />
     <Compile Include="Collections\DictionaryEventArgs.cs" />

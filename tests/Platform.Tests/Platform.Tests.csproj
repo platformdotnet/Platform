@@ -49,6 +49,7 @@
     <Compile Include="InvocationQueueTests.cs" />
     <Compile Include="PerformanceTimerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FifoBufferTests.cs" />
     <Compile Include="TextConversionTests.cs" />
     <Compile Include="TextSerializerTests.cs" />
     <Compile Include="Validation\PageRequest.cs" />
