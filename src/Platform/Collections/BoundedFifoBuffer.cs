@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Platform.Collections
 {
 	public class BoundedFifoBuffer<T>
+		: IList<T>
 	{
 		protected int position;
 		protected readonly T[] bytes;
@@ -102,7 +105,7 @@ namespace Platform.Collections
 
 					if (x < length)
 					{
-						y = Math.Min(end, length);
+						y = Math.Min(end, length - x);
 
 						Array.Copy(this.bytes, 0, output, offset + x, y);
 					}
@@ -128,6 +131,45 @@ namespace Platform.Collections
 					}
 
 					return x;
+				}
+			}
+		}
+
+		public IEnumerator<T> GetEnumerator()
+		{
+			if (this.Length == 0)
+			{
+				yield break;
+			}
+			else
+			{
+				var capacity = this.Capacity;
+				var start = this.position;
+				var end = (this.position + this.Length) % capacity;
+
+				if (start >= end)
+				{
+					var y = 0;
+					var x = capacity - start;
+
+					for (var i = start; i < start + x; i++)
+					{
+						yield return this.bytes[i];
+					}
+
+					y = end;
+
+					for (var i = 0; i < y; i++)
+					{
+						yield return this.bytes[i];
+					}
+				}
+				else
+				{
+					for (var i = start; i < end; i++)
+					{
+						yield return this.bytes[i];
+					}
 				}
 			}
 		}
@@ -204,6 +246,86 @@ namespace Platform.Collections
 			this.Peek(retval, 0, this.Length);
 
 			return retval;
+		}
+
+		public void Add(T item)
+		{
+			this.Write(new [] { item });
+		}
+
+		public void Clear()
+		{
+			this.Length = 0;
+			this.position = 0;
+		}
+
+		public bool Contains(T item)
+		{
+			return this.IndexOf(item) >= 0;
+		}
+
+		public void CopyTo(T[] array, int arrayIndex)
+		{
+			this.Read(array, arrayIndex, this.Length);
+		}
+
+		public bool Remove(T item)
+		{
+			throw new NotSupportedException();
+		}
+
+		public int Count { get { return this.Length; }}
+		public bool IsReadOnly { get { return false; } }
+
+		public int IndexOf(T item)
+		{
+			var i = 0;
+
+			foreach (var x in this)
+			{
+				if (EqualityComparer<T>.Default.Equals(item, x))
+				{
+					return i;
+				}
+
+				i++;
+			}
+
+			return -1;
+		}
+
+		public void Insert(int index, T item)
+		{
+			throw new NotSupportedException();
+		}
+
+		public void RemoveAt(int index)
+		{
+			throw new NotSupportedException();
+		}
+
+		public T this[int index]
+		{
+			get
+			{
+				if (index >= this.Length)
+				{
+					throw new ArgumentOutOfRangeException("index");
+				}
+
+				index = (this.position + index) % this.bytes.Length;
+
+				return this.bytes[index];
+			}
+			set
+			{
+				throw new NotSupportedException();
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return this.GetEnumerator();
 		}
 	}
 }
