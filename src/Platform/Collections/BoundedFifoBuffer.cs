@@ -149,7 +149,6 @@ namespace Platform.Collections
 
 				if (start >= end)
 				{
-					var y = 0;
 					var x = capacity - start;
 
 					for (var i = start; i < start + x; i++)
@@ -157,9 +156,7 @@ namespace Platform.Collections
 						yield return this.bytes[i];
 					}
 
-					y = end;
-
-					for (var i = 0; i < y; i++)
+					for (var i = 0; i < end; i++)
 					{
 						yield return this.bytes[i];
 					}

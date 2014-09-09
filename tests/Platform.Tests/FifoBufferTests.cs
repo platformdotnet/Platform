@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using NUnit.Framework;
 using Platform.Collections;
 using Platform.IO;
@@ -47,7 +48,7 @@ namespace Platform.Tests
 		}
 
 		[Test]
-		public void Test_Simple_RingBuffer_Test_Read_Write_With_Drift()
+		public void Test_Simple_RingBuffer_Test_Read_Write_With_Dri1()
 		{
 			var ringBuffer = new BoundedFifoBuffer<byte>(5);
 
@@ -57,6 +58,23 @@ namespace Platform.Tests
 				Assert.AreEqual("ABC", GetString(ringBuffer.ReadToArray()));
 				ringBuffer.Write(GetBytes("DEF"));
 				Assert.AreEqual("DEF", GetString(ringBuffer.ReadToArray()));
+			}
+		}
+
+		[Test]
+		public void Test_Simple_RingBuffer_Test_Read_Write_With_Drift2()
+		{
+			var ringBuffer = new BoundedFifoBuffer<byte>(5);
+
+			for (var i = 0; i < 100; i++)
+			{
+				ringBuffer.Write(GetBytes("ABC"));
+				Assert.AreEqual("ABC", GetString(ringBuffer.ReadToArray()));
+				ringBuffer.Write(GetBytes("DEF"));
+				Assert.AreEqual('D', ringBuffer[0]);
+				Assert.AreEqual('E', ringBuffer[1]);
+				Assert.AreEqual('F', ringBuffer[2]);
+				ringBuffer.Clear();
 			}
 		}
 
@@ -96,6 +114,36 @@ namespace Platform.Tests
 			ringBuffer.Write(GetBytes("F"));
 
 			Assert.AreEqual("BCDEF", GetString(ringBuffer.ReadToArray()));
+		}
+
+		[Test]
+		public void Test_Circular1_Enumerator()
+		{
+			var ringBuffer = new CircularFifoBuffer<byte>(5);
+
+			ringBuffer.Write(GetBytes("ABC"));
+			ringBuffer.Write(GetBytes("DE"));
+			ringBuffer.Write(GetBytes("F"));
+
+			Assert.AreEqual("BCDEF", GetString(ringBuffer.ToArray()));
+		}
+
+		[Test]
+		public void Test_Circular1_As_List()
+		{
+			var ringBuffer = new CircularFifoBuffer<byte>(5);
+
+			ringBuffer.Write(GetBytes("ABC"));
+			ringBuffer.Write(GetBytes("DE"));
+			ringBuffer.Write(GetBytes("F"));
+
+			Assert.AreEqual('B', ringBuffer[0]);
+			Assert.AreEqual('C', ringBuffer[1]);
+			Assert.AreEqual('D', ringBuffer[2]);
+			Assert.AreEqual('E', ringBuffer[3]);
+			Assert.AreEqual('F', ringBuffer[4]);
+
+			Assert.AreEqual(5, ringBuffer.Count);
 		}
 
 		[Test]
