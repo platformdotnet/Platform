@@ -263,7 +263,7 @@ namespace Platform.Collections
 
 		public void CopyTo(T[] array, int arrayIndex)
 		{
-			this.Read(array, arrayIndex, this.Length);
+			this.Peek(array, arrayIndex, this.Length);
 		}
 
 		public bool Remove(T item)
