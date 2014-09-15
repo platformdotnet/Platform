@@ -180,6 +180,26 @@ namespace Platform
 			}
 
 			return retval;
-		}	
+		}
+
+		public static int Modulus(int value, int n)
+		{
+			return (int)Modulus((double)value, (double)n);
+		}
+
+		public static long Modulus(long value, long n)
+		{
+			return (long)Modulus((Decimal)value, (Decimal)n);
+		}
+
+		public static double Modulus(double value, double n)
+		{
+			return value - n * Math.Floor(value / n);
+		}
+
+		public static Decimal Modulus(Decimal value, Decimal n)
+		{
+			return value - n * Math.Floor(value / n);
+		}
 	}
 }
