@@ -20,6 +20,26 @@ namespace Platform.Tests
 		}
 
 		[Test]
+		public void Test_Read_Single_Item()
+		{
+			var s = "This is a Hel\0lo teHel\0lost";
+			var buffer = new BoundedFifoBuffer<byte>(1024);
+
+			buffer.Write(Encoding.ASCII.GetBytes("BOO"));
+			buffer.Write(Encoding.ASCII.GetBytes(s));
+
+			buffer.Read();
+			buffer.Read();
+			buffer.Read();
+
+			var t = Encoding.ASCII.GetString(buffer.PeekToArray());
+			Assert.AreEqual(s, t);
+			
+			t = Encoding.ASCII.GetString(buffer.ToArray());
+			Assert.AreEqual(s, t);
+		}
+
+		[Test]
 		public void Test_Single_Size_Buffer()
 		{
 			var ringBuffer = new BoundedFifoBuffer<byte>(1);

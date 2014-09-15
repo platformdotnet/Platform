@@ -187,43 +187,36 @@ namespace Platform.Collections
 			{
 				throw new BufferUnderflowException();
 			}
-
-			var capacity = this.Capacity;
-			var start = this.position;
-			var end = (this.position + this.Length) % capacity;
-
-			if (start >= end)
+			else
 			{
-				T retval;
+				var capacity = this.Capacity;
+				var start = this.position;
+				var end = (this.position + this.Length) % capacity;
 
-				if (capacity - start > 0)
+				if (start >= end)
 				{
-					retval = this.bytes[start];
+					var x = this.bytes[start];
+
+					if (!peek)
+					{
+						this.Length -= 1;
+						this.position = (this.position + 1) % capacity;
+					}
+
+					return x;
 				}
 				else
 				{
-					retval = this.bytes[0];
+					var x = this.bytes[start];
+
+					if (!peek)
+					{
+						this.Length -= 1;
+						this.position = (this.position + 1) % capacity;
+					}
+
+					return x;
 				}
-
-				if (!peek)
-				{
-					this.Length--;
-					this.position = (this.position + 1) % capacity;
-				}
-
-				return retval;
-			}
-			else
-			{
-				var retval = this.bytes[start];
-
-				if (!peek)
-				{
-					this.Length--;
-					this.position = (this.position + 1) + capacity;
-				}
-
-				return retval;
 			}
 		}
 
