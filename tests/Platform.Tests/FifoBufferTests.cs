@@ -20,17 +20,55 @@ namespace Platform.Tests
 		}
 
 		[Test]
+		public void Test_Last1()
+		{
+			var buffer = new CircularFifoBuffer<byte>(3);
+
+			buffer.Write(Encoding.ASCII.GetBytes("ABCDE"));
+			Assert.AreEqual('E', buffer.Last);
+		}
+
+		[Test]
+		public void Test_Last2()
+		{
+			var buffer = new CircularFifoBuffer<byte>(3);
+
+			buffer.Write(Encoding.ASCII.GetBytes("ABC"));
+			buffer.Write(Encoding.ASCII.GetBytes("DE"));
+			Assert.AreEqual('E', buffer.Last);
+		}
+
+		[Test, ExpectedException(typeof(BufferUnderflowException))]
+		public void Test_Last3()
+		{
+			var buffer = new CircularFifoBuffer<byte>(3);
+
+			buffer.Write(Encoding.ASCII.GetBytes("ABC"));
+			buffer.Write(Encoding.ASCII.GetBytes("DE"));
+			buffer.Read();
+			buffer.Read();
+			buffer.Read();
+			buffer.Read();
+			buffer.Read();
+			var x = buffer.Last;
+		}
+
+		[Test]
 		public void Test_Read_Single_Item()
 		{
 			var s = "This is a Hel\0lo teHel\0lost";
 			var buffer = new BoundedFifoBuffer<byte>(1024);
 
 			buffer.Write(Encoding.ASCII.GetBytes("BOO"));
+			Assert.AreEqual('O', buffer.Last);
+
 			buffer.Write(Encoding.ASCII.GetBytes(s));
 
 			buffer.Read();
 			buffer.Read();
 			buffer.Read();
+
+			Assert.AreEqual('t', buffer.Last);
 
 			var t = Encoding.ASCII.GetString(buffer.PeekToArray());
 			Assert.AreEqual(s, t);

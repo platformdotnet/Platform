@@ -171,6 +171,35 @@ namespace Platform.Collections
 			}
 		}
 
+		public virtual T First
+		{
+			get
+			{
+				if (this.Length == 0)
+				{
+					throw new BufferUnderflowException();
+				}
+
+				return this.Peek();
+			}
+		}
+
+		public virtual T Last
+		{
+			get
+			{
+				if (this.Length == 0)
+				{
+					throw new BufferUnderflowException();
+				}
+
+				var capacity = this.Capacity;
+				var end = (this.position + this.Length) % capacity;
+
+				return this.bytes[MathUtils.Modulus(end - 1, capacity)];
+			}
+		}
+
 		public virtual T Read()
 		{
 			return this.Read(false);
