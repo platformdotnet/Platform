@@ -186,6 +186,7 @@
     <Compile Include="Threading\ThreadPriorityContext.cs" />
     <Compile Include="Triple.cs" />
     <Compile Include="TypeUtils.cs" />
+    <Compile Include="ArrayEqualityComparer.cs" />
     <Compile Include="Validation\BaseValidationAttribute.cs" />
     <Compile Include="Validation\DefaultPropertyValidator.cs" />
     <Compile Include="Validation\DefaultPropertyValidatorProvider.cs" />
