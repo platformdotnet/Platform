@@ -157,6 +157,7 @@
     <Compile Include="Linq\MemberPopulateExpression.cs" />
     <Compile Include="NamedUtils.cs" />
     <Compile Include="ObjectActivator.cs" />
+    <Compile Include="ObjectReferenceIdentityEqualityComparer.cs" />
     <Compile Include="ObjectToObjectProjector.cs" />
     <Compile Include="ObjectUtils.cs" />
     <Compile Include="Operations.cs" />
