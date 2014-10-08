@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Platform.Validation
@@ -68,7 +69,7 @@ namespace Platform.Validation
 				return this;
 			}
 
-			return new ValidationResult(this.ValidationExceptions.Append(validationResult.ValidationExceptions));
+			return new ValidationResult(this.ValidationExceptions.Concat(validationResult.ValidationExceptions));
 		}
 	}
 }

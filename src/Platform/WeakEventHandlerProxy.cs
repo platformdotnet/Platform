@@ -105,16 +105,12 @@ namespace Platform
 				parameters = handlerDelegate.Method.GetParameters();
 
 				dynamicMethod = new DynamicMethod
-					(
+				(
 					"Proxy",
 					handlerDelegate.Method.ReturnType,
-					EnumerableUtils.Chain
-						(
-						new[] { this.GetType() },
-						parameters.Convert(value => value.ParameterType)
-						).ToArray(),
-						this.GetType()
-					);
+					new[] { this.GetType() }.Concat(parameters.Select(value => value.ParameterType)).ToArray(),
+					this.GetType()
+				);
 
 				generator = dynamicMethod.GetILGenerator();
 

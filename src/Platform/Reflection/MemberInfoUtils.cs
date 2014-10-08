@@ -73,7 +73,7 @@ namespace Platform.Reflection
 								break;
 							case MemberTypes.Constructor:
 								var constructorInfo = (ConstructorInfo)memberInfo;
-								memberInfo = type.GetConstructor(constructorInfo.GetParameters().Convert(x => x.ParameterType).ToArray());
+								memberInfo = type.GetConstructor(constructorInfo.GetParameters().Select(x => x.ParameterType).ToArray());
 								break;
 							case MemberTypes.Event:
 								var eventInfo = (EventInfo)memberInfo;
@@ -85,7 +85,7 @@ namespace Platform.Reflection
 								break;
 							case MemberTypes.Method:
 								var methodInfo = (MethodInfo)memberInfo;
-								memberInfo = type.GetMethod(methodInfo.Name, methodInfo.GetParameters().Convert(x => x.ParameterType).ToArray());
+								memberInfo = type.GetMethod(methodInfo.Name, methodInfo.GetParameters().Select(x => x.ParameterType).ToArray());
 								break;
 							default:
 								var memberInfos = type.GetMember(memberInfo.Name);

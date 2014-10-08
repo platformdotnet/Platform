@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Platform
@@ -17,6 +18,26 @@ namespace Platform
 		public static IEnumerable<T> Null<T>()
 		{
 			yield break;
+		}
+
+		public static IEnumerable<T> Concat<T>(this IEnumerable<T> values, T value)
+		{
+			foreach (var obj in values)
+			{
+				yield return obj;
+			}
+
+			yield return value;
+		}
+
+		public static IEnumerable<T> Prepend<T>(this IEnumerable<T> values,  T value)
+		{
+			yield return value;
+
+			foreach (var obj in values)
+			{
+				yield return obj;
+			}
 		}
 
 		/// <summary>
@@ -88,7 +109,7 @@ namespace Platform
 		{
 			var builder = new StringBuilder();
 
-			return enumerable.Convert<T, string>(ObjectUtils.ToString).ComplexFold
+			return enumerable.Select<T, string>(ObjectUtils.ToString).ComplexFold
 			(
 				delegate(string value)
 				{
@@ -233,48 +254,6 @@ namespace Platform
 		}
 
 		/// <summary>
-		/// Converts an IEnumerable from one type to another using the supplied converter
-		/// </summary>
-		/// <typeparam name="T">The original type of the enumerable</typeparam>
-		/// <typeparam name="U">The resultant type of the enumerable</typeparam>
-		/// <param name="source">The source enumerable</param>
-		/// <param name="converter">
-		/// The converter that will convert elements of the source enumerable
-		/// type into elements of the return enumerable type
-		/// </param>
-		/// <returns>
-		/// A new enumerable containing the converted elements from the original enumerable
-		/// </returns>
-		public static IEnumerable<U> Convert<T, U>(this IEnumerable<T> source, Converter<T, U> converter)
-		{
-			foreach (T value in source)
-			{
-				yield return converter(value);
-			}
-		}
-
-		/// <summary>
-		/// Converts an IEnumerable from one type to another using the supplied converter
-		/// </summary>
-		/// <typeparam name="T">The original type of the enumerable</typeparam>
-		/// <typeparam name="U">The resultant type of the enumerable</typeparam>
-		/// <param name="source">The source enumerable</param>
-		/// <param name="converter">
-		/// The converter that will convert elements of the source enumerable
-		/// type into elements of the return enumerable type
-		/// </param>
-		/// <returns>
-		/// A new enumerable containing the converted elements from the original enumerable
-		/// </returns>
-		public static IEnumerable<U> Convert<T, U>(this IEnumerable source, Converter<T, U> converter)
-		{
-			foreach (T value in source)
-			{
-				yield return converter(value);
-			}
-		}
-
-		/// <summary>
 		/// Copy an IEnumerable to a collection class
 		/// </summary>
 		/// <typeparam name="T">
@@ -297,72 +276,6 @@ namespace Platform
 		}
 
 		/// <summary>
-		/// Chains two or more enumerables into a single enumerable
-		/// </summary>
-		/// <param name="enumerables">The array of enumerable objects to chain</param>		
-		public static IEnumerable<T> Chain<T>(params IEnumerable<T>[] enumerables)
-		{
-			foreach(var enumerable in enumerables)
-			{
-				foreach (T value in enumerable)
-				{
-					yield return value;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Appends one or more enumerables to the curren enumerable
-		/// </summary>
-		/// <param name="first">The first enumerable to append the other enumerables to</param>
-		/// <param name="enumerables">The enumerables to append to the first</param>		
-		public static IEnumerable<T> Append<T>(this IEnumerable<T> first, params IEnumerable<T>[] enumerables)
-		{
-			foreach (T eValue in first)
-			{
-				yield return eValue;
-			}
-
-			foreach (var enumerable in enumerables)
-			{
-				foreach (T value in enumerable)
-				{
-					yield return value;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Appends a single element into the end of a given enumerable
-		/// </summary>
-		/// <param name="enumerable">The enumerable to append the element to</param>
-		/// <param name="value">The value to append to the end of the enumerable</param>
-		public static IEnumerable<T> Append<T>(this IEnumerable<T> enumerable, T value)
-		{
-			foreach (T eValue in enumerable)
-			{
-				yield return eValue;
-			}
-
-			yield return value;
-		}
-
-		/// <summary>
-		/// Prepends a single element into the end of a given enumerable
-		/// </summary>
-		/// <param name="enumerable">The enumerable to append the element to</param>
-		/// <param name="value">The value to prepend to the end of the enumerable</param>
-		public static IEnumerable<T> Prepend<T>(this IEnumerable<T> enumerable, T value)
-		{
-			yield return value;
-
-			foreach (T eValue in enumerable)
-			{
-				yield return eValue;
-			}
-		}
-
-		/// <summary>
 		/// Converts an untyped IEnumerable into a typed IEnumerable<T>
 		/// </summary>
 		/// <param name="enumerable"></param>
@@ -373,19 +286,6 @@ namespace Platform
 			{
 				yield return value;
 			}
-		}
-
-		/// <summary>
-		/// Checks if an IEnumerable contains a value
-		/// </summary>
-		public static bool Contains<T>(this IEnumerable<T> enumerable, T value)
-		{
-			return Contains
-				(
-					enumerable,
-					value,
-					(left, right) => left.Equals(right) ? 0 : 1
-				);
 		}
 
 		/// <summary>
@@ -409,34 +309,6 @@ namespace Platform
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Creates a new IEnumerable with items filtered based on the provided predicate
-		/// </summary>
-		public static IEnumerable<T> Filter<T>(this IEnumerable source, Predicate<T> accept)
-		{
-			foreach (T value in source)
-			{
-				if (accept(value))
-				{
-					yield return value;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Creates a new IEnumerable with items filtered based on the provided predicate
-		/// </summary>
-		public static IEnumerable<T> Filter<T>(this IEnumerable<T> source, Predicate<T> accept)
-		{
-			foreach (T value in source)
-			{
-				if (accept(value))
-				{
-					yield return value;
-				}
-			}
 		}
 
 		/// <summary>
@@ -624,95 +496,6 @@ namespace Platform
 					yield return enumerator.Current;
 				}
 			}
-		}
-
-		/// <summary>
-		/// Converts the enumerable to a dictionary using the enumerable values
-		/// as the values in the dictionary.
-		/// </summary>
-		/// <typeparam name="K">The key type</typeparam>
-		/// <typeparam name="V">The value type</typeparam>
-		/// <param name="enumerable">The enumeration of values</param>
-		/// <param name="valueToKey">A converter that converts values to keys</param>
-		/// <returns>A new dictionary</returns>
-		public static Dictionary<K, V> ToDictionaryWithValues<K, V>(this IEnumerable<V> enumerable, Converter<V, K> valueToKey)
-		{
-			var retval = new Dictionary<K, V>();
-
-			foreach (V value in enumerable)
-			{
-				retval[valueToKey(value)] = value;
-			}
-
-			return retval;
-		}
-
-        /// <summary>
-		/// Converts the enumerable to a dictionary using the enumerable values
-		/// as the values in the dictionary.
-		/// </summary>
-		/// <typeparam name="K">The key type</typeparam>
-		/// <typeparam name="V">The value type</typeparam>
-		/// <typeparam name="D">The type of dictionary to create</typeparam>
-		/// <param name="enumerable">The enumeration of values</param>
-		/// <param name="valueToKey">A converter that converts values to keys</param>
-		/// <returns>A new dictionary</returns>
-		public static D ToDictionaryWithValues<K, V, D>(this IEnumerable<V> enumerable, Converter<V, K> valueToKey)
-			where D : IDictionary<K, V>, new()
-		{
-        	var retval = new D();
-            
-			foreach (V value in enumerable)
-			{
-				retval[valueToKey(value)] = value;
-			}
-
-			return retval;
-		}
-
-		/// <summary>
-		/// Converts the enumerable to a dictionary using the enumerable values
-		/// as the values in the dictionary.
-		/// </summary>
-		/// <typeparam name="K">The key type</typeparam>
-		/// <typeparam name="V">The value type</typeparam>
-		/// <param name="enumerable">The enumeration of values</param>
-		/// <param name="keyToValue">A converter that converts keys to values</param>
-		/// <returns>A new dictionary</returns>
-		public static Dictionary<K, V> ToDictionaryWithKeys<K, V>(this IEnumerable<K> enumerable, Converter<K, V> keyToValue)
-		{
-			var retval = new Dictionary<K, V>();
-
-			foreach (K key in enumerable)
-			{
-				retval[key] = keyToValue(key);
-			}
-
-			return retval;
-		}
-
-
-		/// <summary>
-		/// Converts the enumerable to a dictionary using the enumerable values
-		/// as the values in the dictionary.
-		/// </summary>
-		/// <typeparam name="K">The key type</typeparam>
-		/// <typeparam name="V">The value type</typeparam>
-		/// <typeparam name="D">The type of dictionary to create</typeparam>
-		/// <param name="enumerable">The enumeration of values</param>
-		/// <param name="keyToValue">A converter that converts keys to values</param>
-		/// <returns>A new dictionary</returns>
-		public static D ToDictionaryWithKeys<K, V, D>(this IEnumerable<K> enumerable, Converter<K, V> keyToValue)
-			where D : IDictionary<K, V>, new()
-		{
-			var retval = new D();
-
-			foreach (K key in enumerable)
-			{
-				retval[key] = keyToValue(key);
-			}
-
-			return retval;
 		}
 	}
 }

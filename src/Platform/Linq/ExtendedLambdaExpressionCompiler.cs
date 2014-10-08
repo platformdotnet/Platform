@@ -88,7 +88,7 @@ namespace Platform.Linq
 			}
 			else
 			{
-				delegateType = delegateType.MakeGenericType(lambdaExpression.Parameters.Select(c => c.Type).Append(lambdaExpression.Body.Type).ToArray());
+				delegateType = delegateType.MakeGenericType(lambdaExpression.Parameters.Select(c => c.Type).Concat(lambdaExpression.Body.Type).ToArray());
 			}
 
 			dynamicMethod = new DynamicMethod("", lambdaExpression.Body.Type, lambdaExpression.Parameters.Select(c => c.Type).ToArray());

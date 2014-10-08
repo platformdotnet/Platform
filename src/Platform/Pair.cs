@@ -297,7 +297,7 @@ namespace Platform
 		/// <returns>An enumeration of <see cref="KeyValuePair{TKey,TValue}"/></returns>
 		public static IEnumerable<KeyValuePair<A, B>> ToKeyValuePairs(IEnumerable<Pair<A, B>> enumerable)
 		{
-			return enumerable.Convert<Pair<A, B>, KeyValuePair<A, B>>(ToKeyValuePair);
+			return enumerable.Select(ToKeyValuePair);
 		}
 
 		/// <summary>
@@ -308,7 +308,7 @@ namespace Platform
 		/// <returns>An enumeration of <see cref="Pair{A,B}"/></returns>
 		public static IEnumerable<Pair<A, B>> FromKeyValuePairs(IEnumerable<KeyValuePair<A, B>> enumerable)
 		{
-			return enumerable.Convert<KeyValuePair<A, B>, Pair<A, B>>(FromKeyValuePair);
+			return enumerable.Select<KeyValuePair<A, B>, Pair<A, B>>(FromKeyValuePair);
 		}
 
 		public static IEnumerable<Pair<string, string>> FromNameValueCollection(NameValueCollection nameValueCollection)
