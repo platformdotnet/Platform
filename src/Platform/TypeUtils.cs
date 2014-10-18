@@ -6,10 +6,20 @@ namespace Platform
 {
 	public static class TypeUtils
 	{
-		public static readonly Type ListType = typeof(List<>);
-		public static readonly Type IListType = typeof(IList<>);
-		public static readonly Type IEnumerableType = typeof(IEnumerable<>);
-		public static readonly Type IQueryableType = typeof(IQueryable<>);
+		public static Type MakeNullable(this Type type)
+		{
+			if (type.IsClass)
+			{
+				return type;
+			}
+
+			if (Nullable.GetUnderlyingType(type) != null)
+			{
+				return type;
+			}
+
+			return typeof(Nullable<>).MakeGenericType(type);
+		}
 
 		public static Type GetSequenceType(this Type elementType)
 		{
@@ -44,7 +54,7 @@ namespace Platform
 			{
 				var genericType = sequenceType.GetGenericTypeDefinition();
 
-				if (genericType == ListType || genericType == IListType)
+				if (genericType == typeof(List<>) || genericType == (typeof(IList<>)))
 				{
 					return sequenceType.GetGenericArguments()[0];
 				}
@@ -64,14 +74,11 @@ namespace Platform
 
 			if (interfaces != null && interfaces.Length > 0)
 			{
-				foreach (var interfaceType in interfaces)
+				foreach (var element in interfaces
+					.Select(FindSequenceElementType)
+					.Where(element => element != null))
 				{
-					var element = FindSequenceElementType(interfaceType);
-
-					if (element != null)
-					{
-						return element;
-					}
+					return element;
 				}
 			}
 
@@ -113,12 +120,10 @@ namespace Platform
 			{
 				if (convertGenericsToGenericTypeDefinition)
 				{
-					foreach (var interfaceType in type.GetInterfaces())
+					foreach (var interfaceType in type.GetInterfaces()
+						.Where(interfaceType => interfaceType.IsGenericType))
 					{
-						if (interfaceType.IsGenericType)
-						{
-							yield return interfaceType.GetGenericTypeDefinition();
-						}
+						yield return interfaceType.GetGenericTypeDefinition();
 					}
 				}
 				else
