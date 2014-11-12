@@ -44,7 +44,7 @@ namespace Platform.Xml.Serialization.Tests
 			}
 		}
 
-		[Test]
+		[Test, Category("IgnoreOnMono")]
 		public void Test1()
 		{
 			var foo = new Foo();

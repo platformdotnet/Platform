@@ -8,7 +8,7 @@ namespace Platform
 		: IEqualityComparer<T[]>
 	{
 		public static readonly ArrayEqualityComparer<T> Default = new ArrayEqualityComparer<T>(EqualityComparer<T>.Default);
-
+		
 		private readonly IEqualityComparer<T> elementComparer;
 
 		public ArrayEqualityComparer(IEqualityComparer<T> elementComparer)
