@@ -10,8 +10,9 @@ namespace Platform.Reflection
 	public static class MemberInfoUtils
 	{
 		/// <summary>
-		/// Gets and returns the first custom attribute of the given type.
+		/// Gets and returns the first custom attribute of the given member.
 		/// </summary>
+		/// <param name="memberInfo">The target member</param>
 		/// <typeparam name="T">The type of attribute to get an return</typeparam>
 		/// <param name="inherit"></param>
 		/// <returns>The custom attribute or null if one was not found</returns>
@@ -110,31 +111,37 @@ namespace Platform.Reflection
 				values = memberInfo.GetCustomAttributes(typeof(T), false);
 			}
 
-
 			return values.Length > 0 ? (T)values[0] : null;
 		}
 
 		/// <summary>
-		/// Gets the <see cref="FieldInfo.FieldType"/> or <see cref="PropertyInfo.PropertyType"/>
-		/// of the given <see cref="memberInfo"/> depending on the actual instance type of 
-		/// <see cref="memberInfo"/>.
+		/// Gets the return type of a member.
 		/// </summary>
-		/// <param name="memberInfo"></param>
-		/// <returns>The <see cref="FieldInfo.FieldType"/> or <see cref="PropertyInfo.PropertyType"/></returns>
+		/// <returns>The FieldType, PropertyType or ReturnType of the member or null if the member is not a field, property or method</returns>
 		public static Type GetMemberReturnType(this MemberInfo memberInfo)
 		{
-			if (memberInfo is FieldInfo)
+			var fieldInfo = memberInfo as FieldInfo;
+			
+			if (fieldInfo != null)
 			{
-				return ((FieldInfo)memberInfo).FieldType;
+				return fieldInfo.FieldType;
 			}
-			else if (memberInfo is PropertyInfo)
+
+			var propertyInfo = memberInfo as PropertyInfo;
+
+			if (propertyInfo != null)
 			{
-				return ((PropertyInfo)memberInfo).PropertyType;
+				return propertyInfo.PropertyType;
 			}
-			else
+
+			var methodInfo = memberInfo as MethodInfo;
+
+			if (methodInfo != null)
 			{
-				throw new NotSupportedException();
+				return methodInfo.ReturnType;
 			}
+
+			return null;
 		}
 	}
 }

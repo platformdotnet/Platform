@@ -1,13 +1,12 @@
 using System;
 using System.IO;
-using System.Threading;
 
 namespace Platform.IO
 {
 	/// <summary>
 	/// A class that supports copying from one stream into another stream.
 	/// </summary>
-	public class StreamPump
+	public class StreamCopier
 		: AbstractTask
 	{
 		public static readonly int DefaultBufferSize = 8192 * 8;
@@ -73,8 +72,8 @@ namespace Platform.IO
 		protected class BytesReadMeter
 			: Meter
 		{
-			public BytesReadMeter(StreamPump pump)
-				: base(pump)
+			public BytesReadMeter(StreamCopier copier)
+				: base(copier)
 			{
 			}
 
@@ -82,9 +81,9 @@ namespace Platform.IO
 			{
 				get
 				{
-					lock (pump)
+					lock (this.copier)
 					{
-						return pump.bytesRead;
+						return this.copier.bytesRead;
 					}
 				}
 			}
@@ -93,9 +92,9 @@ namespace Platform.IO
 			{
 				get
 				{
-					lock (pump)
+					lock (this.copier)
 					{
-						return pump.sourceLength;
+						return this.copier.sourceLength;
 					}
 				}
 			}
@@ -104,8 +103,8 @@ namespace Platform.IO
 		protected class BytesWrittenMeter
 			: Meter
 		{
-			public BytesWrittenMeter(StreamPump pump)
-				: base(pump)
+			public BytesWrittenMeter(StreamCopier copier)
+				: base(copier)
 			{
 			}
 
@@ -113,9 +112,9 @@ namespace Platform.IO
 			{
 				get
 				{
-					lock (pump)
+					lock (this.copier)
 					{
-						return pump.bytesWritten;
+						return this.copier.bytesWritten;
 					}
 				}
 			}
@@ -124,9 +123,9 @@ namespace Platform.IO
 			{
 				get
 				{
-					lock (pump)
+					lock (this.copier)
 					{
-						return pump.streamProvider.GetSourceLength();
+						return this.copier.streamProvider.GetSourceLength();
 					}
 				}
 			}
@@ -135,18 +134,18 @@ namespace Platform.IO
 		protected abstract class Meter
 			: AbstractMeter
 		{
-			protected StreamPump pump;
+			protected StreamCopier copier;
 
-			protected Meter(StreamPump pump)
+			protected Meter(StreamCopier copier)
 			{
-				this.pump = pump;
+				this.copier = copier;
 			}
 
 			public override object Owner
 			{
 				get
 				{
-					return pump;
+					return this.copier;
 				}
 			}
 
@@ -202,32 +201,32 @@ namespace Platform.IO
 			}
 		}
 
-		public StreamPump(Stream source, Stream destination)
+		public StreamCopier(Stream source, Stream destination)
 			: this(source, destination, true, true)
 		{
 		}
 
-		public StreamPump(Stream source, Stream destination, int bufferSize)
+		public StreamCopier(Stream source, Stream destination, int bufferSize)
 			: this(source, destination, true, true, bufferSize)
 		{
 		}
 
-		public StreamPump(Stream source, Stream destination, bool autoCloseSource, bool autoCloseDestination)
+		public StreamCopier(Stream source, Stream destination, bool autoCloseSource, bool autoCloseDestination)
 			: this(source, destination, autoCloseSource, autoCloseDestination, -1)
 		{
 		}
 
-		public StreamPump(Stream source, Stream destination, bool autoCloseSource, bool autoCloseDestination, int bufferSize)
+		public StreamCopier(Stream source, Stream destination, bool autoCloseSource, bool autoCloseDestination, int bufferSize)
 			: this(new StaticStreamProvider(source, destination), autoCloseSource, autoCloseDestination, bufferSize)
 		{	
 		}
 
-		public StreamPump(IStreamProvider streamProvider, bool autoCloseSource, bool autoCloseDestination)
+		public StreamCopier(IStreamProvider streamProvider, bool autoCloseSource, bool autoCloseDestination)
 			: this(streamProvider, autoCloseSource, autoCloseDestination, -1)
 		{	
 		}
 
-		public StreamPump(IStreamProvider streamProvider, bool autoCloseSource, bool autoCloseDestination, int bufferSize)
+		public StreamCopier(IStreamProvider streamProvider, bool autoCloseSource, bool autoCloseDestination, int bufferSize)
 		{
 			this.streamProvider = streamProvider;
 
@@ -241,7 +240,7 @@ namespace Platform.IO
 			sourceLength = this.streamProvider.GetSourceLength();
 		}
 
-		protected StreamPump(bool autoCloseSource, bool autoCloseDestination, int bufferSize)
+		protected StreamCopier(bool autoCloseSource, bool autoCloseDestination, int bufferSize)
 		{
 			streamProvider = (IStreamProvider)this;
 
@@ -284,14 +283,12 @@ namespace Platform.IO
 
 		public override void DoRun()
 		{
-			int read;
-			bool finished = false;
-			Stream source, destination;
-						
+			var finished = false;
+
 			ProcessTaskStateRequest();
 
-			source = streamProvider.GetSourceStream();
-			destination = streamProvider.GetDestinationStream();
+			var source = this.streamProvider.GetSourceStream();
+			var destination = this.streamProvider.GetDestinationStream();
 
 			try
 			{
@@ -307,7 +304,7 @@ namespace Platform.IO
 
 					while (true)
 					{
-						read = source.Read(buffer, 0, buffer.Length);
+						var read = source.Read(buffer, 0, buffer.Length);
 
 						if (read == 0)
 						{
@@ -381,7 +378,7 @@ namespace Platform.IO
 
 		public static void Copy(Stream inStream, Stream outStream)
 		{
-			new StreamPump(inStream, outStream, true, true).Run();
+			new StreamCopier(inStream, outStream, true, true).Run();
 		}
 	}
 }

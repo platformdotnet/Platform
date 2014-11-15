@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Platform.Tests
 {
@@ -11,7 +10,7 @@ namespace Platform.Tests
 		{
 			var x = new int[] { 1, 2, 3 };
 
-			Assert.AreEqual(6, x.Fold(Operations.Add));
+			Assert.AreEqual(6, x.Fold((a, b) => a + b));
 		}
 
 		[Test]
@@ -19,7 +18,7 @@ namespace Platform.Tests
 		{
 			var x = new int[] { 1, 2, 3 };
 
-			Assert.AreEqual(10, x.Fold(4, Operations.Add));
+			Assert.AreEqual(10, x.Fold(4, (a, b) => a + b));
 		}
 
 		[Test]

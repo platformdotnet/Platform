@@ -1,17 +1,11 @@
-﻿#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-#endregion
+﻿using System;
 
 namespace Platform
 {
 	/// <summary>
-	/// Provides extension methods for the <see cref="int"/> class.
+	/// Provides extension methods for the <see cref="Int32"/> type.
 	/// </summary>
-	public static class IntUtils
+	public static class Int32Utils
 	{
 		/// <summary>
 		/// Gets an integer from a single hex character

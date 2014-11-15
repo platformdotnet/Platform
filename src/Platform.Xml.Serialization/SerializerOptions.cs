@@ -1,12 +1,13 @@
-using Platform.Collections;
+using System.Collections.Generic;
 
 namespace Platform.Xml.Serialization
 {
 	public class SerializerOptions
-		: DictionaryWrapper<string, object>
 	{
 		public static readonly string WriteXmlheader = "WriteXmlheader";
 		private static readonly SerializerOptions empty = new SerializerOptions();
+
+		private readonly Dictionary<string, object> options = new Dictionary<string, object>();
 
 		public static SerializerOptions Empty
 		{
@@ -16,17 +17,22 @@ namespace Platform.Xml.Serialization
 			}
 		}
 
-		public SerializerOptions(params object[] options)
-			: base(null)
+		public object GetOption(string name)
 		{
-			var dictionary = new LinearHashDictionary<string, object>();
+			return this.options[name];
+		}
 
+		public bool TryGetValue(string name, out object value)
+		{
+			return this.options.TryGetValue(name, out value);
+		}
+
+		public SerializerOptions(params object[] options)
+		{
 			for (var i = 0; i < options.Length; i += 2)
 			{
-				dictionary[options[i].ToString()] = options[i + 1];
+				this.options[options[i].ToString()] = options[i + 1];
 			}
-
-			this.Wrappee = dictionary.ToReadOnly();
 		}
 	}
 }

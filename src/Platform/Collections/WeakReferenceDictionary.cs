@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading;
 using Platform.References;
 
 namespace Platform.Collections
@@ -24,7 +23,7 @@ namespace Platform.Collections
 		/// A <see cref="WeakReference{T}"/> that contains a key.
 		/// </summary>
 		public class KeyedWeakReference
-			: Platform.References.WeakReference<V>, IKeyed<K>			
+			: WeakReference<V>, IKeyed<K>			
 		{
 			object IKeyed.Key
 			{
@@ -68,18 +67,16 @@ namespace Platform.Collections
 				return obj == this || keyedReference.Key.Equals(this.Key);
 			}
 		}
-		private readonly System.Threading.Timer cleanerTimer;
 
-		/// <summary>
-		/// Creates a new <see cref="WeakReferenceDictionary{K,V}"/> backed with a
-		/// <see cref="Dictionary{TKey,TValue}"/>.
-		/// </summary>
-		/// <remarks>
-		/// Dead references will be cleaned out (removed) with every read or write operation to the
-		/// dictionary (this is a fast operation based upon <see cref="IReferenceQueue{T}"/>).
-		/// </remarks>
+		private readonly Timer cleanerTimer;
+
 		public WeakReferenceDictionary()
-			: this(typeof(Dictionary<,>))
+			: this(TimeSpan.FromMilliseconds(-1), 0)
+		{
+		}
+
+		public WeakReferenceDictionary(int capacity)
+			: this(TimeSpan.FromMilliseconds(-1), capacity)
 		{
 		}
 
@@ -87,80 +84,34 @@ namespace Platform.Collections
 		/// Creates a new <see cref="WeakReferenceDictionary{K,V}"/> with the provided type
 		/// as the store for the dictionary.
 		/// </summary>
-		/// <remarks>
-		/// Dead references will be cleaned out (removed) with every read or write operation to the
-		/// dictionary (this is a fast operation based upon <see cref="IReferenceQueue{T}"/>).
-		/// </remarks>
-		/// <param name="openGenericDictionaryType">
-		/// The type to use as the store for the current dictionary.  The type must implement
-		/// <see cref="IDictionary{TKey,TValue}"/>.  The provided type should be the open
-		/// (unrealised) generic type.  For example, it should be <c>typeof(Dictionary<,>)</c>
-		/// and not <c>typeof(Dictionary<string, string>)</c>
-		/// </param>
-		/// <param name="constructorArgs">Arguments to pass to the backing dictionary constructor</param>
-		public WeakReferenceDictionary(Type openGenericDictionaryType, params object[] constructorArgs)
-			: this(TimeSpan.FromMilliseconds(-1), openGenericDictionaryType, constructorArgs)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new <see cref="WeakReferenceDictionary{K,V}"/> with the provided type
-		/// as the store for the dictionary.
-		/// </summary>
-		/// <remarks>
-		/// Dead references will be cleaned out (removed) periodically at intervals specified by <see cref="periodicCleanTimeout"/>.
-		/// If <see cref="periodicCleanTimeout"/> is -1 milliseconds then clean out will be performed with 
-		/// every read or write operation (this is a fast operation based upon <see cref="IReferenceQueue{T}"/>).
-		/// If <see cref="periodicCleanTimeout"/> is specified then clean out will not be performed by
-		/// every read or write operation and will only be performed at set intervals determined by the timeout value.
-		/// </remarks>
 		/// <param name="periodicCleanTimeout">The amount of time</param>
-		/// <param name="openGenericDictionaryType">
-		/// The type to use as the store for the current dictionary.  The type must implement
-		/// <see cref="IDictionary{TKey,TValue}"/>.  The provided type should be the open
-		/// (unrealised) generic type.  For example, it should be <c>typeof(Dictionary<,>)</c>
-		/// and not <c>typeof(Dictionary<string, string>)</c>
-		/// </param>
-		/// <param name="constructorArgs">Arguments to pass to the backing dictionary constructor</param>
-		public WeakReferenceDictionary(TimeSpan periodicCleanTimeout, Type openGenericDictionaryType, params object[] constructorArgs)
-			: base(openGenericDictionaryType, constructorArgs)
+		/// <param name="capacity">The initial capacity of the dictionary</param>
+		public WeakReferenceDictionary(TimeSpan periodicCleanTimeout, int capacity)
+			: base(capacity)
 		{
-			if (periodicCleanTimeout.TotalMilliseconds != -1)
+			if ((int)periodicCleanTimeout.TotalMilliseconds != -1)
 			{
-				cleanerTimer = new System.Threading.Timer(OnTimer, null, (int)Math.Round(periodicCleanTimeout.TotalMilliseconds / 2), (int)Math.Round(periodicCleanTimeout.TotalMilliseconds / 2));
-			}
-		}
-
-		/// <summary>
-		/// Creates a new <see cref="WeakReferenceDictionary{K,V}"/> backed with a
-		/// <see cref="Dictionary{TKey,TValue}"/>.
-		/// </summary>
-		/// <remarks>
-		/// Dead references will be cleaned out (removed) periodically at intervals specified by <see cref="periodicCleanTimeout"/>.
-		/// If <see cref="periodicCleanTimeout"/> is -1 milliseconds then clean out will be performed with 
-		/// every read or write operation (this is a fast operation based upon <see cref="IReferenceQueue{T}"/>).
-		/// If <see cref="periodicCleanTimeout"/> is specified then clean out will not be performed by
-		/// every read or write operation and will only be performed at set intervals determined by the timeout value.
-		/// </remarks>
-		/// <param name="periodicCleanTimeout">The amount of time</param>
-		public WeakReferenceDictionary(TimeSpan periodicCleanTimeout)
-			: this(periodicCleanTimeout, typeof(Dictionary<,>))
-		{
-			if (periodicCleanTimeout.TotalMilliseconds != -1)
-			{
-				cleanerTimer = new System.Threading.Timer(OnTimer, null, (int)Math.Round(periodicCleanTimeout.TotalMilliseconds / 2), (int)Math.Round(periodicCleanTimeout.TotalMilliseconds / 2));
+				cleanerTimer = new Timer(OnTimer, null, (int)Math.Round(periodicCleanTimeout.TotalMilliseconds / 2), (int)Math.Round(periodicCleanTimeout.TotalMilliseconds / 2));
 			}
 		}
 
 		~WeakReferenceDictionary()
 		{
-			System.Threading.Timer timer = cleanerTimer;
+			this.Dispose(false);
+		}
 
-			if (timer != null)
+		public void Dispose()
+		{
+			this.Dispose(true);
+
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
 			{
-				timer.Dispose();
-
-				timer = null;
+				this.cleanerTimer.Dispose();
 			}
 		}
 
@@ -197,7 +148,7 @@ namespace Platform.Collections
 		/// <returns>A new <see cref="KeyedWeakReference"/></returns>
 		protected override KeyedWeakReference CreateReference(K key, V value)
 		{
-			return new KeyedWeakReference(key, value, referenceQueue);
+			return new KeyedWeakReference(key, value, this.referenceQueueBase);
 		}
 	}
 }

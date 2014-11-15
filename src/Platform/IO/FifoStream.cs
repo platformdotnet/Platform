@@ -150,7 +150,7 @@ namespace Platform.IO
 		{
 		    lock (this)
 			{
-				for (;;)
+				while (true)
 				{
 					if (length == 0)
 					{

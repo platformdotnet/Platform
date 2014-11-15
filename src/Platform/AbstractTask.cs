@@ -9,7 +9,7 @@ namespace Platform
     /// The class provides support for accepting and processing messages to perform
     /// task operations such as <see cref="Start()"/> and <see cref="Stop()"/>
     /// </summary>
-    public abstract partial class AbstractTask
+    public abstract class AbstractTask
         : ITask
     {
         #region TaskAsyncStateAndImplementationHelper

@@ -1,6 +1,3 @@
-using System;
-using Platform;
-
 namespace Platform
 {
 	/// <summary>

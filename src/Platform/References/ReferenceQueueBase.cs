@@ -9,8 +9,8 @@ namespace Platform.References
 	/// enqueued.  The <see cref="Dequeue()"/> methods all block until a <see cref="Reference{T}"/>
 	/// is next available on the queue.
 	/// </summary>
-	public class ReferenceQueue<T>
-		: Platform.Collections.AbstractQueue<Reference<T>>, IReferenceQueue<T>
+	public class ReferenceQueueBase<T>
+		: Collections.QueueBase<Reference<T>>, IReferenceQueue<T>
 		where T : class
 	{
 		private Reference<T> firstReference;
@@ -36,7 +36,7 @@ namespace Platform.References
 
 		public override bool TryPeek(out Reference<T> value)
 		{
-			lock (this.SyncLock)
+			lock (this)
 			{
 				if (firstReference == null)
 				{
@@ -53,7 +53,7 @@ namespace Platform.References
 
 		public override bool TryDequeue(out Reference<T> value)
 		{
-			lock (this.SyncLock)
+			lock (this)
 			{
 				if (firstReference == null || lastReference == null)
                 {
@@ -101,13 +101,13 @@ namespace Platform.References
 
 		public virtual bool TryDequeue(TimeSpan timeout, out Reference<T> value)
 		{
-			lock (this.SyncLock)
+			lock (this)
 			{
 				for (;;)
 				{
 					if (!TryDequeue(out value))
 					{
-						if (!Monitor.Wait(this.SyncLock, timeout))
+						if (!Monitor.Wait(this, timeout))
 						{
 							return false;
 						}
@@ -122,7 +122,7 @@ namespace Platform.References
 
 		public override void Enqueue(Reference<T> reference)
 		{
-			lock (this.SyncLock)
+			lock (this)
 			{
 				if (firstReference == null)
 				{
@@ -136,7 +136,7 @@ namespace Platform.References
 					lastReference = reference;
 				}
 
-				Monitor.PulseAll(this.SyncLock);
+				Monitor.PulseAll(this);
 			}
 		}
 	}

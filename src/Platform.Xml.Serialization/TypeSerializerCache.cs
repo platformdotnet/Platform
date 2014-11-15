@@ -1,13 +1,12 @@
 using System;
-using System.Reflection;
-using Platform.Collections;
+using System.Collections.Generic;
 
 namespace Platform.Xml.Serialization
 {
 	public class TypeSerializerCache		
 	{		
 		private readonly TypeSerializerFactory typeSerializerFactory;
-		private readonly ILDictionary<Pair<Type, object>, TypeSerializer> cache;
+		private readonly Dictionary<Pair<Type, object>, TypeSerializer> cache;
 
 		/// <summary>
 		/// 
@@ -16,7 +15,7 @@ namespace Platform.Xml.Serialization
 		public TypeSerializerCache(TypeSerializerFactory typeSerializerFactory)
 		{
 			this.typeSerializerFactory = typeSerializerFactory;
-			cache = new LinearHashDictionary<Pair<Type, object>, TypeSerializer>();
+			cache = new Dictionary<Pair<Type, object>, TypeSerializer>();
 		}
 
 		/// <summary>

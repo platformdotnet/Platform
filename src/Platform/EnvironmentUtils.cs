@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Collections.Generic;
-using System.Text;
 using Platform.IO;
 
 namespace Platform
@@ -58,19 +58,17 @@ namespace Platform
 		/// <param name="dateTime">The <see cref="DateTime"/></param>
 		internal static void LinuxSetSystemTime(DateTime dateTime)
 		{
-			string dateTimeString;
-			Process process;
-			ProcessStartInfo startInfo;
+			var dateTimeString = dateTime.ToUniversalTime().ToString("MM/dd/yyyy HH:mm:ss");
 
-			dateTimeString = dateTime.ToUniversalTime().ToString("MM/dd/yyyy HH:mm:ss");
+			var startInfo = new ProcessStartInfo("/bin/date", String.Format(@"--utc --set=""{0}""", dateTimeString))
+			{
+				UseShellExecute = false,
+				RedirectStandardOutput = true,
+				RedirectStandardError = true
+			};
 
-			startInfo = new ProcessStartInfo("/bin/date", String.Format(@"--utc --set=""{0}""", dateTimeString));
+			var process = Process.Start(startInfo);
 
-			startInfo.UseShellExecute = false;
-			startInfo.RedirectStandardOutput = true;
-			startInfo.RedirectStandardError = true;
-
-			process = Process.Start(startInfo);
 			process.StandardOutput.DiscardToEnd();
 			process.StandardError.DiscardToEnd();
 			process.WaitForExit();
@@ -109,6 +107,24 @@ namespace Platform
 			st.milliseconds = (short)trts.Millisecond;
 
 			SetSystemTime(ref st);
+		}
+
+		/// <summary>
+		/// Gets the path that the current application resides in
+		/// </summary>
+		public static string ApplicationPath
+		{
+			get
+			{
+				// GetEntryAssembly may return null if the application is started
+				// from native code (by TestDrive.NET for example)
+
+				var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
+
+				var uriCodebase = new Uri(assembly.CodeBase);
+
+				return Path.GetDirectoryName(uriCodebase.LocalPath);
+			}
 		}
 	}
 }

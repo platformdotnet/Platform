@@ -1,17 +1,11 @@
-#region Using directives
-
 using System;
-using System.Collections.Generic;
-using System.Text;
-
-#endregion
 
 namespace Platform
 {
 	/// <summary>
 	/// Defines operations that can be performed on functions such as currying.
 	/// </summary>
-	public static class FunctionUtils
+	public static class FuncUtils
 	{
 		/// <summary>
 		/// Takes a function (<paramref name="ff"/>) and returns a function that converts the return value of the 

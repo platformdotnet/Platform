@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Platform.References;
 
 namespace Platform.Collections
@@ -90,7 +89,7 @@ namespace Platform.Collections
 			}
 		}
 
-		public virtual TimeSpan TimeOut
+		public TimeSpan TimeOut
 		{
 			get;
 			protected set;
@@ -100,13 +99,15 @@ namespace Platform.Collections
 		private readonly int maximumCount = -1;
 		private volatile bool cleanOnNext = false;
 
+
 		/// <summary>
-		/// Creates a new <see cref="WeakReferenceDictionary{K,V}"/> backed by a <see cref="Dictionary{K, V}"/>.
+		/// Creates a new <see cref="WeakReferenceDictionary{K,V}"/> with the provided type
+		/// as the store for the dictionary.
 		/// </summary>
 		/// <param name="timeout">The amount of time each item in the dictionary will be guaranteed to be uncollected for</param>
 		public TimedReferenceDictionary(TimeSpan timeout)
-			: this(timeout, typeof(Dictionary<,>))
-		{
+			: this(timeout, null)
+		{	
 		}
 
 		/// <summary>
@@ -114,20 +115,15 @@ namespace Platform.Collections
 		/// as the store for the dictionary.
 		/// </summary>
 		/// <param name="timeout">The amount of time each item in the dictionary will be guaranteed to be uncollected for</param>
-		/// <param name="openGenericDictionaryType">
-		/// The type to use as the store for the current dictionary.  The type must implement
-		/// <see cref="IDictionary{TKey,TValue}"/>.  The provided type should be the open
-		/// (unrealised) generic type.  For example, it should be <c>typeof(Dictionary<,>)</c>
-		/// and not <c>typeof(Dictionary<string, string>)</c>
-		/// </param>
-		/// <param name="constructorArgs">Arguments to pass to the backing dictionary constructor</param>
-		public TimedReferenceDictionary(TimeSpan timeout, Type openGenericDictionaryType, params object[] constructorArgs)
-			: this(timeout, -1, openGenericDictionaryType, constructorArgs)
+		/// <param name="comparer">The comparer for the keys</param>
+		public TimedReferenceDictionary(TimeSpan timeout, IEqualityComparer<K> comparer)
+			: this(timeout, -1, comparer)
 		{
 		}
-		
+
 		/// <summary>
-		/// Creates a new <see cref="WeakReferenceDictionary{K,V}"/> backed by a <see cref="Dictionary{K, V}"/>.
+		/// Creates a new <see cref="WeakReferenceDictionary{K,V}"/> with the provided type
+		/// as the store for the dictionary.
 		/// </summary>
 		/// <param name="timeout">
 		/// The amount of time each item in the dictionary will be guaranteed to be uncollected for
@@ -136,10 +132,10 @@ namespace Platform.Collections
 		/// The maximum number of items allowed in the dictionary.  Pass -1 for no limit.
 		/// </param>
 		public TimedReferenceDictionary(TimeSpan timeout, int maximumCount)
-			: this(timeout, maximumCount, typeof(Dictionary<,>))
-		{
+			: this(timeout, maximumCount, null)
+		{	
 		}
-        
+
 		/// <summary>
 		/// Creates a new <see cref="WeakReferenceDictionary{K,V}"/> with the provided type
 		/// as the store for the dictionary.
@@ -150,15 +146,9 @@ namespace Platform.Collections
 		/// <param name="maximumCount">
 		/// The maximum number of items allowed in the dictionary.  Pass -1 for no limit.
 		/// </param>
-		/// <param name="openGenericDictionaryType">
-		/// The type to use as the store for the current dictionary.  The type must implement
-		/// <see cref="IDictionary{TKey,TValue}"/>.  The provided type should be the open
-		/// (unrealised) generic type.  For example, it should be <c>typeof(Dictionary<,>)</c>
-		/// and not <c>typeof(Dictionary<string, string>)</c>
-		/// </param>
-		/// <param name="constructorArgs">Arguments to pass to the backing dictionary constructor</param>
-		public TimedReferenceDictionary(TimeSpan timeout, int maximumCount, Type openGenericDictionaryType, params object[] constructorArgs)
-			: base(openGenericDictionaryType, constructorArgs)
+		/// <param name="comparer">The comparer for the keys</param>
+		public TimedReferenceDictionary(TimeSpan timeout, int maximumCount,  IEqualityComparer<K> comparer)
+			: base(comparer)
 		{
 			this.TimeOut = timeout;
 			
@@ -194,7 +184,7 @@ namespace Platform.Collections
 		/// <returns>True if the item was found and returned otherwise False</returns>
 		public override bool TryGetValue(K key, out V value)
 		{
-			lock (this.SyncLock)
+			lock (this)
 			{
 				KeyedTimedReference reference;
 
@@ -228,7 +218,7 @@ namespace Platform.Collections
 		/// <param name="state">Will always be null</param>
 		protected virtual void OnTimer(object state)
 		{
-			lock (this.SyncLock)
+			lock (this)
 			{
 				CheckMaximumCount();
 
@@ -301,7 +291,7 @@ namespace Platform.Collections
 		/// </summary>
 		private void CheckMaximumCount()
 		{
-			lock (this.SyncLock)
+			lock (this)
 			{
 				if (maximumCount != -1 && dictionary.Count >= maximumCount + lastMaximumFlushCount)
 				{
@@ -314,11 +304,11 @@ namespace Platform.Collections
 						int originalCount = this.Count;
 						int smallestIndex = -1;
 						DateTime smallestTime = DateTime.MaxValue;
-						ILList<TimedReferenceDictionary<K, V>.KeyedTimedReference> removeList;
+						IList<KeyedTimedReference> removeList;
 
 						Action routine = delegate
 						{
-							removeList = new ArrayList<TimedReferenceDictionary<K, V>.KeyedTimedReference>(removeCount);
+							removeList = new List<KeyedTimedReference>(removeCount);
 
 							foreach (var reference in dictionary.Values)
 							{
@@ -373,7 +363,7 @@ namespace Platform.Collections
 		/// <returns>A new <see cref="TimedReferenceDictionary{K, V}"/></returns>
 		protected override TimedReferenceDictionary<K, V>.KeyedTimedReference CreateReference(K key, V value)
 		{
-			return new KeyedTimedReference(key, value, referenceQueue, this.TimeOut);
+			return new KeyedTimedReference(key, value, this.referenceQueueBase, this.TimeOut);
 		}
 	}
 }

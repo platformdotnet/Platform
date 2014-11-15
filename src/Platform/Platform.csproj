@@ -28,7 +28,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -67,6 +67,8 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -116,35 +118,24 @@
     <Compile Include="Action.cs" />
     <Compile Include="ActionUtils.cs" />
     <Compile Include="ActivatorUtils.cs" />
-    <Compile Include="ApplicationUtils.cs" />
     <Compile Include="BigEndianByteQuad.cs" />
     <Compile Include="CachedValue.cs" />
-    <Compile Include="Clock.cs" />
     <Compile Include="Collections\BoundedFifoBuffer.cs" />
     <Compile Include="Collections\BufferOverflowException.cs" />
     <Compile Include="Collections\BufferUnderflowException.cs" />
     <Compile Include="Collections\CircularFifoBuffer.cs" />
+    <Compile Include="Collections\CollectionBase.cs" />
     <Compile Include="Collections\ListUtils.cs" />
-    <Compile Include="Collections\ReadOnlyList.cs" />
-    <Compile Include="Collections\DictionaryEventArgs.cs" />
-    <Compile Include="Collections\ItemNotFoundException.cs" />
-    <Compile Include="Collections\ReadOnlyDictionary.cs" />
     <Compile Include="Collections\ReferenceDictionaryEventArgs.cs" />
-    <Compile Include="Collections\SortedListView.cs" />
     <Compile Include="ComparisonComparator.cs" />
     <Compile Include="ConfigurationBlock.cs" />
     <Compile Include="DataflowDirection.cs" />
-    <Compile Include="DateTimeClock.cs" />
     <Compile Include="DateTimeFormats.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="EnvironmentUtils.cs" />
-    <Compile Include="EqualityComparison.cs" />
     <Compile Include="Func.cs" />
-    <Compile Include="Function.cs" />
-    <Compile Include="FunctionBasedEqualityComparer.cs" />
-    <Compile Include="FunctionUtils.cs" />
+    <Compile Include="FuncUtils.cs" />
     <Compile Include="HashValue.cs" />
-    <Compile Include="HighPerformanceClock.cs" />
     <Compile Include="IAutoLock.cs" />
     <Compile Include="IO\ILineReader.cs" />
     <Compile Include="IO\IStreamWithEvents.cs" />
@@ -153,17 +144,12 @@
     <Compile Include="LeftOrRight.cs" />
     <Compile Include="AbstractTask.cs" />
     <Compile Include="Linq\ExpressionVisitor.cs" />
-    <Compile Include="Linq\ExtendedLambdaExpressionCompiler.cs" />
-    <Compile Include="Linq\MemberPopulateExpression.cs" />
+    <Compile Include="MeterEventArgs.cs" />
     <Compile Include="NamedUtils.cs" />
     <Compile Include="ObjectActivator.cs" />
     <Compile Include="ObjectReferenceIdentityEqualityComparer.cs" />
-    <Compile Include="ObjectToObjectProjector.cs" />
     <Compile Include="ObjectUtils.cs" />
-    <Compile Include="Operations.cs" />
     <Compile Include="Pair.cs" />
-    <Compile Include="PerformanceTimer.cs" />
-    <Compile Include="ProjectionContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quad.cs" />
     <Compile Include="Reflection\AssemblyUtils.cs" />
@@ -180,10 +166,6 @@
     <Compile Include="Text\CharArrayReader.cs" />
     <Compile Include="ISyncLocked.cs" />
     <Compile Include="Text\RegularExpressions\RegexCache.cs" />
-    <Compile Include="Text\TextFieldAttribute.cs" />
-    <Compile Include="Text\TextReaderConverter.cs" />
-    <Compile Include="Text\TextRecordAttribute.cs" />
-    <Compile Include="Text\TextSerializer.cs" />
     <Compile Include="Threading\ThreadPriorityContext.cs" />
     <Compile Include="Triple.cs" />
     <Compile Include="TypeUtils.cs" />
@@ -228,34 +210,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CharUtils.cs" />
-    <Compile Include="Collections\AbstractCollection.cs" />
-    <Compile Include="Collections\AbstractDictionary.cs" />
-    <Compile Include="Collections\AbstractList.cs" />
-    <Compile Include="Collections\AbstractQueue.cs" />
-    <Compile Include="Collections\AbstractRandomAccessList.cs" />
-    <Compile Include="Collections\AbstractSequentialAccessList.cs" />
-    <Compile Include="Collections\ArrayBucketHashDictionary.cs" />
-    <Compile Include="Collections\LinearHashDictionary.cs" />
-    <Compile Include="Collections\ArrayList.cs" />
+    <Compile Include="Collections\QueueBase.cs" />
     <Compile Include="Collections\ArrayQueue.cs" />
     <Compile Include="Collections\BlockingQueue.cs" />
-    <Compile Include="Collections\ILBlockingQueue.cs" />
-    <Compile Include="Collections\LinkedListQueue.cs" />
-    <Compile Include="Collections\ListWrapper.cs" />
+    <Compile Include="Collections\IBlockingQueue.cs" />
     <Compile Include="Collections\CollectionEnumerable.cs" />
-    <Compile Include="Collections\CollectionEventArgs.cs" />
-    <Compile Include="Collections\CollectionWrapper.cs" />
-    <Compile Include="Collections\DictionaryWrapper.cs" />
-    <Compile Include="Collections\ILCollection.cs" />
-    <Compile Include="Collections\ILDictionary.cs" />
-    <Compile Include="Collections\ILList.cs" />
-    <Compile Include="Collections\ILQueue.cs" />
-    <Compile Include="Collections\ListEventArgs.cs" />
-    <Compile Include="Collections\IReverseEnumerable.cs" />
-    <Compile Include="Collections\LinkedBucketHashDictionary.cs" />
-    <Compile Include="Collections\DoublyLinkedList.cs" />
-    <Compile Include="Collections\ListBackedQueue.cs" />
-    <Compile Include="Collections\QueueWrapper.cs" />
+    <Compile Include="Collections\IQueue.cs" />
     <Compile Include="Collections\ReferenceDictionary.cs" />
     <Compile Include="Collections\TimedReferenceDictionary.cs" />
     <Compile Include="Collections\WeakReferenceDictionary.cs" />
@@ -265,16 +225,13 @@
     <Compile Include="INamed.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IntUtils.cs" />
+    <Compile Include="Int32Utils.cs" />
     <Compile Include="IO\ChunkingStream.cs" />
     <Compile Include="IO\FifoStream.cs" />
-    <Compile Include="IO\Int16ByteArrayAdapter.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="IO\PartialStream.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IO\StreamPump.cs">
+    <Compile Include="IO\StreamCopier.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IO\StreamUtils.cs">
@@ -292,7 +249,6 @@
     <Compile Include="IRunnable.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ISelectable.cs" />
     <Compile Include="IValued.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -325,9 +281,6 @@
     </Compile>
     <Compile Include="References\IReferenceQueue.cs" />
     <Compile Include="ITuple.cs" />
-    <Compile Include="ObjectFilters.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="PredicateUtils.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -337,7 +290,7 @@
     <Compile Include="References\Reference.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="References\ReferenceQueue.cs">
+    <Compile Include="References\ReferenceQueueBase.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="References\TimedReference.cs">
@@ -361,7 +314,7 @@
     <Compile Include="Threading\MeterValueEvent.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Converters.cs">
+    <Compile Include="ConverterUtils.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StringUriUtils.cs">
@@ -376,7 +329,6 @@
     <Compile Include="Utilities\CommandLineOptionsSerializer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="EqualityComparerUtils.cs" />
     <Compile Include="Utilities\InvocationQueue.cs" />
     <Compile Include="IObjectCache.cs" />
     <Compile Include="Utilities\RecylingObjectPool.cs" />

@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Platform.Collections
 {
@@ -12,8 +10,8 @@ namespace Platform.Collections
 	/// an item is available or any specified timeout expires.
 	/// </remarks>
 	/// <typeparam name="T"></typeparam>
-	interface ILBlockingQueue<T>
-		: ILQueue<T>
+	interface IBlockingQueue<T>
+		: IQueue<T>
 	{
 		/// <summary>
 		/// Gets the next item in the queue.

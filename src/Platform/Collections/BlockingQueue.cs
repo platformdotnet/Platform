@@ -1,59 +1,59 @@
 using System;
 using System.Threading;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Platform.Collections
 {
-	/// <summary>
-	/// Adapts any <see cref="ILQueue{T}"/> implementation into a queue 
-	/// which which supports blocked dequeue operations.
-	/// </summary>
-	/// <remarks>
-	/// Blocking queues block on all dequeue operations until
-	/// an item is available or any specified timeout expires.
-	/// </remarks>
-	/// <typeparam name="T"></typeparam>
-	public class BlockingQueueAdapter<T>
-		: QueueWrapper<T>, ILBlockingQueue<T>
+	public class BlockingQueue<T>
+		: QueueBase<T>, IBlockingQueue<T>
 	{
-		private readonly object monitor = new object();
+		public static readonly TimeSpan DefaultTimeout = TimeSpan.FromMilliseconds(-1);
 
-		public BlockingQueueAdapter(ILQueue<T> wrappee)
-			: base(wrappee)
+		private readonly IQueue<T> queue;
+		private readonly object lockObject = new object();
+
+		public BlockingQueue()
+			: this(new ArrayQueue<T>())
+		{	
+		}
+
+		public BlockingQueue(IQueue<T> backingQueue)
+			: this(backingQueue, DefaultTimeout)
 		{
-			this.AfterItemAdded += delegate
+		}
+
+		public BlockingQueue(IQueue<T> backingQueue, TimeSpan timeout)
+		{
+			this.queue = backingQueue;
+		}
+
+		public override int Count
+		{
+			get
 			{
-				lock (monitor)
+				lock (this.lockObject)
 				{
-					Monitor.PulseAll(monitor);
+					return queue.Count;
 				}
-			};		
+			}
 		}
 
 		public override void Enqueue(T item)
 		{
-			lock (this.SyncLock)
+			lock (this.lockObject)
 			{
-				base.Enqueue(item);	
-			}
+				this.queue.Enqueue(item);
 
-			lock (monitor)
-			{
-				Monitor.Pulse(monitor);
+				Monitor.Pulse(this.lockObject);
 			}
 		}
 
 		public override void Enqueue(T[] items, int offset, int count)
 		{
-			lock (this.SyncLock)
+			lock (this.lockObject)
 			{
-				base.Enqueue(items, offset, count);	
-			}
+				this.queue.Enqueue(items, offset, count);
 
-			lock (monitor)
-			{				
-				Monitor.Pulse(monitor);
+				Monitor.Pulse(this.lockObject);
 			}
 		}
 
@@ -83,18 +83,37 @@ namespace Platform.Collections
 
 		public override bool TryDequeue(out T value)
 		{
-			return TryDequeue(TimeSpan.FromMilliseconds(Timeout.Infinite), out value);
+			return TryDequeue(DefaultTimeout, out value);
+		}
+
+		public override bool TryPeek(out T value)
+		{
+			lock (this.lockObject)
+			{
+				if (this.Count == 0)
+				{
+					value = default(T);
+
+					return false;
+				}
+				else
+				{
+					value = this.queue.Peek();
+
+					return true;
+				}
+			}
 		}
 
 		public virtual bool TryDequeue(TimeSpan timeout, out T value)
 		{
-			lock (monitor)
+			lock (this.lockObject)
 			{
-				for (;;)
+				while (true)
 				{
 					if (this.Count == 0)
 					{
-						if (!Monitor.Wait(monitor, timeout))
+						if (!Monitor.Wait(this.lockObject, timeout))
 						{
 							value = default(T);
 
@@ -106,11 +125,8 @@ namespace Platform.Collections
 						break;	
 					}
 				}
-			}
 
-			lock (this.SyncLock)
-			{
-				value = base.Dequeue();
+				value = this.queue.Dequeue();
 			}
 
 			return true;

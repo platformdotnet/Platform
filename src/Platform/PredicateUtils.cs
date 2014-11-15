@@ -237,7 +237,7 @@ namespace Platform
 		{
 			int x = 0;
 
-			return value => x >= objects.Length ? false : value.Equals(objects[x++]);
+			return value => x < objects.Length && value.Equals(objects[x++]);
 		}
 
 		/// <summary>
@@ -258,7 +258,7 @@ namespace Platform
 		{
 			int x = objects.Length - 1;
 
-			return value => x < 0 ? false : value.Equals(objects[x--]);
+			return value => x >= 0 && value.Equals(objects[x--]);
 		}
 	}
 }

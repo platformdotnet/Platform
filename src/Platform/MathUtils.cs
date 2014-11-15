@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Platform
 {
@@ -99,24 +100,12 @@ namespace Platform
 		/// <returns>The minimum of all the provided values</returns>
 		public static int Min(params int[] args)
 		{
-			int retval;
-
 			if (args.Length < 2)
 			{
 				throw new ArgumentException("Must provide at least two values");
 			}
 
-			retval = int.MaxValue;
-
-			foreach (int value in args)
-			{
-				if (value < retval)
-				{
-					retval = value;	
-				}
-			}
-
-			return retval;
+			return args.Concat(new[] { int.MaxValue }).Min();
 		}
 
 		/// <summary>
@@ -162,24 +151,12 @@ namespace Platform
 		/// <returns>The maximum of all the provided values</returns>
 		public static int Max(params int[] args)
 		{
-			int retval;
-
 			if (args.Length < 2)
 			{
 				throw new ArgumentException("Must provide at least two values");
 			}
 
-			retval = int.MinValue;
-
-			foreach (int value in args)
-			{
-				if (value > retval)
-				{
-					retval = value;
-				}
-			}
-
-			return retval;
+			return args.Concat(new[] { int.MinValue }).Max();
 		}
 
 		public static int Modulus(int value, int n)

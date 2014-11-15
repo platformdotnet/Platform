@@ -145,37 +145,34 @@ namespace Platform.IO
 		/// </param>
 		/// <returns></returns>
 		public static string ReadLineUnbuffered(this Stream stream, Encoding encoding, int maxBytes)
-		{			
-			int charCount;
-			int maxCharCount;
-			int lastByte = -1;
-			int byteCount = 0;
-			Pair<byte[], int> retval;
+		{
+			var lastByte = -1;
+			var byteCount = 0;
 
 			if (encoding != Encoding.UTF8 && encoding != Encoding.ASCII)
 			{
 				throw new ArgumentException(encoding.ToString(), "encoding");
 			}
 
-			retval = stream.ReadDynamicBlock(delegate(byte x)
+			var retval = stream.ReadDynamicBlock(delegate(byte x)
+			{
+				if (x == '\n' && lastByte == '\r')
 				{
-					if (x == '\n' && lastByte == '\r')
-					{
-						return false;
-					}
+					return false;
+				}
 
-					lastByte = x;
-					byteCount++;
+				lastByte = x;
+				byteCount++;
 
-					if (byteCount > maxBytes)
-					{
-						throw new OverflowException();
-					}
+				if (byteCount > maxBytes)
+				{
+					throw new OverflowException();
+				}
 
-					return true;
-				});
+				return true;
+			});
 
-			maxCharCount = encoding.GetMaxCharCount(retval.Right);
+			var maxCharCount = encoding.GetMaxCharCount(retval.Right);
 
 			if (t_CharBuffer == null
 				|| (t_CharBuffer != null && maxCharCount > t_CharBuffer.Length))
@@ -190,7 +187,7 @@ namespace Platform.IO
 				Array.Resize(ref t_CharBuffer, newLength);
 			}
 
-			charCount = Encoding.UTF8.GetChars(retval.Left, 0, lastByte == '\r' ? retval.Right - 1 : retval.Right, t_CharBuffer, 0);
+			var charCount = Encoding.UTF8.GetChars(retval.Left, 0, lastByte == '\r' ? retval.Right - 1 : retval.Right, t_CharBuffer, 0);
 
 			return new string(t_CharBuffer, 0, charCount);
 		}

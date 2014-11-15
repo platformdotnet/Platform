@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Platform.Collections
 {
 	/// <summary>
 	/// An queue implementation that uses an array as a store.
 	/// </summary>
-	/// <typeparam name="T">The type of object stored in the stack</typeparam>
 	public class ArrayQueue<T>
-		: AbstractQueue<T>
+		: QueueBase<T>
 	{
-		protected const int DefaultInitialCapacity = 0x10;
+		protected const int DefaultInitialCapacity = 16;
 
 		private int count;
 		private T[] array;
@@ -31,7 +29,7 @@ namespace Platform.Collections
 		private void Grow()
 		{
 			int newLength;
-			T[] oldArray = array;
+			var oldArray = array;
 
 			if (count == Int32.MaxValue)
 			{
@@ -49,13 +47,11 @@ namespace Platform.Collections
 
 			array = new T[newLength];
 
-			int x, y;
+			var y = 0;
 
-			y = 0;
-
-			for (int i = startIndex; i < startIndex + count; i++)
+			for (var i = startIndex; i < startIndex + count; i++)
 			{
-				x = i % oldArray.Length;
+				var x = i % oldArray.Length;
 
 				array[y++] = oldArray[x];
 			}
@@ -115,6 +111,7 @@ namespace Platform.Collections
 				return count;
 			}
 		}
+		
 		public override IEnumerator<T> GetEnumerator()
 		{
 		    for (var i = startIndex; i < startIndex + count; i++)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Platform.Collections;
 
 namespace Platform.Xml.Serialization
@@ -9,8 +10,8 @@ namespace Platform.Xml.Serialization
 	public class CachingXmlSerializerFactory
 		: XmlSerializerFactory
 	{
-		private ILDictionary<Pair<Type, SerializerOptions>, object> cache;
-		private ILDictionary<Pair<Type, SerializerOptions>, object> cacheForDynamic;
+		private IDictionary<Pair<Type, SerializerOptions>, object> cache;
+		private IDictionary<Pair<Type, SerializerOptions>, object> cacheForDynamic;
 
 		/// <summary>
 		/// <see cref="XmlSerializerFactory.NewXmlSerializer{T}()<>"/>
@@ -40,7 +41,7 @@ namespace Platform.Xml.Serialization
 
 			if (this.cacheForDynamic == null)
 			{
-				this.cacheForDynamic = new LinearHashDictionary<Pair<Type, SerializerOptions>, object>();
+				this.cacheForDynamic = new Dictionary<Pair<Type, SerializerOptions>, object>();
 			}
 
 			if (this.cacheForDynamic.TryGetValue(key, out value))
@@ -74,7 +75,7 @@ namespace Platform.Xml.Serialization
 
 			if (this.cache == null)
 			{
-				this.cache = new LinearHashDictionary<Pair<Type, SerializerOptions>, object>();
+				this.cache = new Dictionary<Pair<Type, SerializerOptions>, object>();
 			}
 
 			if (this.cache.TryGetValue(key, out value))

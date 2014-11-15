@@ -16,66 +16,66 @@ namespace Platform.Linq
 
 			switch (expression.NodeType)
 			{
-				case ExpressionType.Negate:
-				case ExpressionType.NegateChecked:
-				case ExpressionType.Not:
-				case ExpressionType.Convert:
-				case ExpressionType.ConvertChecked:
-				case ExpressionType.ArrayLength:
-				case ExpressionType.Quote:
-				case ExpressionType.TypeAs:
-					return VisitUnary((UnaryExpression)expression);
-				case ExpressionType.Add:
-				case ExpressionType.AddChecked:
-				case ExpressionType.Subtract:
-				case ExpressionType.SubtractChecked:
-				case ExpressionType.Multiply:
-				case ExpressionType.MultiplyChecked:
-				case ExpressionType.Divide:
-				case ExpressionType.Modulo:
-				case ExpressionType.And:
-				case ExpressionType.AndAlso:
-				case ExpressionType.Or:
-				case ExpressionType.OrElse:
-				case ExpressionType.LessThan:
-				case ExpressionType.LessThanOrEqual:
-				case ExpressionType.GreaterThan:
-				case ExpressionType.GreaterThanOrEqual:
-				case ExpressionType.Equal:
-				case ExpressionType.NotEqual:
-				case ExpressionType.Coalesce:
-				case ExpressionType.ArrayIndex:
-				case ExpressionType.RightShift:
-				case ExpressionType.LeftShift:
-				case ExpressionType.ExclusiveOr:
-					return VisitBinary((BinaryExpression)expression);
-				case ExpressionType.TypeIs:
-					return VisitTypeIs((TypeBinaryExpression)expression);
-				case ExpressionType.Conditional:
-					return VisitConditional((ConditionalExpression)expression);
-				case ExpressionType.Constant:
-					return VisitConstant((ConstantExpression)expression);
-				case ExpressionType.Parameter:
-					return VisitParameter((ParameterExpression)expression);
-				case ExpressionType.MemberAccess:
-					return VisitMemberAccess((MemberExpression)expression);
-				case ExpressionType.Call:
-					return VisitMethodCall((MethodCallExpression)expression);
-				case ExpressionType.Lambda:
-					return VisitLambda((LambdaExpression)expression);
-				case ExpressionType.New:
-					return VisitNew((NewExpression)expression);
-				case ExpressionType.NewArrayInit:
-				case ExpressionType.NewArrayBounds:
-					return VisitNewArray((NewArrayExpression)expression);
-				case ExpressionType.Invoke:
-					return VisitInvocation((InvocationExpression)expression);
-				case ExpressionType.MemberInit:
-					return VisitMemberInit((MemberInitExpression)expression);
-				case ExpressionType.ListInit:
-					return VisitListInit((ListInitExpression)expression);
-				default:
-					throw new Exception(String.Format("Unhandled expression type: '{0}'", expression.NodeType));
+			case ExpressionType.Negate:
+			case ExpressionType.NegateChecked:
+			case ExpressionType.Not:
+			case ExpressionType.Convert:
+			case ExpressionType.ConvertChecked:
+			case ExpressionType.ArrayLength:
+			case ExpressionType.Quote:
+			case ExpressionType.TypeAs:
+				return VisitUnary((UnaryExpression)expression);
+			case ExpressionType.Add:
+			case ExpressionType.AddChecked:
+			case ExpressionType.Subtract:
+			case ExpressionType.SubtractChecked:
+			case ExpressionType.Multiply:
+			case ExpressionType.MultiplyChecked:
+			case ExpressionType.Divide:
+			case ExpressionType.Modulo:
+			case ExpressionType.And:
+			case ExpressionType.AndAlso:
+			case ExpressionType.Or:
+			case ExpressionType.OrElse:
+			case ExpressionType.LessThan:
+			case ExpressionType.LessThanOrEqual:
+			case ExpressionType.GreaterThan:
+			case ExpressionType.GreaterThanOrEqual:
+			case ExpressionType.Equal:
+			case ExpressionType.NotEqual:
+			case ExpressionType.Coalesce:
+			case ExpressionType.ArrayIndex:
+			case ExpressionType.RightShift:
+			case ExpressionType.LeftShift:
+			case ExpressionType.ExclusiveOr:
+				return VisitBinary((BinaryExpression)expression);
+			case ExpressionType.TypeIs:
+				return VisitTypeIs((TypeBinaryExpression)expression);
+			case ExpressionType.Conditional:
+				return VisitConditional((ConditionalExpression)expression);
+			case ExpressionType.Constant:
+				return VisitConstant((ConstantExpression)expression);
+			case ExpressionType.Parameter:
+				return VisitParameter((ParameterExpression)expression);
+			case ExpressionType.MemberAccess:
+				return VisitMemberAccess((MemberExpression)expression);
+			case ExpressionType.Call:
+				return VisitMethodCall((MethodCallExpression)expression);
+			case ExpressionType.Lambda:
+				return VisitLambda((LambdaExpression)expression);
+			case ExpressionType.New:
+				return VisitNew((NewExpression)expression);
+			case ExpressionType.NewArrayInit:
+			case ExpressionType.NewArrayBounds:
+				return VisitNewArray((NewArrayExpression)expression);
+			case ExpressionType.Invoke:
+				return VisitInvocation((InvocationExpression)expression);
+			case ExpressionType.MemberInit:
+				return VisitMemberInit((MemberInitExpression)expression);
+			case ExpressionType.ListInit:
+				return VisitListInit((ListInitExpression)expression);
+			default:
+				throw new Exception(String.Format("Unhandled expression type: '{0}'", expression.NodeType));
 			}
 		}
 
@@ -83,14 +83,14 @@ namespace Platform.Linq
 		{
 			switch (binding.BindingType)
 			{
-				case MemberBindingType.Assignment:
-					return VisitMemberAssignment((MemberAssignment)binding);
-				case MemberBindingType.MemberBinding:
-					return VisitMemberMemberBinding((MemberMemberBinding)binding);
-				case MemberBindingType.ListBinding:
-					return VisitMemberListBinding((MemberListBinding)binding);
-				default:
-					throw new Exception(string.Format("Unhandled binding type '{0}'", binding.BindingType));
+			case MemberBindingType.Assignment:
+				return VisitMemberAssignment((MemberAssignment)binding);
+			case MemberBindingType.MemberBinding:
+				return VisitMemberMemberBinding((MemberMemberBinding)binding);
+			case MemberBindingType.ListBinding:
+				return VisitMemberListBinding((MemberListBinding)binding);
+			default:
+				throw new Exception(string.Format("Unhandled binding type '{0}'", binding.BindingType));
 			}
 		}
 
@@ -108,7 +108,7 @@ namespace Platform.Linq
 
 		protected virtual Expression VisitUnary(UnaryExpression unaryExpression)
 		{
-			Expression operand = Visit(unaryExpression.Operand);
+			var operand = Visit(unaryExpression.Operand);
 
 			if (operand != unaryExpression.Operand)
 			{
@@ -297,7 +297,7 @@ namespace Platform.Linq
 				{
 					list = new List<MemberBinding>(n);
 
-					for (int j = 0; j < i; j++)
+					for (var j = 0; j < i; j++)
 					{
 						list.Add(original[j]);
 					}
@@ -366,14 +366,7 @@ namespace Platform.Linq
 
 			if (args != expression.Arguments)
 			{
-				if (expression.Members != null)
-				{
-					return Expression.New(expression.Constructor, args, expression.Members);
-				}
-				else
-				{
-					return Expression.New(expression.Constructor, args);
-				}
+				return Expression.New(expression.Constructor, args, expression.Members);
 			}
 
 			return expression;

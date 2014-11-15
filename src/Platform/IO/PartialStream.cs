@@ -23,7 +23,6 @@ namespace Platform.IO
 		{
 		}
 
-
 		/// <summary>
 		/// Constructs a new <see cref="PartialStream"/> that provides a view of the given
 		/// <see cref="stream"/> but starting at <see cref="offset"/> and lasting for <see cref="length"/>

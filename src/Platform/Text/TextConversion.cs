@@ -158,7 +158,7 @@ namespace Platform.Text
 					writer.Write((char)y);
 				}
 
-				bytes[0] = (byte)(IntUtils.FromHexNoCheck((char)x) * 0x10 + IntUtils.FromHexNoCheck((char)y));
+				bytes[0] = (byte)(Int32Utils.FromHexNoCheck((char)x) * 0x10 + Int32Utils.FromHexNoCheck((char)y));
 
 				var charcount = decoder.GetChars(bytes, 0, 1, chars, 0);
 
@@ -331,23 +331,6 @@ namespace Platform.Text
 					w.Write(c);
 				}
 			});
-		}
-
-		public static string ToString(string s, Converter<char, char> convert)
-		{
-			return s.Convert(convert);
-		}
-
-		public static string ToString<I, O>(System.Collections.Generic.IEnumerable<I> input, Converter<I, O> convert)
-		{
-			var builder = new StringBuilder();
-
-			foreach (I value in input)
-			{
-				builder.Append(convert(value));
-			}
-
-			return builder.ToString();
 		}
 
 		public static bool IsHexChar(char c)

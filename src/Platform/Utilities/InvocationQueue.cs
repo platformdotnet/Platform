@@ -14,7 +14,7 @@ namespace Platform.Utilities
 	/// <see cref="ITask"/>.
 	/// </summary>
 	public class InvocationQueue
-		: BlockingQueueAdapter<Action>, ITask
+		: BlockingQueue<Action>, ITask
 	{
 		/// <summary>
 		/// <see cref="ITask.RequestedTaskStateChanged"/>.
@@ -43,22 +43,7 @@ namespace Platform.Utilities
 			}
 		}
 	
-		/// <summary>
-		/// Creates a new <see cref="InvocationQueue"/>.
-		/// </summary>
-		public InvocationQueue()
-			: this(typeof(LinkedListQueue<>))
-		{
-		}
-
-		/// <summary>
-		/// Creates a new <see cref="InvocationQueue"/> using the given <see cref="queueType"/>
-		/// as a backing queue.  The <see cref="queueType"/> must implement <see cref="ILQueue{Action}"/>.
-		/// </summary>
-		/// <param name="queueType">The type of queue to use</param>
-		/// <param name="args">Arguments to the queue's constructor.</param>
-        public InvocationQueue(Type queueType, params object[] args)
-            : base((ILQueue<Action>)Activator.CreateInstance(queueType.MakeGenericType(typeof(Action)), args))
+        public InvocationQueue()
         {
 			this.IdleWaitTime = TimeSpan.FromMilliseconds(250);
 			this.TaskAsynchronisity = TaskAsynchronisity.AsyncWithBackgroundThread;
@@ -200,7 +185,7 @@ namespace Platform.Utilities
 		/// task state change requests (such as calls to <see cref="Pause"/>) and invocating 
 		/// the <see cref="DoIdleProcessing"/> event .  Default is 250ms.
 		/// </summary>
-		public virtual TimeSpan IdleWaitTime
+		public TimeSpan IdleWaitTime
 		{
 			get;
 			set;
@@ -220,7 +205,7 @@ namespace Platform.Utilities
 		/// <summary>
 		/// An event that is raised when the <see cref="InvocationQueue"/> is not busy.
 		/// </summary>
-		public virtual event EventHandler DoIdleProcessing;
+		public event EventHandler DoIdleProcessing;
 
 		/// <summary>
 		/// Raises the <see cref="DoIdleProcessing"/> event.

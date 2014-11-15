@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Platform
 {
 	/// <summary>
 	/// Caches a value and automatically retrieves the new value
-	/// if the cached value is invalidated by a cal to <see cref="Invalidate"/>.
+	/// if the cached value is invalidated by a call to <see cref="Invalidate"/>.
 	/// </summary>
 	/// <typeparam name="T">The type of value to cache</typeparam>
 	public struct CachedValue<T>

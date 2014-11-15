@@ -54,6 +54,7 @@ namespace Platform
 			{
 				var genericType = sequenceType.GetGenericTypeDefinition();
 
+
 				if (genericType == typeof(List<>) || genericType == (typeof(IList<>)))
 				{
 					return sequenceType.GetGenericArguments()[0];
@@ -61,9 +62,9 @@ namespace Platform
 
 				foreach (var genericArgument in sequenceType.GetGenericArguments())
 				{
-					var iEnumerable = typeof(IEnumerable<>).MakeGenericType(genericArgument);
+					var eumerable = typeof(IEnumerable<>).MakeGenericType(genericArgument);
 
-					if (iEnumerable.IsAssignableFrom(sequenceType))
+					if (eumerable.IsAssignableFrom(sequenceType))
 					{
 						return genericArgument;
 					}
@@ -120,8 +121,8 @@ namespace Platform
 			{
 				if (convertGenericsToGenericTypeDefinition)
 				{
-					foreach (var interfaceType in type.GetInterfaces()
-						.Where(interfaceType => interfaceType.IsGenericType))
+
+					foreach (var interfaceType in type.GetInterfaces().Where(interfaceType => interfaceType.IsGenericType))
 					{
 						yield return interfaceType.GetGenericTypeDefinition();
 					}
