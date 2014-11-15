@@ -10,6 +10,16 @@ namespace Platform.Collections
 		public int Count { get { return this.innerList.Count; } }
 		public T this[int index] { get { return this.innerList[index]; } }
 
+		public ReadOnlyList(params T[] values)
+			: this(new List<T>(values))
+		{
+		}
+
+		public ReadOnlyList(IEnumerable<T> items)
+			: this(new List<T>(items))
+		{
+		}
+
 		public ReadOnlyList(IList<T> innerList)
 		{
 			this.innerList = innerList;
