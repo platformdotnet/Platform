@@ -15,7 +15,7 @@
     <copyright>Copyright (c) 2003-2013 Thong Nguyen (tumtumtum@gmail.com)</copyright>
     <tags>platform xml serialization serializer</tags>
     <dependencies>
-      <dependency id="Platform.NET" version="1.0.0.146"/>
+      <dependency id="Platform.NET" version="$version$"/>
     </dependencies>
   </metadata>
 </package>
