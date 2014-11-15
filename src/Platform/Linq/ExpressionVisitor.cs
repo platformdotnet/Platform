@@ -246,9 +246,10 @@ namespace Platform.Linq
 			return original;
 		}
 
-		protected virtual IReadOnlyList<Expression> VisitExpressionList(IReadOnlyList<Expression> original)
+		protected virtual IReadOnlyList<T> VisitExpressionList<T>(IReadOnlyList<T> original)
+			where T : Expression
 		{
-			List<Expression> list = null;
+			List<T> list = null;
 
 			if (original == null)
 			{
@@ -257,7 +258,7 @@ namespace Platform.Linq
 
 			for (int i = 0, n = original.Count; i < n; i++)
 			{
-				var p = Visit(original[i]);
+				var p = (T)Visit(original[i]);
 
 				if (list != null)
 				{
@@ -268,7 +269,7 @@ namespace Platform.Linq
 				}
 				else if (p != original[i])
 				{
-					list = new List<Expression>(n);
+					list = new List<T>(n);
 
 					for (var j = 0; j < i; j++)
 					{
@@ -284,7 +285,7 @@ namespace Platform.Linq
 
 			if (list != null)
 			{
-				return new ReadOnlyList<Expression>(list);
+				return new ReadOnlyList<T>(list);
 			}
 
 			return original;
@@ -359,13 +360,14 @@ namespace Platform.Linq
 			return original;
 		}
 
-		protected virtual IEnumerable<MemberBinding> VisitBindingList(IReadOnlyList<MemberBinding> original)
+		protected virtual IEnumerable<T> VisitBindingList<T>(IReadOnlyList<T> original)
+			where T : MemberBinding
 		{
-			List<MemberBinding> list = null;
+			List<T> list = null;
 
 			for (int i = 0, n = original.Count; i < n; i++)
 			{
-				var b = VisitBinding(original[i]);
+				var b = (T)VisitBinding(original[i]);
 
 				if (list != null)
 				{
@@ -373,7 +375,7 @@ namespace Platform.Linq
 				}
 				else if (b != original[i])
 				{
-					list = new List<MemberBinding>(n);
+					list = new List<T>(n);
 
 					for (var j = 0; j < i; j++)
 					{
