@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Platform.Tests</RootNamespace>
     <AssemblyName>Platform.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\src\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,9 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\src\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\..\src\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -49,11 +49,9 @@
     <Compile Include="ListUtilsTests.cs" />
     <Compile Include="InvocationQueueTests.cs" />
     <Compile Include="MathUtilsTests.cs" />
-    <Compile Include="PerformanceTimerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FifoBufferTests.cs" />
     <Compile Include="TextConversionTests.cs" />
-    <Compile Include="TextSerializerTests.cs" />
     <Compile Include="Validation\PageRequest.cs" />
     <Compile Include="Validation\Person.cs" />
     <Compile Include="Validation\SearchRequest.cs" />

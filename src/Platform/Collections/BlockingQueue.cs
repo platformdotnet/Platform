@@ -126,7 +126,7 @@ namespace Platform.Collections
 					}
 				}
 
-				value = base.Dequeue();
+				value = this.queue.Dequeue();
 			}
 
 			return true;
