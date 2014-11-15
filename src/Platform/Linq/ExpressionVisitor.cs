@@ -366,7 +366,14 @@ namespace Platform.Linq
 
 			if (args != expression.Arguments)
 			{
-				return Expression.New(expression.Constructor, args, expression.Members);
+				if (expression.Members != null)
+				{
+					return Expression.New(expression.Constructor, args, expression.Members);
+				}
+				else
+				{
+					return Expression.New(expression.Constructor, args);
+				}
 			}
 
 			return expression;
