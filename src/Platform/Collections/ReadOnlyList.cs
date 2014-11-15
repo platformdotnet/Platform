@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Platform.Collections
 {
-#if NET40
 	public class ReadOnlyList<T>
 		: IReadOnlyList<T>
 	{
@@ -26,5 +25,4 @@ namespace Platform.Collections
 			return this.GetEnumerator();
 		}
 	}
-#endif
 }
