@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using Platform.Collections;
 
 namespace Platform.Linq
 {
@@ -96,7 +97,7 @@ namespace Platform.Linq
 
 		protected virtual ElementInit VisitElementInitializer(ElementInit initializer)
 		{
-			ReadOnlyCollection<Expression> arguments = VisitExpressionList(initializer.Arguments);
+			var arguments = VisitExpressionList(initializer.Arguments);
 
 			if (arguments != initializer.Arguments)
 			{
@@ -245,6 +246,50 @@ namespace Platform.Linq
 			return original;
 		}
 
+		protected virtual IReadOnlyList<Expression> VisitExpressionList(IReadOnlyList<Expression> original)
+		{
+			List<Expression> list = null;
+
+			if (original == null)
+			{
+				return null;
+			}
+
+			for (int i = 0, n = original.Count; i < n; i++)
+			{
+				var p = Visit(original[i]);
+
+				if (list != null)
+				{
+					if (p != null)
+					{
+						list.Add(p);
+					}
+				}
+				else if (p != original[i])
+				{
+					list = new List<Expression>(n);
+
+					for (var j = 0; j < i; j++)
+					{
+						list.Add(original[j]);
+					}
+
+					if (p != null)
+					{
+						list.Add(p);
+					}
+				}
+			}
+
+			if (list != null)
+			{
+				return new ReadOnlyList<Expression>(list);
+			}
+
+			return original;
+		}
+
 		protected virtual MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
 		{
 			var e = Visit(assignment.Expression);
@@ -314,6 +359,39 @@ namespace Platform.Linq
 			return original;
 		}
 
+		protected virtual IEnumerable<MemberBinding> VisitBindingList(IReadOnlyList<MemberBinding> original)
+		{
+			List<MemberBinding> list = null;
+
+			for (int i = 0, n = original.Count; i < n; i++)
+			{
+				var b = VisitBinding(original[i]);
+
+				if (list != null)
+				{
+					list.Add(b);
+				}
+				else if (b != original[i])
+				{
+					list = new List<MemberBinding>(n);
+
+					for (var j = 0; j < i; j++)
+					{
+						list.Add(original[j]);
+					}
+
+					list.Add(b);
+				}
+			}
+
+			if (list != null)
+			{
+				return list;
+			}
+
+			return original;
+		}
+
 		protected virtual IEnumerable<ElementInit> VisitElementInitializerList(ReadOnlyCollection<ElementInit> original)
 		{
 			List<ElementInit> list = null;
@@ -331,7 +409,41 @@ namespace Platform.Linq
 				{
 					list = new List<ElementInit>(n);
 
-					for (int j = 0; j < i; j++)
+					for (var j = 0; j < i; j++)
+					{
+						list.Add(original[j]);
+					}
+
+					list.Add(init);
+				}
+			}
+
+			if (list != null)
+			{
+				return list;
+			}
+
+			return original;
+		}
+
+		protected virtual IEnumerable<ElementInit> VisitElementInitializerList(IReadOnlyList<ElementInit> original)
+		{
+			List<ElementInit> list = null;
+
+			for (int i = 0, n = original.Count; i < n; i++)
+			{
+				var init = VisitElementInitializer(original[i]);
+
+				if (list != null)
+				{
+					list.Add(init);
+				}
+
+				else if (init != original[i])
+				{
+					list = new List<ElementInit>(n);
+
+					for (var j = 0; j < i; j++)
 					{
 						list.Add(original[j]);
 					}

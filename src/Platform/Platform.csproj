@@ -53,7 +53,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;DEBUG;DEBUGLAMBDA</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET40</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
@@ -125,7 +125,10 @@
     <Compile Include="Collections\BufferUnderflowException.cs" />
     <Compile Include="Collections\CircularFifoBuffer.cs" />
     <Compile Include="Collections\CollectionBase.cs" />
+    <Compile Include="Collections\IReadOnlyCollection.cs" />
+    <Compile Include="Collections\IReadOnlyList.cs" />
     <Compile Include="Collections\ListUtils.cs" />
+    <Compile Include="Collections\ReadOnlyList.cs" />
     <Compile Include="Collections\ReferenceDictionaryEventArgs.cs" />
     <Compile Include="ComparisonComparator.cs" />
     <Compile Include="ConfigurationBlock.cs" />
