@@ -1,10 +1,4 @@
-﻿#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-#endregion
+﻿// Copyright (c) 2014 Thong Nguyen (tumtumtum@gmail.com)
 
 namespace Platform
 {

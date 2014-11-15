@@ -11,8 +11,8 @@ namespace Platform.Text.RegularExpressions
 
 		private struct CacheKey
 		{
-		    internal string regex;
-			internal RegexOptions options;
+		    internal readonly string regex;
+			internal readonly RegexOptions options;
 
 			public CacheKey(string regex, RegexOptions options)
 			{
@@ -44,7 +44,7 @@ namespace Platform.Text.RegularExpressions
 			cache = new TimedReferenceDictionary<CacheKey, Regex>(timeout);
 		}
 
-		public Regex NewRegex(string regex, RegexOptions options)
+		public Regex Create(string regex, RegexOptions options)
 		{
 			lock (cache)
 			{

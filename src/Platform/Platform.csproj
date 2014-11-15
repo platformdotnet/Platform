@@ -148,11 +148,9 @@
     <Compile Include="NamedUtils.cs" />
     <Compile Include="ObjectActivator.cs" />
     <Compile Include="ObjectReferenceIdentityEqualityComparer.cs" />
-    <Compile Include="ObjectUtils.cs" />
     <Compile Include="Pair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quad.cs" />
-    <Compile Include="Reflection\AssemblyUtils.cs" />
     <Compile Include="ReownedMeter.cs" />
     <Compile Include="TaskUtils.cs" />
     <Compile Include="Network\Time\NtpNetworkTimeClient.cs" />
@@ -160,7 +158,7 @@
     <Compile Include="Network\Time\NetworkTimeClient.cs" />
     <Compile Include="NumericConstants.cs" />
     <Compile Include="References\NotifyingWeakReference.cs" />
-    <Compile Include="RegexBasedPredicateHelper.cs" />
+    <Compile Include="Text\RegularExpressions\RegexBasedPredicateHelper.cs" />
     <Compile Include="Runtime\Interop\MarshalUtils.cs" />
     <Compile Include="StopRequestedException.cs" />
     <Compile Include="Text\CharArrayReader.cs" />
@@ -199,11 +197,7 @@
     <Compile Include="Validation\ValueRangeConstraintAttribute.cs" />
     <Compile Include="Validation\ValueRequiredAttribute.cs" />
     <Compile Include="ValueBox.cs" />
-    <Compile Include="Reflection\AppDomainUtils.cs" />
     <Compile Include="ArrayUtils.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="AssemblyProvidesTypeAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AutoLock.cs">
@@ -318,15 +312,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StringUriUtils.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utilities\BasicCommandLineParser.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utilities\CommandLineOptionAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utilities\CommandLineOptionsSerializer.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utilities\InvocationQueue.cs" />

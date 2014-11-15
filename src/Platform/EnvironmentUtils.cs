@@ -1,3 +1,5 @@
+// Copyright (c) 2014 Thong Nguyen (tumtumtum@gmail.com)
+
 using System;
 using System.Diagnostics;
 using System.IO;

@@ -109,7 +109,7 @@ namespace Platform
 		{
 			var builder = new StringBuilder();
 
-			return enumerable.Select<T, string>(ObjectUtils.ToString).ComplexFold
+			return enumerable.Select(c => Convert.ToString(c)).ComplexFold
 			(
 				delegate(string value)
 				{
@@ -483,7 +483,7 @@ namespace Platform
 
 			using (enumerator)
 			{
-				for (int i = 0; i < startOffset; i++)
+				for (var i = 0; i < startOffset; i++)
 				{
 					if (!enumerator.MoveNext())
 					{

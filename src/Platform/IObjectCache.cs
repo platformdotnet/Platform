@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Platform.Collections;
+// Copyright (c) 2014 Thong Nguyen (tumtumtum@gmail.com)
 
 namespace Platform
 {

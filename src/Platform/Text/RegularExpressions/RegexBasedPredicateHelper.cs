@@ -1,7 +1,9 @@
+// Copyright (c) 2014 Thong Nguyen (tumtumtum@gmail.com)
+
 using System;
 using System.Text.RegularExpressions;
 
-namespace Platform
+namespace Platform.Text.RegularExpressions
 {
 	/// <summary>
 	/// A helper class for creating predicate based on a regular expression.

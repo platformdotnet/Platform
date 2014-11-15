@@ -1,3 +1,5 @@
+// Copyright (c) 2014 Thong Nguyen (tumtumtum@gmail.com)
+
 using System;
 
 namespace Platform
@@ -8,7 +10,7 @@ namespace Platform
 	/// </summary>
 	/// <typeparam name="T">The type of value to cache</typeparam>
 	public struct CachedValue<T>
-		: IValued, IValued<T>
+		: IValued<T>
 	{
 		/// <summary>
 		/// The cached value.

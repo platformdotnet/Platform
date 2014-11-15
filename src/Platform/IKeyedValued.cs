@@ -1,4 +1,6 @@
-﻿namespace Platform
+﻿// Copyright (c) 2014 Thong Nguyen (tumtumtum@gmail.com)
+
+namespace Platform
 {
 	public interface IKeyedValued
 		: IKeyed, IValued

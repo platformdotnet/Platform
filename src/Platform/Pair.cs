@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright (c) 2014 Thong Nguyen (tumtumtum@gmail.com)
+
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;

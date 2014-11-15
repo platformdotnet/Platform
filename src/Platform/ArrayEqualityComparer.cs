@@ -1,5 +1,6 @@
-﻿// Copyright (c) 2013 Thong Nguyen (tumtumtum@gmail.com)
+﻿// Copyright (c) 2014 Thong Nguyen (tumtumtum@gmail.com)
 
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Platform
@@ -51,14 +52,7 @@ namespace Platform
 				return 0;
 			}
 
-			var retval = 0;
-
-			foreach (T element in array)
-			{
-				retval ^= this.elementComparer.GetHashCode(element);
-			}
-
-			return retval;
+			return array.Aggregate(0, (current, element) => current ^ this.elementComparer.GetHashCode(element));
 		}
 	}
 }

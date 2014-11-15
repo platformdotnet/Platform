@@ -1,9 +1,10 @@
+// Copyright (c) 2014 Thong Nguyen (tumtumtum@gmail.com)
+
 using System;
 using System.Linq;
-using System.Reflection;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Platform.Text.RegularExpressions;
 
 namespace Platform
 {
@@ -106,23 +107,7 @@ namespace Platform
 		/// <returns>A new predicate</returns>
 		public static Predicate<T> And<T>(this Predicate<T> predicate1, params Predicate<T>[] predicates)
 		{
-			return delegate(T value)
-			{
-				if (!predicate1(value))
-				{
-					return false;
-				}
-
-				foreach (Predicate<T> predicate in predicates)
-				{
-					if (!predicate(value))
-					{
-						return false;
-					}
-				}
-
-				return true;
-			};
+			return value => predicate1(value) && predicates.All(predicate => predicate(value));
 		}
 
 		/// <summary>
@@ -153,15 +138,7 @@ namespace Platform
 					return true;
 				}
 
-				foreach (Predicate<T> predicate in predicates)
-				{
-					if (predicate(value))
-					{
-						return true;
-					}
-				}
-
-				return false;
+				return predicates.Any(predicate => predicate(value));
 			};
 		}
 
@@ -203,7 +180,7 @@ namespace Platform
 		/// </returns>
 		public static Predicate<T> ObjectEqualsAny<T>(IEnumerable<T> values)
 		{
-			return value => values.Contains(value);
+			return values.Contains;
 		}
 
 		/// <summary>
@@ -235,7 +212,7 @@ namespace Platform
 		/// </returns>
 		public static Predicate<T> ObjectByObjectFromLeft<T>(params T[] objects)
 		{
-			int x = 0;
+			var x = 0;
 
 			return value => x < objects.Length && value.Equals(objects[x++]);
 		}
@@ -256,7 +233,7 @@ namespace Platform
 		/// </returns>
 		public static Predicate<T> ObjectByObjectFromRight<T>(params T[] objects)
 		{
-			int x = objects.Length - 1;
+			var x = objects.Length - 1;
 
 			return value => x >= 0 && value.Equals(objects[x--]);
 		}

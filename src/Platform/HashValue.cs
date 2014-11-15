@@ -1,3 +1,5 @@
+// Copyright (c) 2014 Thong Nguyen (tumtumtum@gmail.com)
+
 using System.IO;
 using Platform.Text;
 
