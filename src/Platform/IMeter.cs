@@ -2,68 +2,6 @@ using System;
 
 namespace Platform
 {
-	#region MeterEventArgs
-
-	/// <summary>
-	/// Contains event information for the <see cref="IMeter"/> interface.
-	/// </summary>
-	public class MeterEventArgs
-		: EventArgs, IValued
-	{
-		/// <summary>
-		/// Gets the current value (<see cref="NewValue"/>)
-		/// </summary>
-		public virtual object Value
-		{
-			get
-			{
-				return NewValue;
-			}
-		}
-
-		/// <summary>
-		/// Gets the current value (<see cref="NewValue"/>)
-		/// </summary>
-		object IValued.Value
-		{
-			get
-			{
-				return NewValue;
-			}
-		}
-
-		/// <summary>
-		/// Gets the current value.
-		/// </summary>
-		public virtual object NewValue
-		{
-			get;
-			private set;
-		}
-
-		/// <summary>
-		/// Gets the previous value
-		/// </summary>
-		public virtual object OldValue
-		{
-			get;
-			private set;
-		}
-
-		/// <summary>
-		/// Constructs a new <see cref="MeterEventArgs"/>.
-		/// </summary>
-		/// <param name="newValue">The new value</param>
-		/// <param name="oldValue">The old value</param>
-		public MeterEventArgs(object newValue, object oldValue)
-		{
-			this.NewValue = newValue;
-			this.OldValue = oldValue;
-		}
-	}
-
-	#endregion
-
 	/// <summary>
 	/// An interface that provides on a view onto an object that provides a certain value
 	/// including maximum and minimum possible values.  An <see cref="IMeter"/> object

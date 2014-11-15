@@ -158,7 +158,7 @@ namespace Platform.Text
 					writer.Write((char)y);
 				}
 
-				bytes[0] = (byte)(IntUtils.FromHexNoCheck((char)x) * 0x10 + IntUtils.FromHexNoCheck((char)y));
+				bytes[0] = (byte)(Int32Utils.FromHexNoCheck((char)x) * 0x10 + Int32Utils.FromHexNoCheck((char)y));
 
 				var charcount = decoder.GetChars(bytes, 0, 1, chars, 0);
 

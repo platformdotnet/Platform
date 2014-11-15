@@ -157,16 +157,14 @@ namespace Platform
 
 		public override bool Equals(object obj)
 		{
-			Quad<A, B, C, D>? objTuple;
-
-			objTuple = obj as Quad<A, B, C, D>?;
+			var objTuple = obj as Quad<A, B, C, D>?;
 
 			if (objTuple != null)
 			{
-				return Object.Equals(first, objTuple.Value.first)
-				&& Object.Equals(second, objTuple.Value.second)
-				&& Object.Equals(third, objTuple.Value.third)
-				&& Object.Equals(fourth, objTuple.Value.fourth);
+				return Equals(first, objTuple.Value.first)
+					&& Equals(second, objTuple.Value.second)
+					&& Equals(third, objTuple.Value.third)
+					&& Equals(fourth, objTuple.Value.fourth);
 			}
 
 			return false;

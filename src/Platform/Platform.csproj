@@ -144,6 +144,7 @@
     <Compile Include="LeftOrRight.cs" />
     <Compile Include="AbstractTask.cs" />
     <Compile Include="Linq\ExpressionVisitor.cs" />
+    <Compile Include="MeterEventArgs.cs" />
     <Compile Include="NamedUtils.cs" />
     <Compile Include="ObjectActivator.cs" />
     <Compile Include="ObjectReferenceIdentityEqualityComparer.cs" />
@@ -224,7 +225,7 @@
     <Compile Include="INamed.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IntUtils.cs" />
+    <Compile Include="Int32Utils.cs" />
     <Compile Include="IO\ChunkingStream.cs" />
     <Compile Include="IO\FifoStream.cs" />
     <Compile Include="IO\PartialStream.cs">
