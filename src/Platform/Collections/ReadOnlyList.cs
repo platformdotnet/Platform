@@ -16,7 +16,7 @@ namespace Platform.Collections
 		}
 
 		public ReadOnlyList(IEnumerable<T> items)
-			: this(new List<T>(items))
+			: this(items is ReadOnlyList<T> ? (IList<T>)items : new List<T>(items))
 		{
 		}
 
