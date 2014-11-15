@@ -341,7 +341,7 @@ namespace Platform
 		bool CanRequestTaskState(TaskState taskState);
 
 		/// <summary>
-		/// Requests that a task enter the given <typeparamref name="taskState"/>.
+		/// Requests that a task enter the given <paramref name="taskState"/>.
 		/// </summary>
 		/// <param name="taskState">
 		/// The <see cref="TaskState"/> to enter.
@@ -349,7 +349,7 @@ namespace Platform
 		void RequestTaskState(TaskState taskState);
 
 		/// <summary>
-		/// Requests that a task enter the given<typeparamref name="taskState"/>.
+		/// Requests that a task enter the given <paramref name="taskState"/>.
 		/// </summary>
 		/// <param name="taskState">
 		/// The <see cref="TaskState"/> to enter.

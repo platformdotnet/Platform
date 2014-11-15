@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Platform.References;
 
 namespace Platform.Collections
@@ -90,7 +89,7 @@ namespace Platform.Collections
 			}
 		}
 
-		public virtual TimeSpan TimeOut
+		public TimeSpan TimeOut
 		{
 			get;
 			protected set;
@@ -100,13 +99,15 @@ namespace Platform.Collections
 		private readonly int maximumCount = -1;
 		private volatile bool cleanOnNext = false;
 
+
 		/// <summary>
-		/// Creates a new <see cref="WeakReferenceDictionary{K,V}"/> backed by a <see cref="Dictionary{K, V}"/>.
+		/// Creates a new <see cref="WeakReferenceDictionary{K,V}"/> with the provided type
+		/// as the store for the dictionary.
 		/// </summary>
 		/// <param name="timeout">The amount of time each item in the dictionary will be guaranteed to be uncollected for</param>
 		public TimedReferenceDictionary(TimeSpan timeout)
-			: this(timeout, typeof(Dictionary<,>))
-		{
+			: this(timeout, null)
+		{	
 		}
 
 		/// <summary>
@@ -114,20 +115,15 @@ namespace Platform.Collections
 		/// as the store for the dictionary.
 		/// </summary>
 		/// <param name="timeout">The amount of time each item in the dictionary will be guaranteed to be uncollected for</param>
-		/// <param name="openGenericDictionaryType">
-		/// The type to use as the store for the current dictionary.  The type must implement
-		/// <see cref="IDictionary{TKey,TValue}"/>.  The provided type should be the open
-		/// (unrealised) generic type.  For example, it should be <c>typeof(Dictionary<,>)</c>
-		/// and not <c>typeof(Dictionary<string, string>)</c>
-		/// </param>
-		/// <param name="constructorArgs">Arguments to pass to the backing dictionary constructor</param>
-		public TimedReferenceDictionary(TimeSpan timeout, Type openGenericDictionaryType, params object[] constructorArgs)
-			: this(timeout, -1, openGenericDictionaryType, constructorArgs)
+		/// <param name="comparer">The comparer for the keys</param>
+		public TimedReferenceDictionary(TimeSpan timeout, IEqualityComparer<K> comparer)
+			: this(timeout, -1, comparer)
 		{
 		}
-		
+
 		/// <summary>
-		/// Creates a new <see cref="WeakReferenceDictionary{K,V}"/> backed by a <see cref="Dictionary{K, V}"/>.
+		/// Creates a new <see cref="WeakReferenceDictionary{K,V}"/> with the provided type
+		/// as the store for the dictionary.
 		/// </summary>
 		/// <param name="timeout">
 		/// The amount of time each item in the dictionary will be guaranteed to be uncollected for
@@ -136,10 +132,10 @@ namespace Platform.Collections
 		/// The maximum number of items allowed in the dictionary.  Pass -1 for no limit.
 		/// </param>
 		public TimedReferenceDictionary(TimeSpan timeout, int maximumCount)
-			: this(timeout, maximumCount, typeof(Dictionary<,>))
-		{
+			: this(timeout, maximumCount, null)
+		{	
 		}
-        
+
 		/// <summary>
 		/// Creates a new <see cref="WeakReferenceDictionary{K,V}"/> with the provided type
 		/// as the store for the dictionary.
@@ -150,15 +146,9 @@ namespace Platform.Collections
 		/// <param name="maximumCount">
 		/// The maximum number of items allowed in the dictionary.  Pass -1 for no limit.
 		/// </param>
-		/// <param name="openGenericDictionaryType">
-		/// The type to use as the store for the current dictionary.  The type must implement
-		/// <see cref="IDictionary{TKey,TValue}"/>.  The provided type should be the open
-		/// (unrealised) generic type.  For example, it should be <c>typeof(Dictionary<,>)</c>
-		/// and not <c>typeof(Dictionary<string, string>)</c>
-		/// </param>
-		/// <param name="constructorArgs">Arguments to pass to the backing dictionary constructor</param>
-		public TimedReferenceDictionary(TimeSpan timeout, int maximumCount, Type openGenericDictionaryType, params object[] constructorArgs)
-			: base(openGenericDictionaryType, constructorArgs)
+		/// <param name="comparer">The comparer for the keys</param>
+		public TimedReferenceDictionary(TimeSpan timeout, int maximumCount,  IEqualityComparer<K> comparer)
+			: base(comparer)
 		{
 			this.TimeOut = timeout;
 			

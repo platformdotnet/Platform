@@ -333,23 +333,6 @@ namespace Platform.Text
 			});
 		}
 
-		public static string ToString(string s, Converter<char, char> convert)
-		{
-			return s.Convert(convert);
-		}
-
-		public static string ToString<I, O>(System.Collections.Generic.IEnumerable<I> input, Converter<I, O> convert)
-		{
-			var builder = new StringBuilder();
-
-			foreach (I value in input)
-			{
-				builder.Append(convert(value));
-			}
-
-			return builder.ToString();
-		}
-
 		public static bool IsHexChar(char c)
 		{
 			return (c >= 'A' && c <= 'Z')

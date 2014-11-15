@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Platform.IO
 {
@@ -16,9 +14,11 @@ namespace Platform.IO
 
 		public virtual void OnBeforeClose(EventArgs eventArgs)
 		{
-			if (BeforeClose != null)
+			var callback = BeforeClose;
+
+			if (callback != null)
 			{
-				BeforeClose(this, eventArgs);
+				callback(this, eventArgs);
 			}
 		}
 
@@ -26,9 +26,11 @@ namespace Platform.IO
 
 		public virtual void OnAfterClose(EventArgs eventArgs)
 		{
-			if (AfterClose != null)
+			var callback = AfterClose;
+
+			if (callback != null)
 			{
-				AfterClose(this, eventArgs);
+				callback(this, eventArgs);
 			}
 		}
 	
@@ -45,6 +47,7 @@ namespace Platform.IO
 				return readMeter;
 			}
 		}
+
 		private readonly MutableMeter readMeter;
 
 		private long readBytes = 0;
@@ -61,6 +64,7 @@ namespace Platform.IO
 				return writeMeter;
 			}
 		}
+
 		private readonly MutableMeter writeMeter;
 
 		private long writeBytes = 0;
@@ -123,9 +127,7 @@ namespace Platform.IO
 
 		public override int Read(byte[] buffer, int offset, int count)
 		{
-			int retval;
-			
-			retval = base.Read(buffer, offset, count);
+			var retval = base.Read(buffer, offset, count);
 
 			if (retval != 0 && readMeter != null)
 			{

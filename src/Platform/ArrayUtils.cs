@@ -210,7 +210,7 @@ namespace Platform
 		/// <returns>A new array</returns>
 		public static T[] NewArray<T>(this ICollection<T> collection)
 		{
-			return NewArray<T, T>(collection, Converters<T, T>.NoConvert);
+			return NewArray<T, T>(collection, ConverterUtils<T, T>.NoConvert);
 		}
 
 		/// <summary>

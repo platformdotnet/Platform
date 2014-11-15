@@ -7,19 +7,12 @@ namespace Platform.Text.RegularExpressions
 {
 	public class RegexCache
 	{
-		public static RegexCache GlobalCache
-		{
-			get
-			{
-				return globalCache;
-			}
-		}
-		private static readonly RegexCache globalCache = new RegexCache(TimeSpan.FromMinutes(60));
+		public static readonly RegexCache Default = new RegexCache(TimeSpan.FromMinutes(60));
 
 		private struct CacheKey
 		{
-		    private string regex;
-		    private RegexOptions options;
+		    internal string regex;
+			internal RegexOptions options;
 
 			public CacheKey(string regex, RegexOptions options)
 			{
@@ -28,14 +21,27 @@ namespace Platform.Text.RegularExpressions
 			}
 		}
 
+		private class CacheKeyEqualityComparer
+			: IEqualityComparer<CacheKey>
+		{
+			public static readonly CacheKeyEqualityComparer Default = new CacheKeyEqualityComparer();
+
+			public bool Equals(CacheKey x, CacheKey y)
+			{
+				return x.options == y.options && x.regex == y.regex;
+			}
+
+			public int GetHashCode(CacheKey obj)
+			{
+				return (obj.regex == null ? 0 : obj.regex.GetHashCode() ^ (int)obj.options);
+			}
+		}
+
 		private readonly IDictionary<CacheKey, Regex> cache;
 
 		public RegexCache(TimeSpan timeout)
 		{
-			cache = new TimedReferenceDictionary<CacheKey, Regex>
-			(
-				timeout, typeof(Dictionary<,>)
-			);
+			cache = new TimedReferenceDictionary<CacheKey, Regex>(timeout);
 		}
 
 		public Regex NewRegex(string regex, RegexOptions options)

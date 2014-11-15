@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Platform.IO
 {
 	/// <summary>
-	/// An interface for supporting of reading lines with timeouts.  Usually used
-	/// with the <see cref="TextReaderUtils.MergeTextReadersAsLineReader"/> method.
+	/// An interface for supporting of reading lines with timeouts. Usually used with the <see cref="TextReaderUtils.MergeTextReadersAsLineReader"/> method.
 	/// </summary>
 	/// <seealso cref="TextReaderUtils.MergeTextReadersAsLineReader"/>
 	public interface ILineReader
@@ -27,5 +23,4 @@ namespace Platform.IO
 		/// <returns>True if a line was read before the timeout period</returns>
 		bool ReadLine(TimeSpan timeout, out string line);
 	}
-
 }

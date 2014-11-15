@@ -1,15 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Platform.References
 {
 	/// <summary>
-	/// A <see cref="WeakReference<T>"/> that fires an event after its target has been finalized
+	/// A <see cref="WeakReference"/> that fires an event after its target has been finalized
 	/// </summary>
-	/// <typeparam name="T">
-	/// The type of the target that the reference points to.
-	/// </typeparam>
+	/// <typeparam name="T">The type of the target that the reference points to</typeparam>
 	public class NotifyingWeakReference<T>
 		: WeakReference<T>
 		where T : class
@@ -22,9 +18,11 @@ namespace Platform.References
 
 		protected virtual void OnReferenceCollected(EventArgs eventArgs)
 		{
-			if (ReferenceCollected != null)
+			var eventHandler = this.ReferenceCollected;
+
+			if (eventHandler != null)
 			{
-				ReferenceCollected(this, eventArgs);
+				eventHandler(this, eventArgs);
 			}
 		}
 
@@ -45,6 +43,7 @@ namespace Platform.References
 				}
 				else
 				{
+					// ReSharper disable once ObjectCreationAsStatement
 					new GarbageCollectionListener(notifyingReference);
 				}
 			}
@@ -57,6 +56,7 @@ namespace Platform.References
 		public NotifyingWeakReference(T value)
 			: base(value)
 		{
+			// ReSharper disable once ObjectCreationAsStatement
 			new GarbageCollectionListener(this);
 		}
 
@@ -71,6 +71,7 @@ namespace Platform.References
 		public NotifyingWeakReference(T value, bool trackResurrection)
 			: base(value, null, trackResurrection)
 		{
+			// ReSharper disable once ObjectCreationAsStatement
 			new GarbageCollectionListener(this);
 		}
 	}

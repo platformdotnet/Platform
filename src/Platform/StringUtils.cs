@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -85,11 +86,9 @@ namespace Platform
 			return s.Substring(index, length);
 		}
 
-		public static Pair<string, string> SplitAroundFirstStringFromLeft(this string s, string searchString)
+		public static Pair<string, string> SplitOnFirst(this string s, string searchString)
 		{
-			int x;
-
-			x = s.IndexOf(searchString);
+			var x = s.IndexOf(searchString, StringComparison.Ordinal);
 
 			if (x < 0)
 			{
@@ -99,9 +98,9 @@ namespace Platform
 			return new Pair<string, string>(s.Substring(0, x), s.Substring(x + searchString.Length));
 		}
 
-		public static Pair<string, string> SplitAroundFirstStringFromRight(this string s, string searchString)
+		public static Pair<string, string> SplitOnLast(this string s, string searchString)
 		{
-			var x = s.LastIndexOf(searchString);
+			var x = s.LastIndexOf(searchString, StringComparison.Ordinal);
 
 			if (x < 0)
 			{
@@ -273,114 +272,6 @@ namespace Platform
 			return s1.Equals(s2, StringComparison.InvariantCultureIgnoreCase);
 		}
 
-		public static string Convert(this string s, Converter<char, char> converter)
-		{
-			return ConvertAndFilter(s, converter, null);
-		}
-
-		public static string Filter(this string s, Predicate<char> shouldFilter)
-		{
-			return s.FilterAndConvert(shouldFilter, null);
-		}
-
-		public static string ConvertAndFilter(this string s, Converter<char, char> convert, Predicate<char> filter)
-		{
-			StringBuilder builder;
-			
-			if (convert != null)
-			{
-				builder = new StringBuilder(s.Length * 2);
-			}
-			else
-			{
-				builder = new StringBuilder(s.Length);
-			}
-
-			var filtered = false;
-						
-			for (int i = 0; i < s.Length; i++)
-			{				
-				char value;
-				
-				if (convert != null)
-				{
-					value = convert(s[i]);
-				}
-				else
-				{
-					value = s[i];
-				}
-
-				if (filter == null)
-				{
-					builder.Append(value);
-				}
-				else if (filter(value))
-				{
-					filtered = true;
-
-					builder.Append(value);
-				}				
-			}
-
-			if (!filtered && convert == null)
-			{
-				return s;
-			}
-			else
-			{
-				return builder.ToString();				
-			}
-		}
-
-		public static string FilterAndConvert(this string s, Predicate<char> acceptChar, Converter<char, char> convert)
-		{
-			StringBuilder builder;
-			
-			if (convert != null)
-			{
-				builder = new StringBuilder(s.Length * 2);
-			}
-			else
-			{
-				builder = new StringBuilder(s.Length);
-			}
-
-			var filtered = false;
-						
-			for (var i = 0; i < s.Length; i++)
-			{				
-				char c;
-
-				c = s[i];
-
-				if (acceptChar != null && acceptChar(c))
-				{
-					if (convert != null)
-					{
-						builder.Append(convert(c));
-					}
-					else
-					{
-						builder.Append(c);
-					}
-
-					continue;
-				}
-				
-				filtered = true;
-			}
-
-			if (!filtered && convert == null)
-			{
-				return s;
-			}
-			else
-			{
-				return builder.ToString();				
-			}
-		}
-		
 		/// <summary>
 		/// Gets the string made of all the characters on the left of the string while the
 		/// predicate is satisfied.
@@ -414,11 +305,8 @@ namespace Platform
 
 		/// <summary>
 		/// Gets the string made up of all the characters on the right of all the characters
-		/// on the left that match the predicate!
+		/// on the left that match the predicate
 		/// </summary>
-		/// <param name="s"></param>
-		/// <param name="predicate"></param>
-		/// <returns></returns>
 		public static string RightFromLeft(this string s, Predicate<char> predicate)
 		{
 			int i;
@@ -474,12 +362,7 @@ namespace Platform
 				}
 			}
 
-			if (i  < 0)
-			{
-				return s;
-			}
-
-			return s.Substring(i + 1);
+			return i  < 0 ? s : s.Substring(i + 1);
 		}
 
 		public static string LeftFromRight(this string s, Predicate<char> accept)
@@ -498,22 +381,12 @@ namespace Platform
 				}
 			}
 
-			if (i  < 0)
-			{
-				return String.Empty;
-			}
-
-			return s.Substring(0, i + 1);
+			return i  < 0 ? String.Empty : s.Substring(0, i + 1);
 		}
 
 		public static string Left(this string s, int count)
 		{
-			if (count >= s.Length)
-			{
-				return s;
-			}
-
-			return s.Substring(0, count);
+			return count >= s.Length ? s : s.Substring(0, count);
 		}
 
 		public static string Right(this string s, int count)
@@ -543,9 +416,9 @@ namespace Platform
 
 		public static int CountChars(this string s, Predicate<char> acceptChar, int startIndex, int count)
 		{
-			int retval = 0;
+			var retval = 0;
 
-			for (int i = startIndex; i < count; i++)
+			for (var i = startIndex; i < count; i++)
 			{
 				if (acceptChar(s[i]))
 				{
@@ -679,37 +552,30 @@ namespace Platform
 
 		public static string TrimLeft(this string s, string match)
 		{
-			if (s.StartsWith(match))
-			{
-				return s.Substring(match.Length);
-			}
-			else
-			{
-				return s;
-			}
+			return s.StartsWith(match) ? s.Substring(match.Length) : s;
 		}
 
 		public static string TrimRight(this string s, string match)
 		{
-			if (s.EndsWith(match))
-			{
-				return s.Substring(0, s.Length - match.Length);
-			}
-			else
-			{
-				return s;
-			}
+			return s.EndsWith(match) ? s.Substring(0, s.Length - match.Length) : s;
 		}
 
+		/// <summary>
+		/// Returns the index of the first character that satifies the predicate.
+		/// </summary>
+		/// <param name="s">The string to search</param>
+		/// <param name="acceptChar">The predicate</param>
+		/// <returns>The index of the first character if found otherwise -1</returns>
 		public static int IndexOf(this string s, Predicate<char> acceptChar)
 		{
 			return s.IndexOf(0, acceptChar);
 		}
 
-		//// <summary>
+		/// <summary>
 		/// Returns the index of the first character that satisfies the given predicate.
 		/// </summary>
 		/// <param name="s">The string to search.</param>
+		/// <param name="startIndex">The index to start search at</param>
 		/// <param name="acceptChar">
 		/// The predicate that every character is asserted against.
 		/// </param>
@@ -766,32 +632,17 @@ namespace Platform
 
 		public static string ShortTail(this string s)
 		{
-			if (s.Length == 0)
-			{
-				return s;
-			}
-
-			return s[s.Length - 1].ToString();
+			return s.Length == 0 ? s : s[s.Length - 1].ToString(CultureInfo.InvariantCulture);
 		}
 
 		public static string Head(this string s)
 		{
-			if (s.Length == 0)
-			{
-				return s;
-			}
-
-			return s[0].ToString();
+			return s.Length == 0 ? s : s[0].ToString(CultureInfo.InvariantCulture);
 		}
 
 		public static string Tail(this string s)
 		{
-			if (s.Length <= 1)
-			{
-				return s;
-			}
-
-			return s.Substring(1);
+			return s.Length <= 1 ? s : s.Substring(1);
 		}
 
 		public static bool IsNumeric(this string s)

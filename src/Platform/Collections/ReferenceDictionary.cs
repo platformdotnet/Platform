@@ -75,15 +75,26 @@ namespace Platform.Collections
 			return true;
 		}
 
-		protected ReferenceDictionary(Type openGenericDictionaryType, params object[] constructorArgs)
-		{
-			Type type;
+		protected ReferenceDictionary()
+			: this(null)
+		{	
+		}
 
-			type = openGenericDictionaryType.MakeGenericType(typeof(K), typeof(R));
-			
+		protected ReferenceDictionary(int capacity)
+			: this(capacity, null)
+		{
+		}
+
+		protected ReferenceDictionary(IEqualityComparer<K> comparer)
+			 : this(0, comparer)
+		{
+		}
+
+		protected ReferenceDictionary(int capacity, IEqualityComparer<K> comparer)
+		{
 			this.referenceQueueBase = new ReferenceQueueBase<V>();
 
-			dictionary = (IDictionary<K, R>)Activator.CreateInstance(type, constructorArgs);
+			this.dictionary = comparer == null ? new Dictionary<K, R>(capacity) : new Dictionary<K, R>(capacity, comparer);
 		}
 
 		protected abstract R CreateReference(K key, V value);

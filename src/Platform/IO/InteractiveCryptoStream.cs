@@ -1,9 +1,8 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
-using Platform.IO;
 
-namespace Platform.Security.Cryptography
+namespace Platform.IO
 {
 	/// <summary>
 	/// A stream wrapper implementation that implements support cryptography
@@ -29,22 +28,11 @@ namespace Platform.Security.Cryptography
 		private int writeBufferCount;
 		private readonly ICryptoTransform transform;
 		private readonly CryptoStreamMode mode;
-
-		public override bool CanRead
-		{
-			get
-			{
-				return mode == CryptoStreamMode.Read;
-			}
-		}
-
-		public override bool CanWrite
-		{
-			get
-			{
-				return mode == CryptoStreamMode.Write;
-			}
-		}
+		
+		public override long Position { get { throw new NotSupportedException(); } set { throw new NotSupportedException(); } }
+		public override long Length { get { throw new NotSupportedException(); } }
+		public override bool CanRead { get { return this.mode == CryptoStreamMode.Read; } }
+		public override bool CanWrite { get { return this.mode == CryptoStreamMode.Write; } }
 
 		public override bool CanSeek
 		{
@@ -59,30 +47,9 @@ namespace Platform.Security.Cryptography
 			throw new NotSupportedException();
 		}
 
-		public override long Position
-		{
-			get
-			{
-				throw new NotSupportedException();
-			}
-			set
-			{
-				throw new NotSupportedException();
-			}
-		}
-
-		public override long Length
-		{
-			get
-			{
-				throw new NotSupportedException();
-			}
-		}
-
 		public InteractiveCryptoStream(Stream stream, ICryptoTransform transform, CryptoStreamMode mode)
 			: this(stream, transform, mode, 255)
-		{
-			
+		{	
 		}
 
 		public InteractiveCryptoStream(Stream stream, ICryptoTransform transform, CryptoStreamMode mode, int bufferSizeInBlocks)
@@ -102,29 +69,27 @@ namespace Platform.Security.Cryptography
 
 			this.transform = transform;
 			
-			writeBuffer = new byte[2 + transform.InputBlockSize * bufferSizeInBlocks];
-			writeBlockBuffer = new byte[transform.OutputBlockSize];
+			this.writeBuffer = new byte[2 + transform.InputBlockSize * bufferSizeInBlocks];
+			this.writeBlockBuffer = new byte[transform.OutputBlockSize];
 
-			readPreBuffer = new byte[transform.OutputBlockSize * 5];
-			readBuffer = new byte[transform.InputBlockSize * 5];
+			this.readPreBuffer = new byte[transform.OutputBlockSize * 5];
+			this.readBuffer = new byte[transform.InputBlockSize * 5];
 
-			writeBufferCount = 2;
-			readBufferCount = 0;
-			readBufferIndex = 0;
+			this.writeBufferCount = 2;
+			this.readBufferCount = 0;
+			this.readBufferIndex = 0;
 		}
 
 		public override void WriteByte(byte value)
 		{
-			writeOneByte[0] = value;
+			this.writeOneByte[0] = value;
 
-			Write(writeOneByte, 0, 1);
+			this.Write(this.writeOneByte, 0, 1);
 		}
 
 		public override void Write(byte[] buffer, int offset, int count)
 		{
-			int length;
-
-			if (!CanWrite)
+			if (!this.CanWrite)
 			{
 				throw new NotSupportedException("Reading not supported");
 			}
@@ -156,18 +121,18 @@ namespace Platform.Security.Cryptography
 
 			while (count > 0)
 			{
-				length = Math.Min(count, writeBuffer.Length - writeBufferCount);
+				var length = Math.Min(count, this.writeBuffer.Length - this.writeBufferCount);
 
 				if (length == 0)
 				{
-					Flush();
+					this.Flush();
 	
 					continue;
 				}
 
-				Array.Copy(buffer, offset, writeBuffer, writeBufferCount, length);
+				Array.Copy(buffer, offset, this.writeBuffer, this.writeBufferCount, length);
 
-				writeBufferCount += length;
+				this.writeBufferCount += length;
 				count -= length;
 			}
 		}
@@ -177,27 +142,24 @@ namespace Platform.Security.Cryptography
 
 		public override int ReadByte()
 		{
-			int x;
-
-			x = Read(readOneByte, 0, 1);
+			var x = this.Read(this.readOneByte, 0, 1);
 
 			if (x == -1)
 			{
 				return -1;
 			}
 
-			return readOneByte[0];
+			return this.readOneByte[0];
 		}
 
 		private int ReadAndConvertBlocks()
 		{
-			int x, read;
+			int x;
+			var read = 0;
 
-			read = 0;
-
-			for (;;)
+			while (true)
 			{
-				x = base.Read(readPreBuffer, 0, readPreBuffer.Length - read);
+				x = base.Read(this.readPreBuffer, 0, this.readPreBuffer.Length - read);
 
 				if (x == 0)
 				{
@@ -206,27 +168,27 @@ namespace Platform.Security.Cryptography
 
 				read += x;
 
-				if (read % transform.OutputBlockSize == 0)
+				if (read % this.transform.OutputBlockSize == 0)
 				{
 					break;
 				}
 			}
 
-			if (transform.CanTransformMultipleBlocks)
+			if (this.transform.CanTransformMultipleBlocks)
 			{
-				return transform.TransformBlock(readPreBuffer, 0, read, readBuffer, 0);
+				return this.transform.TransformBlock(this.readPreBuffer, 0, read, this.readBuffer, 0);
 			}
 			else
 			{
 				x = 0;
 
-				for (int i = 0; i < read / transform.OutputBlockSize; i++)
+				for (int i = 0; i < read / this.transform.OutputBlockSize; i++)
 				{
-					x += transform.TransformBlock(readPreBuffer,
-						i * transform.OutputBlockSize,
-						transform.OutputBlockSize,
-					                                readBuffer,
-						i * transform.InputBlockSize);
+					x += this.transform.TransformBlock(this.readPreBuffer,
+						i * this.transform.OutputBlockSize,
+						this.transform.OutputBlockSize,
+					                                this.readBuffer,
+						i * this.transform.InputBlockSize);
 				}
 				
 				return x;
@@ -235,9 +197,7 @@ namespace Platform.Security.Cryptography
 
 		public override int Read(byte[] buffer, int offset, int count)
 		{
-			int x, length;
-
-			if (!CanRead)
+			if (!this.CanRead)
 			{
 				throw new NotSupportedException("Reading not supported");
 			}
@@ -267,13 +227,13 @@ namespace Platform.Security.Cryptography
 				throw new ArgumentOutOfRangeException("count", count, "can not be negative");
 			}
 
-			for (;;)
+			while (true)
 			{
-				if (readBufferCount == 0)
+				if (this.readBufferCount == 0)
 				{
-					for (;;)
+					while (true)
 					{
-						x = ReadAndConvertBlocks();
+						var x = this.ReadAndConvertBlocks();
 
 						if (x == 0)
 						{
@@ -281,55 +241,55 @@ namespace Platform.Security.Cryptography
 						}
 						else if (x == -1)
 						{
-							readBufferIndex = 0;
-							readBufferCount = 0;
+							this.readBufferIndex = 0;
+							this.readBufferCount = 0;
 
 							return 0;
 						}
 
-						readBufferIndex = 0;
-						readBufferCount = x;
+						this.readBufferIndex = 0;
+						this.readBufferCount = x;
 
 						break;
 					}
 				}
 
-				if (bytesLeftInSuperBlock == 0)
+				if (this.bytesLeftInSuperBlock == 0)
 				{
-					bytesLeftInSuperBlock = readBuffer[readBufferIndex];
-					bytesLeftInSuperBlock |= readBuffer[readBufferIndex + 1] << 8;
+					this.bytesLeftInSuperBlock = this.readBuffer[this.readBufferIndex];
+					this.bytesLeftInSuperBlock |= this.readBuffer[this.readBufferIndex + 1] << 8;
 
-					bytesLeftInSuperBlock += 2;
+					this.bytesLeftInSuperBlock += 2;
 					
-					if (bytesLeftInSuperBlock == 2)
+					if (this.bytesLeftInSuperBlock == 2)
 					{
-						bytesLeftInSuperBlock = 0;
-						readBufferIndex += transform.InputBlockSize;
-						readBufferCount -= transform.InputBlockSize;
+						this.bytesLeftInSuperBlock = 0;
+						this.readBufferIndex += this.transform.InputBlockSize;
+						this.readBufferCount -= this.transform.InputBlockSize;
 
 						continue;
 					}
 
-					readBufferCount -= 2;
-					readBufferIndex += 2;
+					this.readBufferCount -= 2;
+					this.readBufferIndex += 2;
 					
-					bytesPaddingSuperBlock = (((bytesLeftInSuperBlock + 15) / 16) * 16) - bytesLeftInSuperBlock;
+					this.bytesPaddingSuperBlock = (((this.bytesLeftInSuperBlock + 15) / 16) * 16) - this.bytesLeftInSuperBlock;
 
-					bytesLeftInSuperBlock -= 2;
+					this.bytesLeftInSuperBlock -= 2;
 				}
 
-				length = MathUtils.Min(bytesLeftInSuperBlock, readBufferCount, count);
+				var length = MathUtils.Min(this.bytesLeftInSuperBlock, this.readBufferCount, count);
 
-				Array.Copy(readBuffer, readBufferIndex, buffer, offset, length);
+				Array.Copy(this.readBuffer, this.readBufferIndex, buffer, offset, length);
 
-				bytesLeftInSuperBlock -= length;
-				readBufferCount -= length;
-				readBufferIndex += length;
+				this.bytesLeftInSuperBlock -= length;
+				this.readBufferCount -= length;
+				this.readBufferIndex += length;
 
-				if (bytesLeftInSuperBlock == 0)
+				if (this.bytesLeftInSuperBlock == 0)
 				{
-					readBufferIndex += bytesPaddingSuperBlock;
-					readBufferCount -= bytesPaddingSuperBlock;
+					this.readBufferIndex += this.bytesPaddingSuperBlock;
+					this.readBufferCount -= this.bytesPaddingSuperBlock;
 				}
 
 				return length;
@@ -340,72 +300,64 @@ namespace Platform.Security.Cryptography
 
 		public override void Flush()
 		{
-			PrivateFlush();
+			this.PrivateFlush();
 
 			// The ICryptoTransform always keeps the most recent block
 			// in memory so we have to write an empty block to get the
 			// result of the encryption of the last useful block.
 
-			writeBuffer[0] = 0;
-			writeBuffer[1] = 0;
+			this.writeBuffer[0] = 0;
+			this.writeBuffer[1] = 0;
 
-			for (int i = 2; i < transform.InputBlockSize; i++)
+			for (int i = 2; i < this.transform.InputBlockSize; i++)
 			{
-				writeBuffer[i] = (byte)random.Next(0, 255);
+				this.writeBuffer[i] = (byte)this.random.Next(0, 255);
 			}
 																	   
-			transform.TransformBlock(writeBuffer, 0, transform.InputBlockSize,  writeBlockBuffer, 0);
+			this.transform.TransformBlock(this.writeBuffer, 0, this.transform.InputBlockSize,  this.writeBlockBuffer, 0);
 
-			base.Write(writeBlockBuffer, 0, writeBlockBuffer.Length);
+			base.Write(this.writeBlockBuffer, 0, this.writeBlockBuffer.Length);
 			base.Flush();
 		}
 
 		private void PrivateFlush()
 		{
-			int x;
-			int length;
-			int numberOfBlocks;
-			
-			if (writeBufferCount == 2)
+			if (this.writeBufferCount == 2)
 			{
 				return;
 			}
 
-			numberOfBlocks = ((writeBufferCount - 1) / transform.InputBlockSize) + 1;
+			var numberOfBlocks = ((this.writeBufferCount - 1) / this.transform.InputBlockSize) + 1;
 
 			if (numberOfBlocks == 0)
 			{
 				return;
 			}
 			
-			writeBuffer[0] = ((byte)((writeBufferCount - 2) & 0xff));
-			writeBuffer[1] = ((byte)(((writeBufferCount - 2) & 0xff00) >> 8));
+			this.writeBuffer[0] = ((byte)((this.writeBufferCount - 2) & 0xff));
+			this.writeBuffer[1] = ((byte)(((this.writeBufferCount - 2) & 0xff00) >> 8));
 
-			for (int i = 0; i < numberOfBlocks; i++)
+			for (var i = 0; i < numberOfBlocks; i++)
 			{
-				length = transform.InputBlockSize;
-				
 				if (i == numberOfBlocks - 1)
 				{
-					if (writeBuffer.Length - writeBufferCount < transform.InputBlockSize)
+					if (this.writeBuffer.Length - this.writeBufferCount < this.transform.InputBlockSize)
 					{
-						Array.Clear(writeBuffer, writeBufferCount, writeBuffer.Length - writeBufferCount);
-
-						length = transform.InputBlockSize - (writeBuffer.Length - writeBufferCount);
+						Array.Clear(this.writeBuffer, this.writeBufferCount, this.writeBuffer.Length - this.writeBufferCount);
 					}
 				}
 
-				x = transform.TransformBlock(writeBuffer, i * transform.InputBlockSize, transform.InputBlockSize,  writeBlockBuffer, 0);
+				var x = this.transform.TransformBlock(this.writeBuffer, i * this.transform.InputBlockSize, this.transform.InputBlockSize,  this.writeBlockBuffer, 0);
 
-				if (x != transform.InputBlockSize)
+				if (x != this.transform.InputBlockSize)
 				{
 					throw new Exception();
 				}
 
-				base.Write(writeBlockBuffer, 0, writeBlockBuffer.Length);
+				base.Write(this.writeBlockBuffer, 0, this.writeBlockBuffer.Length);
 			}
 
-			writeBufferCount = 2;
+			this.writeBufferCount = 2;
 		}
 	}
 }

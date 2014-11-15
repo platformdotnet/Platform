@@ -2,7 +2,7 @@ using System;
 
 namespace Platform
 {
-	public class Converters<I, O>
+	public class ConverterUtils<I, O>
 	{
 		public static Converter<I, O> NoConvert
 		{
@@ -11,6 +11,7 @@ namespace Platform
 				return noConvert;
 			}
 		}
+
 		private static readonly Converter<I, O> noConvert = value => (O) (object) value;
 	}
 }
