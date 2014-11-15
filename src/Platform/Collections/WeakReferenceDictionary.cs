@@ -197,7 +197,7 @@ namespace Platform.Collections
 		/// <returns>A new <see cref="KeyedWeakReference"/></returns>
 		protected override KeyedWeakReference CreateReference(K key, V value)
 		{
-			return new KeyedWeakReference(key, value, referenceQueue);
+			return new KeyedWeakReference(key, value, this.referenceQueueBase);
 		}
 	}
 }

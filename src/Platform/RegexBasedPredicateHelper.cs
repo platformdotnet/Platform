@@ -51,7 +51,7 @@ namespace Platform
 		/// <returns>The <see cref="Regex"/> associated with the <see cref="Predicate{T}"/></returns>
 		public static Regex GetRegexFromPredicate(Predicate<string> regexBasedPredicate)
 		{
-			RegexBasedPredicateHelper predicateHelper = regexBasedPredicate.Target as RegexBasedPredicateHelper;
+			var predicateHelper = regexBasedPredicate.Target as RegexBasedPredicateHelper;
 
 			if (predicateHelper == null)
 			{
@@ -68,7 +68,7 @@ namespace Platform
 
 		public virtual Predicate<string> ToPredicate()
 		{
-			return (Predicate<string>)this;
+			return this;
 		}
 
 		public static implicit operator Predicate<string>(RegexBasedPredicateHelper predicateHelper)

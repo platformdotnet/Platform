@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 using Platform.Collections;
 
@@ -29,7 +28,7 @@ namespace Platform.Text.RegularExpressions
 			}
 		}
 
-		private readonly ILDictionary<CacheKey, Regex> cache;
+		private readonly IDictionary<CacheKey, Regex> cache;
 
 		public RegexCache(TimeSpan timeout)
 		{
@@ -41,7 +40,7 @@ namespace Platform.Text.RegularExpressions
 
 		public Regex NewRegex(string regex, RegexOptions options)
 		{
-			lock (cache.SyncLock)
+			lock (cache)
 			{
 				Regex retval;
 				var key = new CacheKey(regex, options);

@@ -9,7 +9,7 @@ namespace Platform.References
 	/// target has been collected.
 	/// </summary>
 	/// <typeparam name="T">The <see cref="Reference{T}"/> target</typeparam>
-	/// <seealso cref="ReferenceQueue{T}"/>
+	/// <seealso cref="ReferenceQueueBaseBase{T}"/>
 	public interface IReferenceQueue<T>
 		where T : class
 	{

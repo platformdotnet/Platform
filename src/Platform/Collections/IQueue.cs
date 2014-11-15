@@ -8,8 +8,8 @@ namespace Platform.Collections
 	/// Interface for all objects that implement a queue.
 	/// </summary>
 	/// <typeparam name="T">The type of value stored in the queue</typeparam>
-	public interface ILQueue<T>
-		: ILCollection<T>
+	public interface IQueue<T>
+		: ICollection<T>
 	{
 		/// <summary>
 		/// Enqueues an item onto the collection.
@@ -38,16 +38,6 @@ namespace Platform.Collections
 		/// <param name="item">A variable to store the value if available</param>
 		/// <returns>True if an item is available and has been returned otherwise False</returns>
 		bool TryDequeue(out T item);
-
-		/// <summary>
-		/// Tries to dequeue several items into an array.  The first item dequeued will be
-		/// placed at <see cref="offset"/>, the next at offset+1 etc.
-		/// </summary>
-		/// <param name="items">An array to store the values dequeued</param>
-		/// <param name="offset">An offset within the array to start storing dequeued values</param>
-		/// <param name="count">The number of items to try to dequeue</param>
-		/// <returns>The number of items dequeued</returns>
-		int TryDequeue(T[] items, int offset, int count);
 
 		/// <summary>
 		/// Returns the next item in the queue without removing it from the queue.

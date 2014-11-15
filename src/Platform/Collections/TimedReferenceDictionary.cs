@@ -194,7 +194,7 @@ namespace Platform.Collections
 		/// <returns>True if the item was found and returned otherwise False</returns>
 		public override bool TryGetValue(K key, out V value)
 		{
-			lock (this.SyncLock)
+			lock (this)
 			{
 				KeyedTimedReference reference;
 
@@ -228,7 +228,7 @@ namespace Platform.Collections
 		/// <param name="state">Will always be null</param>
 		protected virtual void OnTimer(object state)
 		{
-			lock (this.SyncLock)
+			lock (this)
 			{
 				CheckMaximumCount();
 
@@ -301,7 +301,7 @@ namespace Platform.Collections
 		/// </summary>
 		private void CheckMaximumCount()
 		{
-			lock (this.SyncLock)
+			lock (this)
 			{
 				if (maximumCount != -1 && dictionary.Count >= maximumCount + lastMaximumFlushCount)
 				{
@@ -314,11 +314,11 @@ namespace Platform.Collections
 						int originalCount = this.Count;
 						int smallestIndex = -1;
 						DateTime smallestTime = DateTime.MaxValue;
-						ILList<TimedReferenceDictionary<K, V>.KeyedTimedReference> removeList;
+						IList<KeyedTimedReference> removeList;
 
 						Action routine = delegate
 						{
-							removeList = new ArrayList<TimedReferenceDictionary<K, V>.KeyedTimedReference>(removeCount);
+							removeList = new List<KeyedTimedReference>(removeCount);
 
 							foreach (var reference in dictionary.Values)
 							{
@@ -373,7 +373,7 @@ namespace Platform.Collections
 		/// <returns>A new <see cref="TimedReferenceDictionary{K, V}"/></returns>
 		protected override TimedReferenceDictionary<K, V>.KeyedTimedReference CreateReference(K key, V value)
 		{
-			return new KeyedTimedReference(key, value, referenceQueue, this.TimeOut);
+			return new KeyedTimedReference(key, value, this.referenceQueueBase, this.TimeOut);
 		}
 	}
 }
