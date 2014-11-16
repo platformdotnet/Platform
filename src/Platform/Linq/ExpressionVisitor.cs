@@ -246,10 +246,9 @@ namespace Platform.Linq
 			return original;
 		}
 
-		protected virtual IReadOnlyList<T> VisitExpressionList<T>(IReadOnlyList<T> original)
-			where T : Expression
+		protected virtual IReadOnlyList<Expression> VisitExpressionList(IReadOnlyList<Expression> original)
 		{
-			List<T> list = null;
+			List<Expression> list = null;
 
 			if (original == null)
 			{
@@ -258,7 +257,7 @@ namespace Platform.Linq
 
 			for (int i = 0, n = original.Count; i < n; i++)
 			{
-				var p = (T)Visit(original[i]);
+				var p = Visit(original[i]);
 
 				if (list != null)
 				{
@@ -269,7 +268,7 @@ namespace Platform.Linq
 				}
 				else if (p != original[i])
 				{
-					list = new List<T>(n);
+					list = new List<Expression>(n);
 
 					for (var j = 0; j < i; j++)
 					{
@@ -285,7 +284,7 @@ namespace Platform.Linq
 
 			if (list != null)
 			{
-				return new ReadOnlyList<T>(list);
+				return list.ToReadOnlyList();
 			}
 
 			return original;
@@ -360,75 +359,7 @@ namespace Platform.Linq
 			return original;
 		}
 
-		protected virtual IEnumerable<T> VisitBindingList<T>(IReadOnlyList<T> original)
-			where T : MemberBinding
-		{
-			List<T> list = null;
-
-			for (int i = 0, n = original.Count; i < n; i++)
-			{
-				var b = (T)VisitBinding(original[i]);
-
-				if (list != null)
-				{
-					list.Add(b);
-				}
-				else if (b != original[i])
-				{
-					list = new List<T>(n);
-
-					for (var j = 0; j < i; j++)
-					{
-						list.Add(original[j]);
-					}
-
-					list.Add(b);
-				}
-			}
-
-			if (list != null)
-			{
-				return list;
-			}
-
-			return original;
-		}
-
 		protected virtual IEnumerable<ElementInit> VisitElementInitializerList(ReadOnlyCollection<ElementInit> original)
-		{
-			List<ElementInit> list = null;
-
-			for (int i = 0, n = original.Count; i < n; i++)
-			{
-				var init = VisitElementInitializer(original[i]);
-
-				if (list != null)
-				{
-					list.Add(init);
-				}
-
-				else if (init != original[i])
-				{
-					list = new List<ElementInit>(n);
-
-					for (var j = 0; j < i; j++)
-					{
-						list.Add(original[j]);
-					}
-
-					list.Add(init);
-				}
-			}
-
-			if (list != null)
-			{
-				return list;
-			}
-
-			return original;
-		}
-
-		protected virtual IEnumerable<ElementInit> VisitElementInitializerList(IReadOnlyList<ElementInit> original)
 		{
 			List<ElementInit> list = null;
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Platform.Collections;
 
 namespace Platform
 {
@@ -18,6 +19,21 @@ namespace Platform
 		public static IEnumerable<T> Null<T>()
 		{
 			yield break;
+		}
+
+		internal static ReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> enumerable)
+		{
+			if (enumerable == null)
+			{
+				return null;
+			}
+
+			if (enumerable is ReadOnlyList<T>)
+			{
+				return (ReadOnlyList<T>)enumerable;
+			}
+
+			return new ReadOnlyList<T>(enumerable.ToList());
 		}
 
 		public static IEnumerable<T> Concat<T>(this IEnumerable<T> values, T value)
