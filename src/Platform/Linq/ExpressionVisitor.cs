@@ -75,9 +75,16 @@ namespace Platform.Linq
 				return VisitMemberInit((MemberInitExpression)expression);
 			case ExpressionType.ListInit:
 				return VisitListInit((ListInitExpression)expression);
+			case ExpressionType.Extension:
+				return VisitExtension(expression);
 			default:
 				throw new Exception(String.Format("Unhandled expression type: '{0}'", expression.NodeType));
 			}
+		}
+
+		protected virtual Expression VisitExtension(Expression expression)
+		{
+			return expression;
 		}
 
 		protected virtual MemberBinding VisitBinding(MemberBinding binding)
