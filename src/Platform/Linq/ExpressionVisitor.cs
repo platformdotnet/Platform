@@ -413,7 +413,7 @@ namespace Platform.Linq
 			return expression;
 		}
 
-		protected virtual NewExpression VisitNew(NewExpression expression)
+		protected virtual Expression VisitNew(NewExpression expression)
 		{
 			var args = VisitExpressionList(expression.Arguments);
 
@@ -440,7 +440,7 @@ namespace Platform.Linq
 
 			if (n != expression.NewExpression || bindings != expression.Bindings)
 			{
-				return Expression.MemberInit(n, bindings);
+				return Expression.MemberInit((NewExpression)n, bindings);
 			}
 
 			return expression;
@@ -453,7 +453,7 @@ namespace Platform.Linq
 
 			if (n != expression.NewExpression || initializers != expression.Initializers)
 			{
-				return Expression.ListInit(n, initializers);
+				return Expression.ListInit((NewExpression)n, initializers);
 			}
 
 			return expression;
