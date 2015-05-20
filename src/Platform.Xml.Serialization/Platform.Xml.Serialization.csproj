@@ -112,7 +112,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CachingXmlSerializerFactory.cs" />
+    <Compile Include="ColorSerializer.cs" />
     <Compile Include="FieldGetterSetter.cs" />
+    <Compile Include="GuidSerializer.cs" />
     <Compile Include="IGetterSetter.cs" />
     <Compile Include="IVariableSubstitutor.cs" />
     <Compile Include="IXmlDeserializationStartListener.cs" />
@@ -195,6 +197,7 @@
     <Compile Include="XmlElementAttribute.cs" />
     <Compile Include="XmlEnvironmentVariableSubstitutor.cs" />
     <Compile Include="XmlExcludeAttribute.cs" />
+    <Compile Include="XmlFormatAttribute.cs" />
     <Compile Include="XmlListElementAttribute.cs" />
     <Compile Include="XmlListElementDynamicTypeProviderAttribute.cs" />
     <Compile Include="XmlNodeNodeTypeSerializer.cs" />
