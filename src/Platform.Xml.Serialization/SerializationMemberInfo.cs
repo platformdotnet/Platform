@@ -145,7 +145,7 @@ namespace Platform.Xml.Serialization
 
 			// Get the [XmlExclude] [XmlAttribute] or [XmlElement] attribute
 
-			var attribute = GetFirstApplicableAttribute(false, typeof (XmlExcludeAttribute), typeof (XmlAttributeAttribute), typeof (XmlElementAttribute));
+			var attribute = GetFirstApplicableAttribute(false, typeof (XmlExcludeAttribute),typeof(XmlTextAttribute), typeof (XmlAttributeAttribute), typeof (XmlElementAttribute));
 
 			if (attribute != null)
 			{
@@ -155,6 +155,10 @@ namespace Platform.Xml.Serialization
 
 					serializedNodeType = XmlNodeType.None;
 				}
+                else if (attribute is XmlTextAttribute)
+                {
+                    serializedNodeType = XmlNodeType.Text;
+                }
 				else if ((approach = attribute as XmlApproachAttribute) != null)
 				{
 					ApproachAttribute = approach;
