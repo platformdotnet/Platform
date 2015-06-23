@@ -215,7 +215,7 @@ namespace Platform.Xml.Serialization
 
 			foreach (var item in (System.Collections.IEnumerable)obj)
 			{
-				if (state.ShouldSerialize(item))
+				if (state.ShouldSerialize(item, this.serializationMemberInfo))
 				{
 					ListItem listItem;
 

@@ -50,11 +50,13 @@
     <Compile Include="FriendlyPerson.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="InnerTextTest.cs" />
+    <Compile Include="LowerCaseTests.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DictionaryTests.cs" />
     <Compile Include="InheritanceTests.cs" />
     <Compile Include="BasicSerializerTests.cs" />
+    <Compile Include="SerializeIfNullTests.cs" />
     <Compile Include="XmlNodeTests.cs" />
   </ItemGroup>
   <ItemGroup>

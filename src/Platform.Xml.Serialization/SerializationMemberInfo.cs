@@ -21,6 +21,7 @@ namespace Platform.Xml.Serialization
 		protected bool treatAsNullIfEmpty = false;
 		protected string serializedName = "";
 		protected string serializedNamespace = "";
+	    protected bool serializeIfNull = false;
 		protected XmlSerializationAttribute[] applicableTypeAttributes;
 		protected XmlSerializationAttribute[] applicableMemberAttributes;
 		protected IXmlDynamicTypeProvider polymorphicTypeProvider;
@@ -50,6 +51,10 @@ namespace Platform.Xml.Serialization
 			get { return serializeAsCData; }
 		}
 
+	    public virtual bool SerializeIfNull
+	    {
+	        get { return serializeIfNull; }
+	    }
 		public virtual MemberInfo MemberInfo
 		{
 			get { return memberInfo; }
@@ -187,6 +192,9 @@ namespace Platform.Xml.Serialization
 					{
 						this.includeIfUnattributed = true;
 					}
+
+				    if (approach.SerializeIfNull)
+				        this.serializeIfNull = true;
 				}
 			}
 			else
