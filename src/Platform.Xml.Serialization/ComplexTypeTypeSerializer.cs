@@ -222,7 +222,7 @@ namespace Platform.Xml.Serialization
                         }
 
                         // Write the start of the attribute.
-                        writer.WriteStartAttribute(memberInfo.SerializedName, "");
+                        writer.WriteStartAttribute(memberInfo.SerializedName);
 
                         // Write the attribute value.
                         writer.WriteString(simpleSerializer.Serialize(val, state));
