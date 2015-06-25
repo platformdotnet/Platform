@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Platform.Xml.Serialization
 {
@@ -46,11 +47,11 @@ namespace Platform.Xml.Serialization
 		/// </remarks>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		public bool ShouldSerialize(object obj)
+		public bool ShouldSerialize(object obj, SerializationMemberInfo memberInfo)
 		{
 			IXmlSerializationShouldSerializeProvider shouldSerialize;
 
-			if (obj == null)
+			if (obj == null && !memberInfo.SerializeIfNull)
 			{
 				return false;
 			}
