@@ -334,7 +334,7 @@ namespace Platform.Xml.Serialization
                         {
                             // Write start element without namespace
 
-                            writer.WriteStartElement(memberInfo.SerializedName, "");
+                            writer.WriteStartElement(memberInfo.SerializedName);
                         }
 
                         if (memberInfo.SerializeAsValueNodeAttributeName != null)
