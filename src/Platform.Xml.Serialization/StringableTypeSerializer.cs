@@ -75,6 +75,9 @@ namespace Platform.Xml.Serialization
 		    if (obj is IFormattable && formatSpecified)
 		        return (obj as IFormattable).ToString(formatAttribute.Format, CultureInfo.CurrentCulture);
 
+		    if (obj == null)
+		        return string.Empty;
+
 			return obj.ToString();
 		}
 

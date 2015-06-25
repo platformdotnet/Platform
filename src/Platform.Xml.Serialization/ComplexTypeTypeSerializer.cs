@@ -206,7 +206,7 @@ namespace Platform.Xml.Serialization
                 }
 
                 // Make sure we aren't serializing recursively.
-                if (state.ShouldSerialize(val))
+                if (state.ShouldSerialize(val,memberInfo))
                 {
                     try
                     {
@@ -263,7 +263,7 @@ namespace Platform.Xml.Serialization
             }
 
             // Make sure we aren't serializing recursively.
-            if (state.ShouldSerialize(val))
+            if (state.ShouldSerialize(val,memberInfo))
             {
                 try
                 {
@@ -322,7 +322,7 @@ namespace Platform.Xml.Serialization
 
                     var serializerWithSimpleText = serializer as TypeSerializerWithSimpleTextSupport;
 
-                    if (state.ShouldSerialize(val))
+                    if (state.ShouldSerialize(val,memberInfo))
                     {
                         if (memberInfo.Namespace.Length > 0)
                         {
