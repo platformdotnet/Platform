@@ -1,6 +1,7 @@
 // Copyright (c) 2014 Thong Nguyen (tumtumtum@gmail.com)
 
 using System.Collections.Generic;
+using System.Configuration;
 
 namespace Platform
 {
@@ -32,10 +33,8 @@ namespace Platform
 					}
 				}
 
-				#pragma warning disable 618
-				retval = (T)System.Configuration.ConfigurationSettings.GetConfig(configurationPath);
-				#pragma warning restore 618
-
+				retval = (T)ConfigurationManager.GetSection(configurationPath);
+				
 				blockCache[configurationPath] = retval;
 			}
 
