@@ -48,6 +48,8 @@ namespace Platform.Xml.Serialization
 			set;
 		}
 
+        public virtual bool SerializeIfNull { get; set; }
+
 		protected XmlApproachAttribute()
 		{
 			Namespace = "";

@@ -21,6 +21,7 @@ namespace Platform.Xml.Serialization
 		protected bool treatAsNullIfEmpty = false;
 		protected string serializedName = "";
 		protected string serializedNamespace = "";
+	    protected bool serializeIfNull = false;
 		protected XmlSerializationAttribute[] applicableTypeAttributes;
 		protected XmlSerializationAttribute[] applicableMemberAttributes;
 		protected IXmlDynamicTypeProvider polymorphicTypeProvider;
@@ -50,6 +51,10 @@ namespace Platform.Xml.Serialization
 			get { return serializeAsCData; }
 		}
 
+	    public virtual bool SerializeIfNull
+	    {
+	        get { return serializeIfNull; }
+	    }
 		public virtual MemberInfo MemberInfo
 		{
 			get { return memberInfo; }
@@ -145,7 +150,7 @@ namespace Platform.Xml.Serialization
 
 			// Get the [XmlExclude] [XmlAttribute] or [XmlElement] attribute
 
-			var attribute = GetFirstApplicableAttribute(false, typeof (XmlExcludeAttribute), typeof (XmlAttributeAttribute), typeof (XmlElementAttribute));
+			var attribute = GetFirstApplicableAttribute(false, typeof (XmlExcludeAttribute),typeof(XmlTextAttribute), typeof (XmlAttributeAttribute), typeof (XmlElementAttribute));
 
 			if (attribute != null)
 			{
@@ -155,6 +160,10 @@ namespace Platform.Xml.Serialization
 
 					serializedNodeType = XmlNodeType.None;
 				}
+                else if (attribute is XmlTextAttribute)
+                {
+                    serializedNodeType = XmlNodeType.Text;
+                }
 				else if ((approach = attribute as XmlApproachAttribute) != null)
 				{
 					ApproachAttribute = approach;
@@ -183,6 +192,9 @@ namespace Platform.Xml.Serialization
 					{
 						this.includeIfUnattributed = true;
 					}
+
+				    if (approach.SerializeIfNull)
+				        this.serializeIfNull = true;
 				}
 			}
 			else

@@ -26,11 +26,25 @@ namespace Platform.Xml.Serialization
 
 		private Type listType; 
 		private readonly IDictionary<Type, ListItem> typeToItemMap;
-		private readonly IDictionary<string, ListItem> aliasToItemMap;		
-	
-		private class ListItem
-		{
-			public string Alias;
+		private readonly IDictionary<string, ListItem> aliasToItemMap;
+
+	    private class ListItem
+	    {
+	        private string _alias;
+
+	        public string Alias
+	        {
+	            get
+	            {
+	                if (this.Attribute == null)
+	                    return _alias;
+	                if (this.Attribute.MakeNameLowercase)
+	                    return _alias.ToLower();
+	                return _alias;
+	            }
+	            set { _alias = value; }
+	        }
+
 			public XmlListElementAttribute Attribute;
 			public TypeSerializer Serializer;			
 		}
@@ -186,7 +200,10 @@ namespace Platform.Xml.Serialization
 
 			if (typeToItemMap.Count == 0 && this.dynamicTypeResolver == null)
 			{
-				throw new InvalidOperationException("Must specify at least one XmlListElemenType or an XmlListElementTypeSerializerProvider.");
+			    throw new InvalidOperationException(
+			        string.Format(
+			            "Must specify at least one XmlListElemenType or an XmlListElementTypeSerializerProvider for field {0}",
+			             ((Type)memberInfo.MemberInfo).FullName));
 			}
 
 			listType = memberInfo.ReturnType;		
@@ -198,7 +215,7 @@ namespace Platform.Xml.Serialization
 
 			foreach (var item in (System.Collections.IEnumerable)obj)
 			{
-				if (state.ShouldSerialize(item))
+				if (state.ShouldSerialize(item, this.serializationMemberInfo))
 				{
 					ListItem listItem;
 
