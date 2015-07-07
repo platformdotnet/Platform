@@ -13,9 +13,47 @@ namespace Platform.Xml.Serialization.Tests
         [Test]
         public void TestInnerText()
         {
-            ShouldCreateInnerText test = new ShouldCreateInnerText(){ThisShouldBeInner = "lorem ipsum"};
+            ShouldCreateInnerText test = new ShouldCreateInnerText() { ThisShouldBeInner = "lorem ipsum" };
             var result = XmlSerializer<ShouldCreateInnerText>.New().SerializeToString(test);
             Assert.IsTrue(result.Contains("<ShouldCreateInnerText>lorem ipsum</ShouldCreateInnerText>"), "The element should contain the innertext");
+        }
+
+        /// <summary>
+        /// This would throw an exception
+        /// </summary>
+        [Test]
+        public void InnerTextDerived()
+        {
+            bool gotException = false;
+            try
+            {
+                XmlTextDerived test = new XmlTextDerived() { ThisShouldBeInner = "Test1" };
+                var result = XmlSerializer<XmlTextDerived>.New().SerializeToString(test);
+
+            }
+            catch (Exception)
+            {
+
+                gotException = true;
+            }
+
+            Assert.IsFalse(gotException, "This should be valid");
+        }
+
+        [Test]
+        public void InnerTextDerivedShouldThrowError()
+        {
+            bool gotException = false;
+            try
+            {
+                XmlTextDerivedShouldThrowError test = new XmlTextDerivedShouldThrowError() { ThisShouldBeInner = "test" };
+                var result = XmlSerializer<XmlTextDerivedShouldThrowError>.New().SerializeToString(test);
+            }
+            catch (Exception)
+            {
+                gotException = true;
+            }
+            Assert.IsTrue(gotException, "Only one innertext is allowed");
         }
 
         [Test]
@@ -46,8 +84,8 @@ namespace Platform.Xml.Serialization.Tests
         [Test]
         public void MixedTest()
         {
-            var obj = new AMixedTest() {MyProperty = "myproperty", ThisShouldBeInner = "inner"};
-            var result = XmlSerializer<AMixedTest>.New().SerializeToString(obj).Replace("\n","").Replace("\r","");
+            var obj = new AMixedTest() { MyProperty = "myproperty", ThisShouldBeInner = "inner" };
+            var result = XmlSerializer<AMixedTest>.New().SerializeToString(obj).Replace("\n", "").Replace("\r", "");
             Assert.IsTrue(result.Equals("<?xml version=\"1.0\" encoding=\"utf-16\"?><AMixedTest>  <MyProperty>myproperty</MyProperty>inner</AMixedTest>"), "Xml is not correct!");
             var deserialized = XmlSerializer<AMixedTest>.New().Deserialize(result);
             Assert.IsTrue(deserialized.MyProperty == obj.MyProperty && deserialized.ThisShouldBeInner == obj.ThisShouldBeInner, "Objects are not the same");
@@ -78,6 +116,36 @@ namespace Platform.Xml.Serialization.Tests
 
             [XmlElement]
             public string MyProperty { get; set; }
+        }
+
+        [XmlElement]
+        private class XmlTextDerived : XmlTextDerivedBase
+        {
+            [XmlTextAttribute]
+            public string ThisShouldBeInner { get; set; }
+        }
+
+        [XmlElement]
+        private class XmlTextDerivedBase
+        {
+            [XmlAttribute]
+            public string TestProperty { get; set; }
+
+        }
+
+        [XmlElement]
+        private class XmlTextDerivedShouldThrowError : XmlTextDerivedShouldThrowErrorBase
+        {
+            [XmlTextAttribute]
+            public string ThisShouldBeInner { get; set; }
+        }
+
+        [XmlElement]
+        private class XmlTextDerivedShouldThrowErrorBase
+        {
+            [XmlTextAttribute]
+            public string TestProperty { get; set; }
+
         }
     }
 }
