@@ -130,6 +130,7 @@
     </Compile>
     <Compile Include="PropertyGetterSetter.cs" />
     <Compile Include="SerializeMembers.cs" />
+    <Compile Include="StringWriterWithEncoding.cs" />
     <Compile Include="TextResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

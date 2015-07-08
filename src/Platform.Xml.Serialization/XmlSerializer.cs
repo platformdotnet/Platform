@@ -214,6 +214,21 @@ namespace Platform.Xml.Serialization
 			return buffer.ToString();
 		}
 
+	    public virtual string SerializeToString(T obj, Encoding encoding)
+	    {
+            if (obj == null)
+            {
+                throw new ArgumentNullException("obj");
+            }
+
+            var buffer = new StringBuilder(0x100);
+
+            Serialize(obj, new StringWriterWithEncoding(buffer, encoding));
+
+            return buffer.ToString();
+	        
+	    }
+
 		/// <summary>
 		/// Deserializes an object from the given <see cref="XmlReader"/>
 		/// </summary>
