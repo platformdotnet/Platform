@@ -178,7 +178,7 @@ namespace Platform.Xml.Serialization
             }
             else if (localSerializationMemberInfo.SerializedNodeType == XmlNodeType.Text)
             {
-                if (TextMember != null)
+                if (TextMember != null && !TextMember.Equals(localSerializationMemberInfo))
                     throw new Exception(string.Format("There should only be one XmlTextAttribute in type {0}", ((Type)this.serializationMemberInfo.MemberInfo).FullName));
                 TextMember = localSerializationMemberInfo;
             }
