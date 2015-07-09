@@ -10,6 +10,20 @@ namespace Platform.Xml.Serialization.Tests
     [TestFixture]
     public class InnerTextTest
     {
+
+        /// <summary>
+        /// This would not deserialize properly
+        /// </summary>
+        [Test]
+        public void InnerTextWithCData()
+        {
+            var xml =
+                XmlSerializer<InnerTextCData>.New()
+                    .SerializeToString(new InnerTextCData() { ThisShouldBeInner = "Inner Text" });
+            var obj = XmlSerializer<InnerTextCData>.New().Deserialize(xml);
+            Assert.IsTrue(obj.ThisShouldBeInner != null && obj.ThisShouldBeInner.Equals("Inner Text"), "ThisShouldBeInner should contain 'Inner Text'");
+        }
+
         [Test]
         public void TestInnerText()
         {
@@ -78,6 +92,14 @@ namespace Platform.Xml.Serialization.Tests
 
             [XmlElement]
             public string MyProperty { get; set; }
+        }
+
+        [XmlElement]
+        private class InnerTextCData
+        {
+            [XmlTextAttribute]
+            [XmlCData]
+            public string ThisShouldBeInner { get; set; }
         }
     }
 }

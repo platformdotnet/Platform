@@ -559,7 +559,7 @@ namespace Platform.Xml.Serialization
 
             while (true)
             {
-                XmlReaderHelper.ReadUntilAnyTypesReached(reader, new XmlNodeType[] { XmlNodeType.Element, XmlNodeType.EndElement, XmlNodeType.Text });
+                XmlReaderHelper.ReadUntilAnyTypesReached(reader, new XmlNodeType[] { XmlNodeType.Element, XmlNodeType.EndElement, XmlNodeType.Text, XmlNodeType.CDATA });
 
                 if (reader.NodeType == XmlNodeType.Element)
                 {
@@ -567,7 +567,7 @@ namespace Platform.Xml.Serialization
 
                     //XmlReaderHelper.ReadAndConsumeMatchingEndElement(reader);
                 }
-                else if (reader.NodeType == XmlNodeType.Text)
+                else if (reader.NodeType == XmlNodeType.Text || reader.NodeType == XmlNodeType.CDATA)
                 {
                     if (reader.HasValue)
                     {
