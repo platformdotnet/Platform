@@ -87,7 +87,12 @@ namespace Platform.Xml.Serialization
 		/// </summary>
 		public override object Deserialize(string value, SerializationContext state)
 		{
-			return Convert.ChangeType(value, supportedType, formatAttribute.CultureInfo);
+		    if (formatSpecified)
+		    {
+		        return Convert.ChangeType(value, supportedType, formatAttribute.CultureInfo);
+		    }
+		    return Convert.ChangeType(value, supportedType);
+
 		}
 	}
 }
