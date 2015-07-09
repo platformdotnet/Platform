@@ -73,8 +73,9 @@ namespace Platform.Xml.Serialization
 		public override string Serialize(object obj, SerializationContext state)
 		{
 		    if (obj is IFormattable && formatSpecified)
-		        return (obj as IFormattable).ToString(formatAttribute.Format, CultureInfo.CurrentCulture);
-
+		    {
+                return (obj as IFormattable).ToString(formatAttribute.Format, formatAttribute.CultureInfo);
+		    }
 		    if (obj == null)
 		        return string.Empty;
 
@@ -86,7 +87,7 @@ namespace Platform.Xml.Serialization
 		/// </summary>
 		public override object Deserialize(string value, SerializationContext state)
 		{
-			return Convert.ChangeType(value, supportedType);
+			return Convert.ChangeType(value, supportedType, formatAttribute.CultureInfo);
 		}
 	}
 }
