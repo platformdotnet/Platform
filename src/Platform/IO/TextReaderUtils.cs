@@ -323,10 +323,76 @@ namespace Platform.IO
 			}
 		}
 
+		public static TextReader Concat(this TextReader first, TextReader second)
+		{
+			return new CompositeTextReader(first, second);
+		}
+
+		private class CompositeTextReader : TextReader
+		{
+			private readonly TextReader left;
+			private readonly TextReader right;
+			private bool finishedLeft;
+
+			public CompositeTextReader(TextReader left, TextReader right)
+			{
+				this.left = left;
+				this.right = right;
+			}
+
+			public override int Peek()
+			{
+				if (this.finishedLeft)
+				{
+					return this.left.Peek();
+				}
+				else
+				{
+					return this.right.Peek();
+				}
+			}
+
+			public override int Read()
+			{
+				if (!this.finishedLeft)
+				{
+					var value = this.left.Read();
+
+					if (value == -1)
+					{
+						this.finishedLeft = true;
+					}
+					else
+					{
+						return value;
+					}
+				}
+
+				return this.right.Read();
+			}
+
+			public override void Close()
+			{
+				this.left.Close();
+				this.right.Close();
+			}
+
+			protected override void Dispose(bool disposing)
+			{
+				base.Dispose(disposing);
+
+				if (disposing)
+				{
+					this.left.Dispose();
+					this.right.Dispose();
+				}
+			}
+		}
+
 		/// <summary>
 		/// Class to support <see cref="TextReaderUtils.MergeTextReadersAsLineReader"/>
 		/// </summary>
-		private class MergedLineReader
+		private sealed class MergedLineReader
 			: ILineReader
 		{
 			private int endOfInput;
@@ -435,7 +501,7 @@ namespace Platform.IO
 				}
 			}
 
-			public virtual string ReadLine()
+			public string ReadLine()
 			{
 				string line;
 
@@ -444,7 +510,7 @@ namespace Platform.IO
 				return line;
 			}
 
-			public virtual bool ReadLine(TimeSpan timeout, out string outputLine)
+			public bool ReadLine(TimeSpan timeout, out string outputLine)
 			{
 				lock (lockobject)
 				{
@@ -487,7 +553,7 @@ namespace Platform.IO
 				}
 			}
 
-			public virtual void Dispose()
+			public void Dispose()
 			{
 				disposed = true;
 			}
