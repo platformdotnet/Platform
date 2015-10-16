@@ -32,7 +32,7 @@ namespace Platform
 		{
 			var retval = FindSequenceElementType(sequenceType);
 
-			return retval ?? sequenceType;
+			return retval;
 		}
 
 		public static Type GetUnwrappedNullableType(this Type type)

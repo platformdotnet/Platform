@@ -36,7 +36,7 @@ namespace Platform
             /// </summary>
             private object startLock = new object();
 
-            private ITask task;
+            private readonly ITask task;
 
             /// <summary>
             /// <see cref="TaskState"/>
@@ -279,10 +279,8 @@ namespace Platform
 
             public bool RequestTaskState(TaskState state, TimeSpan timeout)
             {
-                TaskState currentState;
-                bool waitForStart = false;
-
-                currentState = TaskState.Unknown;
+	            var waitForStart = false;
+                var currentState = TaskState.Unknown;
 
                 try
                 {
@@ -361,12 +359,7 @@ namespace Platform
                 {
                     if (waitForStart && timeout != TimeSpan.Zero)
                     {
-                        TaskUtils.WaitForAnyTaskState
-                            (
-                            task,
-                            timeout,
-                            PredicateUtils.ObjectNotEquals(currentState)
-                            );
+                        this.task.WaitForAnyTaskState(timeout, PredicateUtils.ObjectNotEquals(currentState));
                     }
                 }
             }

@@ -13,7 +13,7 @@ namespace Platform.Xml.Serialization
 		public static void ReadAndConsumeMatchingEndElement(XmlReader reader)
 		{
 			var x = 0;
-
+			var start = reader.Name;
 			if (reader.IsEmptyElement)
 			{
 				reader.Read();
@@ -23,7 +23,7 @@ namespace Platform.Xml.Serialization
 
 			while (true)
 			{
-				if (reader.NodeType == XmlNodeType.Element)
+				if (reader.NodeType == XmlNodeType.Element && !(x == 0 && start == reader.Name))
 				{
 					x++;
 				}
