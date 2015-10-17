@@ -10,6 +10,45 @@ namespace Platform.Xml.Serialization.Tests
     [TestFixture]
     public class InnerTextTest
     {
+          /// <summary>
+        /// This would throw an exception
+        /// </summary>
+        [Test]
+        public void InnerTextDerived()
+        {
+            bool gotException = false;
+            try
+            {
+                XmlTextDerived test = new XmlTextDerived() { ThisShouldBeInner = "Test1" };
+                var result = XmlSerializer<XmlTextDerived>.New().SerializeToString(test);
+
+            }
+            catch (Exception)
+            {
+
+                gotException = true;
+            }
+
+            Assert.IsFalse(gotException, "This should be valid");
+        }
+
+        [Test]
+        public void InnerTextDerivedShouldThrowError()
+        {
+            bool gotException = false;
+            try
+            {
+                XmlTextDerivedShouldThrowError test = new XmlTextDerivedShouldThrowError() { ThisShouldBeInner = "test" };
+                var result = XmlSerializer<XmlTextDerivedShouldThrowError>.New().SerializeToString(test);
+            }
+            catch (Exception)
+            {
+                gotException = true;
+            }
+            Assert.IsTrue(gotException, "Only one innertext is allowed");
+        }
+
+
         [Test]
         public void TestInnerText()
         {
@@ -78,6 +117,36 @@ namespace Platform.Xml.Serialization.Tests
 
             [XmlElement]
             public string MyProperty { get; set; }
+        }
+
+         [XmlElement]
+        private class XmlTextDerived : XmlTextDerivedBase
+        {
+            [XmlTextAttribute]
+            public string ThisShouldBeInner { get; set; }
+        }
+
+        [XmlElement]
+        private class XmlTextDerivedBase
+        {
+            [XmlAttribute]
+            public string TestProperty { get; set; }
+
+        }
+
+        [XmlElement]
+        private class XmlTextDerivedShouldThrowError : XmlTextDerivedShouldThrowErrorBase
+        {
+            [XmlTextAttribute]
+            public string ThisShouldBeInner { get; set; }
+        }
+
+        [XmlElement]
+        private class XmlTextDerivedShouldThrowErrorBase
+        {
+            [XmlTextAttribute]
+            public string TestProperty { get; set; }
+
         }
     }
 }
