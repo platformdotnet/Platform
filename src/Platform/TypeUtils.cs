@@ -3,11 +3,125 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Platform
 {
 	public static class TypeUtils
 	{
+		public static MemberInfo GetMember<T>(Expression<Func<T, object>> member)
+		{
+			switch (member.Body.NodeType)
+			{
+				case ExpressionType.Call:
+					return GetMethod(member);
+				case ExpressionType.MemberAccess:
+					if (((MemberExpression)member.Body).Member is PropertyInfo)
+					{
+						return GetProperty(member);
+					}
+					else
+					{
+						return GetField(member);
+					}
+				default:
+					throw new ArgumentException($"Argument {nameof(member)} needs to contain a method, property or field", nameof(member));
+			}
+		}
+
+		public static MemberInfo GetMember<T>(Expression<Action<T>> member)
+		{
+			switch (member.Body.NodeType)
+			{
+				case ExpressionType.Call:
+					return GetMethod(member);
+				case ExpressionType.MemberAccess:
+					if (((MemberExpression)member.Body).Member is PropertyInfo)
+					{
+						return GetProperty(member);
+					}
+					else
+					{
+						return GetField(member);
+					}
+				default:
+					throw new ArgumentException($"Argument {nameof(member)} needs to contain a method, property or field", nameof(member));
+			}
+		}
+
+		public static MethodInfo GetMethod<T>(Expression<Func<T, object>> method)
+		{
+			var expression = method.Body as MethodCallExpression;
+
+			if (expression == null)
+			{
+				throw new ArgumentException($"Argument {nameof(method)} needs to contain a method", nameof(method));
+			}
+
+			return expression.Method;
+		}
+
+		public static MethodInfo GetMethod<T>(Expression<Action<T>> method)
+		{
+			var expression = method.Body as MethodCallExpression;
+
+			if (expression == null)
+			{
+				throw new ArgumentException($"Argument {nameof(method)} needs to contain a method call", nameof(method));
+			}
+
+			return expression.Method;
+		}
+
+		public static PropertyInfo GetProperty<T>(Expression<Func<T, object>> property)
+		{
+			var expression = property.Body as MemberExpression;
+
+			if (!(expression?.Member is PropertyInfo))
+			{
+				throw new ArgumentException($"Argument {nameof(property)} needs to contain a property", nameof(property));
+			}
+
+			return (PropertyInfo)expression.Member;
+		}
+
+		public static PropertyInfo GetProperty<T>(Expression<Action<T>> property)
+		{
+			var expression = property.Body as MemberExpression;
+
+			if (!(expression?.Member is PropertyInfo))
+			{
+				throw new ArgumentException($"Argument {nameof(property)} needs to contain a property", nameof(property));
+			}
+
+			return (PropertyInfo)expression.Member;
+		}
+
+		public static FieldInfo GetField<T>(Expression<Func<T, object>> field)
+		{
+			var expression = field.Body as MemberExpression;
+
+			if (!(expression?.Member is FieldInfo))
+			{
+				throw new ArgumentException($"Argument {nameof(field)} needs to contain a field", nameof(field));
+			}
+
+			return (FieldInfo)expression.Member;
+		}
+
+		public static FieldInfo GetField<T>(Expression<Action<T>> field)
+		{
+			var expression = field.Body as MemberExpression;
+
+			if (!(expression?.Member is FieldInfo))
+			{
+				throw new ArgumentException($"Argument {nameof(field)} needs to contain a field", nameof(field));
+			}
+
+			return (FieldInfo)expression.Member;
+		}
+
 		public static Type MakeNullable(this Type type)
 		{
 			if (type.IsClass)
