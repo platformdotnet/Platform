@@ -23,6 +23,12 @@ namespace Platform.Xml.Serialization
 
 			while (true)
 			{
+				if (reader.IsEmptyElement)
+                {
+                    reader.Read();
+                    continue;
+                }
+				
 				if (reader.NodeType == XmlNodeType.Element && !(x == 0 && start == reader.Name))
 				{
 					x++;
