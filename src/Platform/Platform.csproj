@@ -157,7 +157,9 @@
     <Compile Include="ObjectReferenceIdentityEqualityComparer.cs" />
     <Compile Include="Pair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyWiseEqualityComparer.cs" />
     <Compile Include="Quad.cs" />
+    <Compile Include="Reflection\MethodInfoUtils.cs" />
     <Compile Include="ReownedMeter.cs" />
     <Compile Include="TaskUtils.cs" />
     <Compile Include="Network\Time\NtpNetworkTimeClient.cs" />

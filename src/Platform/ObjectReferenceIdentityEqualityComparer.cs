@@ -20,7 +20,7 @@ namespace Platform
 		{
 			if (obj == null)
 			{
-				throw new ArgumentNullException("obj");
+				throw new ArgumentNullException(nameof(obj));
 			}
 
 			return obj.GetHashCode();

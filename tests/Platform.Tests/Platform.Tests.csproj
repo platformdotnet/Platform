@@ -53,6 +53,7 @@
     <Compile Include="MathUtilsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FifoBufferTests.cs" />
+    <Compile Include="TestPropertyWiseEqualityComparer.cs" />
     <Compile Include="TextConversionTests.cs" />
     <Compile Include="Validation\PageRequest.cs" />
     <Compile Include="Validation\Person.cs" />

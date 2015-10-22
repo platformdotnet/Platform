@@ -10,6 +10,16 @@ namespace Platform
 {
 	public static class TypeUtils
 	{
+		private static Expression Unwrap(this Expression expression)
+		{
+			if (expression.NodeType == ExpressionType.Convert)
+			{
+				return ((UnaryExpression)expression).Operand;
+			}
+
+			return expression;
+		}
+
 		public static MemberInfo GetMember<T>(Expression<Func<T, object>> member)
 		{
 			switch (member.Body.NodeType)
@@ -52,7 +62,7 @@ namespace Platform
 
 		public static MethodInfo GetMethod<T>(Expression<Func<T, object>> method)
 		{
-			var expression = method.Body as MethodCallExpression;
+			var expression = method.Body.Unwrap() as MethodCallExpression;
 
 			if (expression == null)
 			{
@@ -64,7 +74,7 @@ namespace Platform
 
 		public static MethodInfo GetMethod<T>(Expression<Action<T>> method)
 		{
-			var expression = method.Body as MethodCallExpression;
+			var expression = method.Body.Unwrap() as MethodCallExpression;
 
 			if (expression == null)
 			{
@@ -76,7 +86,7 @@ namespace Platform
 
 		public static PropertyInfo GetProperty<T>(Expression<Func<T, object>> property)
 		{
-			var expression = property.Body as MemberExpression;
+			var expression = property.Body.Unwrap() as MemberExpression;
 
 			if (!(expression?.Member is PropertyInfo))
 			{
@@ -88,7 +98,7 @@ namespace Platform
 
 		public static PropertyInfo GetProperty<T>(Expression<Action<T>> property)
 		{
-			var expression = property.Body as MemberExpression;
+			var expression = property.Body.Unwrap() as MemberExpression;
 
 			if (!(expression?.Member is PropertyInfo))
 			{
@@ -112,7 +122,7 @@ namespace Platform
 
 		public static FieldInfo GetField<T>(Expression<Action<T>> field)
 		{
-			var expression = field.Body as MemberExpression;
+			var expression = field.Body.Unwrap() as MemberExpression;
 
 			if (!(expression?.Member is FieldInfo))
 			{
