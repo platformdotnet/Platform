@@ -52,6 +52,7 @@
     <Compile Include="FriendlyPerson.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="InnerTextTest.cs" />
+    <Compile Include="ListTest.cs" />
     <Compile Include="NamespaceTests.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -20,6 +20,8 @@ namespace Platform.Xml.Serialization
 		{
 			get
 			{
+			    if (this.MakeNameLowercase)
+			        return this.Name.ToLowerInvariant();
 				return this.Name;
 			}
 			
