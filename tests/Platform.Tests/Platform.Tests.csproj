@@ -55,6 +55,7 @@
     <Compile Include="FifoBufferTests.cs" />
     <Compile Include="TestPropertyWiseEqualityComparer.cs" />
     <Compile Include="TextConversionTests.cs" />
+    <Compile Include="TypeUtilsTests.cs" />
     <Compile Include="Validation\PageRequest.cs" />
     <Compile Include="Validation\Person.cs" />
     <Compile Include="Validation\SearchRequest.cs" />

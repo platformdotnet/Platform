@@ -20,7 +20,47 @@ namespace Platform
 			return expression;
 		}
 
+		public static MemberInfo GetMember<T>(Expression<Func<T>> member)
+		{
+			switch (member.Body.NodeType)
+			{
+				case ExpressionType.Call:
+					return GetMethod(member);
+				case ExpressionType.MemberAccess:
+					if (((MemberExpression)member.Body).Member is PropertyInfo)
+					{
+						return GetProperty(member);
+					}
+					else
+					{
+						return GetField(member);
+					}
+				default:
+					throw new ArgumentException($"Argument {nameof(member)} needs to contain a method, property or field", nameof(member));
+			}
+		}
+
 		public static MemberInfo GetMember<T>(Expression<Func<T, object>> member)
+		{
+			switch (member.Body.NodeType)
+			{
+				case ExpressionType.Call:
+					return GetMethod(member);
+				case ExpressionType.MemberAccess:
+					if (((MemberExpression)member.Body).Member is PropertyInfo)
+					{
+						return GetProperty(member);
+					}
+					else
+					{
+						return GetField(member);
+					}
+				default:
+					throw new ArgumentException($"Argument {nameof(member)} needs to contain a method, property or field", nameof(member));
+			}
+		}
+
+		public static MemberInfo GetMember(Expression<Action> member)
 		{
 			switch (member.Body.NodeType)
 			{
@@ -60,6 +100,18 @@ namespace Platform
 			}
 		}
 
+		public static MethodInfo GetMethod<T>(Expression<Func<T>> method)
+		{
+			var expression = method.Body.Unwrap() as MethodCallExpression;
+
+			if (expression == null)
+			{
+				throw new ArgumentException($"Argument {nameof(method)} needs to contain a method", nameof(method));
+			}
+
+			return expression.Method;
+		}
+
 		public static MethodInfo GetMethod<T>(Expression<Func<T, object>> method)
 		{
 			var expression = method.Body.Unwrap() as MethodCallExpression;
@@ -67,6 +119,18 @@ namespace Platform
 			if (expression == null)
 			{
 				throw new ArgumentException($"Argument {nameof(method)} needs to contain a method", nameof(method));
+			}
+
+			return expression.Method;
+		}
+
+		public static MethodInfo GetMethod(Expression<Action> method)
+		{
+			var expression = method.Body.Unwrap() as MethodCallExpression;
+
+			if (expression == null)
+			{
+				throw new ArgumentException($"Argument {nameof(method)} needs to contain a method call", nameof(method));
 			}
 
 			return expression.Method;
@@ -84,7 +148,31 @@ namespace Platform
 			return expression.Method;
 		}
 
+		public static PropertyInfo GetProperty<T>(Expression<Func<T>> property)
+		{
+			var expression = property.Body.Unwrap() as MemberExpression;
+
+			if (!(expression?.Member is PropertyInfo))
+			{
+				throw new ArgumentException($"Argument {nameof(property)} needs to contain a property", nameof(property));
+			}
+
+			return (PropertyInfo)expression.Member;
+		}
+
 		public static PropertyInfo GetProperty<T>(Expression<Func<T, object>> property)
+		{
+			var expression = property.Body.Unwrap() as MemberExpression;
+
+			if (!(expression?.Member is PropertyInfo))
+			{
+				throw new ArgumentException($"Argument {nameof(property)} needs to contain a property", nameof(property));
+			}
+
+			return (PropertyInfo)expression.Member;
+		}
+
+		public static PropertyInfo GetProperty(Expression<Action> property)
 		{
 			var expression = property.Body.Unwrap() as MemberExpression;
 
@@ -108,9 +196,33 @@ namespace Platform
 			return (PropertyInfo)expression.Member;
 		}
 
+		public static FieldInfo GetField<T>(Expression<Func<T>> field)
+		{
+			var expression = field.Body as MemberExpression;
+
+			if (!(expression?.Member is FieldInfo))
+			{
+				throw new ArgumentException($"Argument {nameof(field)} needs to contain a field", nameof(field));
+			}
+
+			return (FieldInfo)expression.Member;
+		}
+
 		public static FieldInfo GetField<T>(Expression<Func<T, object>> field)
 		{
 			var expression = field.Body as MemberExpression;
+
+			if (!(expression?.Member is FieldInfo))
+			{
+				throw new ArgumentException($"Argument {nameof(field)} needs to contain a field", nameof(field));
+			}
+
+			return (FieldInfo)expression.Member;
+		}
+
+		public static FieldInfo GetField(Expression<Action> field)
+		{
+			var expression = field.Body.Unwrap() as MemberExpression;
 
 			if (!(expression?.Member is FieldInfo))
 			{
