@@ -33,7 +33,7 @@ namespace Platform
 				
 				foreach (var property in typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public))
 				{
-					var expression = Expression.Call(Expression.Constant(equalityComparerFromType(property.PropertyType)), TypeUtils.GetMethod<IEqualityComparer<object>>(c => c.Equals(null, null)).MakeMethodWithChangedDeclaringTypeGeneric(property.PropertyType), Expression.Property(left, property), Expression.Property(right, property));
+					var expression = Expression.Call(Expression.Constant(equalityComparerFromType(property.PropertyType)), TypeUtils.GetMethod<IEqualityComparer<object>>(c => c.Equals(null, null)).GetMethodFromTypeWithNewGenericArg(property.PropertyType), Expression.Property(left, property), Expression.Property(right, property));
 
 					if (body == null)
 					{
