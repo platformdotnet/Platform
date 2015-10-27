@@ -17,6 +17,8 @@ namespace Platform.Tests
 			var method2 = method.GetGenericTypeDefinitionMethod();
 
 			Assert.AreEqual(typeof(Dictionary<,>).GetMethod("TryGetValue"), method2);
+
+			var method3 = method.GetMethodFromTypeWithNewGenericArgs(typeof(int), typeof(int));
 		}
 	}
 }
