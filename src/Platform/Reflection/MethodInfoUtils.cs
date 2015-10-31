@@ -50,6 +50,12 @@ namespace Platform.Reflection
 		{
 			return values.Select(c => (c.ParameterType.IsGenericParameter || c.ParameterType.ContainsGenericParameters) ? genericParameters[c.Position] : c.ParameterType);
 		}
+
+		public static MethodInfo GetGenericMethodOrRegular(this MethodInfo methodInfo)
+		{
+			return methodInfo.IsGenericMethod ? methodInfo.GetGenericMethodDefinition() : methodInfo;
+		}
+
 		
 		public static MethodInfo GetGenericTypeDefinitionMethod(this MethodInfo methodInfo)
 		{
