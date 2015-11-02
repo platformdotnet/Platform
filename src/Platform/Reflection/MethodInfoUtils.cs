@@ -55,7 +55,6 @@ namespace Platform.Reflection
 		{
 			return methodInfo.IsGenericMethod ? methodInfo.GetGenericMethodDefinition() : methodInfo;
 		}
-
 		
 		public static MethodInfo GetGenericTypeDefinitionMethod(this MethodInfo methodInfo)
 		{

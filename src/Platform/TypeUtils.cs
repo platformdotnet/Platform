@@ -26,6 +26,8 @@ namespace Platform
 			{
 				case ExpressionType.Call:
 					return GetMethod(member);
+				case ExpressionType.New:
+					return GetConstructor(member);
 				case ExpressionType.MemberAccess:
 					if (((MemberExpression)member.Body).Member is PropertyInfo)
 					{
@@ -44,19 +46,19 @@ namespace Platform
 		{
 			switch (member.Body.NodeType)
 			{
-				case ExpressionType.Call:
-					return GetMethod(member);
-				case ExpressionType.MemberAccess:
-					if (((MemberExpression)member.Body).Member is PropertyInfo)
-					{
-						return GetProperty(member);
-					}
-					else
-					{
-						return GetField(member);
-					}
-				default:
-					throw new ArgumentException($"Argument {nameof(member)} needs to contain a method, property or field", nameof(member));
+			case ExpressionType.Call:
+				return GetMethod(member);
+			case ExpressionType.MemberAccess:
+				if (((MemberExpression)member.Body).Member is PropertyInfo)
+				{
+					return GetProperty(member);
+				}
+				else
+				{
+					return GetField(member);
+				}
+			default:
+				throw new ArgumentException($"Argument {nameof(member)} needs to contain a method, property or field", nameof(member));
 			}
 		}
 
@@ -98,6 +100,18 @@ namespace Platform
 				default:
 					throw new ArgumentException($"Argument {nameof(member)} needs to contain a method, property or field", nameof(member));
 			}
+		}
+
+		public static ConstructorInfo GetConstructor<T>(Expression<Func<T>> method)
+		{
+			var expression = method.Body.Unwrap() as NewExpression;
+
+			if (expression == null)
+			{
+				throw new ArgumentException($"Argument {nameof(method)} needs to contain a call to new", nameof(method));
+			}
+
+			return expression.Constructor;
 		}
 
 		public static MethodInfo GetMethod<T>(Expression<Func<T>> method)
