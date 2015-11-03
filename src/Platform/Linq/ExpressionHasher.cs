@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Platform.Collections;
@@ -10,10 +11,12 @@ namespace Platform.Linq
 	{
 		private int hashCode;
 		private readonly ExpressionComparerOptions options;
+		private readonly Func<Expression, int> prefilter;
 
-		protected ExpressionHasher(ExpressionComparerOptions options)
+		protected ExpressionHasher(ExpressionComparerOptions options, Func<Expression, int> prefilter)
 		{
 			this.options = options;
+			this.prefilter = prefilter;
 		}
 
 		public static int Hash(Expression expression)
@@ -21,9 +24,9 @@ namespace Platform.Linq
 			return Hash(expression, ExpressionComparerOptions.None);
 		}
 
-		public static int Hash(Expression expression, ExpressionComparerOptions options)
+		public static int Hash(Expression expression, ExpressionComparerOptions options, Func<Expression, int> prefilter = null)
 		{
-			var hasher = new ExpressionHasher(options);
+			var hasher = new ExpressionHasher(options, prefilter);
 
 			hasher.Visit(expression);
 
@@ -34,6 +37,7 @@ namespace Platform.Linq
 		{
 			if (expression != null)
 			{
+				this.hashCode ^= this.prefilter?.Invoke(expression) ?? 0;
 				this.hashCode ^= (int)expression.NodeType << 24;
 			}
 

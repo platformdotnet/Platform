@@ -12,24 +12,45 @@ namespace Platform.Linq
 		private bool result;
 		private object currentObject;
 	    private readonly ExpressionComparerOptions options;
+		private readonly Func<Expression, Expression, bool?> prefilter;
 
-	    public ExpressionComparer(Expression toCompareTo, ExpressionComparerOptions options)
+		protected ExpressionComparer(Expression toCompareTo, ExpressionComparerOptions options, Func<Expression, Expression, bool?> prefilter)
 		{
 			this.result = true;
 			this.currentObject = toCompareTo;
 		    this.options = options;
+			this.prefilter = prefilter;
 		}
 
-		public static bool Equals(Expression left, Expression right, ExpressionComparerOptions options = ExpressionComparerOptions.None)
+		public static bool Equals(Expression left, Expression right, ExpressionComparerOptions options = ExpressionComparerOptions.None, Func<Expression, Expression, bool?> prefilter = null)
 		{
-			var visitor = new ExpressionComparer(right, options);
+			var visitor = new ExpressionComparer(right, options, prefilter);
 
 			visitor.Visit(left);
 
 			return visitor.result;
 		}
 
-		private bool TryGetCurrent<T>(T paramValue, out T current)
+		protected override Expression Visit(Expression expression)
+		{
+			Expression current;
+
+			if (!this.TryGetCurrent(expression, out current))
+			{
+				return expression;
+			}
+
+			if (this.prefilter?.Invoke(expression, current) == false)
+			{
+				this.result = false;
+
+				return expression;
+			}
+
+			return base.Visit(expression);
+		}
+
+		protected bool TryGetCurrent<T>(T paramValue, out T current)
 			where T : class
 		{
 			if (paramValue == null && this.currentObject == null)
