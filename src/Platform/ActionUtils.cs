@@ -18,6 +18,21 @@ namespace Platform
 	/// </summary>
 	public static class ActionUtils
 	{
+		public static Func<T, R> ToFunc<T, R>(this Action<T> action)
+		{
+			return x => { action(x); return default(R); };
+		}
+
+		public static Func<T, T> ToFunc<T>(this Action<T> action)
+		{
+			return x => { action(x); return default(T); };
+		}
+
+		public static Func<T, R> ToFunc<T, R>(this Action<T> action, R result)
+		{
+			return x => { action(x); return result; };
+		}
+
 		public static Exception IgnoreExceptions(Action action)
 		{
 			try
