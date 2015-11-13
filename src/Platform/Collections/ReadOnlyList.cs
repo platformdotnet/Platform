@@ -7,8 +7,8 @@ namespace Platform.Collections
 		: IReadOnlyList<T>
 	{
 		private readonly IList<T> innerList;
-		public int Count { get { return this.innerList.Count; } }
-		public T this[int index] { get { return this.innerList[index]; } }
+		public int Count => this.innerList.Count;
+		public T this[int index] => this.innerList[index];
 
 		public ReadOnlyList(params T[] values)
 			: this(new List<T>(values))

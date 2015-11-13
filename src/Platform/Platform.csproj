@@ -150,6 +150,10 @@
     <Compile Include="IWrapperObject.cs" />
     <Compile Include="LeftOrRight.cs" />
     <Compile Include="AbstractTask.cs" />
+    <Compile Include="Linq\ExpressionComparer.cs" />
+    <Compile Include="Linq\ExpressionComparerOptions.cs" />
+    <Compile Include="Linq\ExpressionEqualityComparer.cs" />
+    <Compile Include="Linq\ExpressionHasher.cs" />
     <Compile Include="Linq\ExpressionVisitor.cs" />
     <Compile Include="MeterEventArgs.cs" />
     <Compile Include="NamedUtils.cs" />
