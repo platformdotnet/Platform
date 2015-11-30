@@ -25,7 +25,16 @@ namespace Platform.Xml.Serialization
 			get;
 			private set;
 		}
-
+		
+		/// <summary>
+		/// The Formatting for the XmlSeiralizer.
+		/// </summary>
+		public virtual Formatting Formatting
+		{
+			get;
+			set;
+		}
+		
 		/// <summary>
 		/// Constructs a new XmlSerializer supporting type <see cref="T"/>
 		/// </summary>
@@ -41,6 +50,16 @@ namespace Platform.Xml.Serialization
 		internal XmlSerializer(Type type)
 			: this(type, SerializerOptions.Empty)
 		{
+		}
+		
+		/// <summary>
+		/// Constructs a new XmlSerializer supporting the type <see cref="type"/>
+		/// </summary>
+		/// <param name="type">The type supported by the serializer</param>
+		internal XmlSerializer(Type type, Formatting formatting)
+			: this(type, SerializerOptions.Empty)
+		{
+			this.Formatting = formatting;
 		}
 
 		/// <summary>
@@ -59,6 +78,7 @@ namespace Platform.Xml.Serialization
 		internal XmlSerializer(Type type, SerializerOptions options)
 		{
 			this.Options = options;
+			this.Formatting = Formatting.Indented;
 			
 			var factory = new StandardTypeSerializerFactory(options);
 			
@@ -195,7 +215,7 @@ namespace Platform.Xml.Serialization
 
 			var textWriter = new XmlTextWriter(writer);
 
-			textWriter.Formatting = Formatting.Indented;
+			textWriter.Formatting = this.Formatting;
 
 			Serialize(obj, textWriter, parameters);
 		}
@@ -332,23 +352,41 @@ namespace Platform.Xml.Serialization
 			return XmlSerializerFactory.Default.NewXmlSerializer(type);
 		}
 
-		/// <summary>
-		/// Creates an XmlSerializer for the supplied type <see cref="type"/> using the default <see cref="XmlSerializerFactory"/>
-		/// and given <see cref="SerializerOptions"/>
-		/// </summary>
-		public static XmlSerializer<object> New(Type type, SerializerOptions options)
+        /// <summary>
+        /// Creates an XmlSerializer for the supplied type <see cref="type"/> using the default <see cref="XmlSerializerFactory"/>
+        /// and given <see cref="SerializerOptions"/>
+        /// </summary>
+        public static XmlSerializer<object> New(Type type, SerializerOptions options)
 		{
 			return XmlSerializerFactory.Default.NewXmlSerializer(type, options);
 		}
 
-		/// <summary>
-		/// Changes the current serializer to a different serializer type.
-		/// </summary>
-		/// <typeparam name="U">The type for the new serializer</typeparam>
-		/// <returns>
-		/// The xml <see cref="XmlSerializer{T}"/> dynamically typed to serialize objects of type <see cref="U"/>
-		/// </returns>
-		public virtual XmlSerializer<U> ChangeType<U>()
+        /// <summary>
+        /// Creates an XmlSerializer for the supplied type <see cref="formatting"/> using the default <see cref="XmlSerializerFactory"/>.
+        /// </summary>
+        public static XmlSerializer<T> New(Formatting formatting)
+        {
+            return XmlSerializerFactory.Default.NewXmlSerializer<T>(formatting);
+        }
+
+        /// <summary>
+        /// Creates an XmlSerializer for the supplied type <see cref="type"/> using the default <see cref="XmlSerializerFactory"/>
+        /// and given <see cref="SerializerOptions"/>
+        /// and given <see cref="Formatting"/>
+        /// </summary>
+        public static XmlSerializer<object> New(Type type, SerializerOptions options, Formatting formatting)
+        {
+            return XmlSerializerFactory.Default.NewXmlSerializer(type, options, formatting);
+        }
+
+        /// <summary>
+        /// Changes the current serializer to a different serializer type.
+        /// </summary>
+        /// <typeparam name="U">The type for the new serializer</typeparam>
+        /// <returns>
+        /// The xml <see cref="XmlSerializer{T}"/> dynamically typed to serialize objects of type <see cref="U"/>
+        /// </returns>
+        public virtual XmlSerializer<U> ChangeType<U>()
 		{
 			return new DynamicallyTypedXmlSerializer<U>(this);
 		}
