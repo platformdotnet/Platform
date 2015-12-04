@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
-using Platform.Collections;
 
 namespace Platform.Linq
 {
@@ -209,7 +208,7 @@ namespace Platform.Linq
 			return methodCallExpression;
 		}
 
-		protected virtual ReadOnlyCollection<Expression> VisitExpressionList(ReadOnlyCollection<Expression> original)
+		protected virtual ICollection<Expression> VisitExpressionList(ICollection<Expression> original)
 		{
 			List<Expression> list = null;
 
@@ -218,9 +217,11 @@ namespace Platform.Linq
 				return null;
 			}
 
-			for (int i = 0, n = original.Count; i < n; i++)
+			var i = 0;
+
+			foreach (var item in original)
 			{
-				var p = Visit(original[i]);
+				var p = Visit(item);
 
 				if (list != null)
 				{
@@ -229,13 +230,20 @@ namespace Platform.Linq
 						list.Add(p);
 					}
 				}
-				else if (p != original[i])
+				else if (p != item)
 				{
-					list = new List<Expression>(n);
+					list = new List<Expression>(original.Count);
 
-					for (var j = 0; j < i; j++)
+					var j = 0;
+
+					foreach (var item2 in original)
 					{
-						list.Add(original[j]);
+						list.Add(item2);
+
+						if (++j >= i)
+						{
+							break;
+						}
 					}
 
 					if (p != null)
@@ -243,6 +251,8 @@ namespace Platform.Linq
 						list.Add(p);
 					}
 				}
+
+				i++;
 			}
 
 			if (list != null)
@@ -253,7 +263,7 @@ namespace Platform.Linq
 			return original;
 		}
 
-		protected virtual IReadOnlyList<T> VisitExpressionList<T>(IReadOnlyList<T> original)
+		protected virtual ICollection<T> VisitExpressionList<T>(ICollection<T> original)
 			where T : Expression
 		{
 			List<T> list = null;
@@ -263,9 +273,11 @@ namespace Platform.Linq
 				return null;
 			}
 
-			for (int i = 0, n = original.Count; i < n; i++)
+			var i = 0;
+
+			foreach (var item in original)
 			{
-				var p = (T)Visit(original[i]);
+				var p = (T)Visit(item);
 
 				if (list != null)
 				{
@@ -274,13 +286,20 @@ namespace Platform.Linq
 						list.Add(p);
 					}
 				}
-				else if (p != original[i])
+				else if (p != item)
 				{
-					list = new List<T>(n);
+					list = new List<T>(original.Count);
 
-					for (var j = 0; j < i; j++)
+					var j = 0;
+
+					foreach (var item2 in original)
 					{
-						list.Add(original[j]);
+						list.Add(item2);
+
+						if (++j >= i)
+						{
+							break; 
+						}
 					}
 
 					if (p != null)
@@ -292,7 +311,7 @@ namespace Platform.Linq
 
 			if (list != null)
 			{
-				return list.ToReadOnlyList();
+				return new ReadOnlyCollection<T>(list);
 			}
 
 			return original;
@@ -334,29 +353,40 @@ namespace Platform.Linq
 			return binding;
 		}
 
-		protected virtual IEnumerable<MemberBinding> VisitBindingList(ReadOnlyCollection<MemberBinding> original)
+		protected virtual ICollection<MemberBinding> VisitBindingList(ICollection<MemberBinding> original)
 		{
 			List<MemberBinding> list = null;
 
-			for (int i = 0, n = original.Count; i < n; i++)
+			var i = 0;
+
+			foreach (var item in original)
 			{
-				var b = VisitBinding(original[i]);
+				var b = VisitBinding(item);
 
 				if (list != null)
 				{
 					list.Add(b);
 				}
-				else if (b != original[i])
+				else if (b != item)
 				{
-					list = new List<MemberBinding>(n);
+					list = new List<MemberBinding>(original.Count);
 
-					for (var j = 0; j < i; j++)
+					var j = 0;
+
+					foreach (var item2 in original)
 					{
-						list.Add(original[j]);
+						list.Add(item2);
+
+						if (++j >= i)
+						{
+							break;
+						}
 					}
 
 					list.Add(b);
 				}
+
+				i++;
 			}
 
 			if (list != null)
@@ -367,26 +397,34 @@ namespace Platform.Linq
 			return original;
 		}
 
-		protected virtual IEnumerable<ElementInit> VisitElementInitializerList(ReadOnlyCollection<ElementInit> original)
+		protected virtual ICollection<ElementInit> VisitElementInitializerList(ICollection<ElementInit> original)
 		{
 			List<ElementInit> list = null;
 
-			for (int i = 0, n = original.Count; i < n; i++)
+			var i = 0;
+
+			foreach (var item in original)
 			{
-				var init = VisitElementInitializer(original[i]);
+				var init = VisitElementInitializer(item);
 
 				if (list != null)
 				{
 					list.Add(init);
 				}
-
-				else if (init != original[i])
+				else if (init != item)
 				{
-					list = new List<ElementInit>(n);
+					list = new List<ElementInit>(original.Count);
 
-					for (var j = 0; j < i; j++)
+					var j = 0;
+
+					foreach (var item2 in original)
 					{
-						list.Add(original[j]);
+						list.Add(item2);
+
+						if (++j >= i)
+						{
+							break;
+						}
 					}
 
 					list.Add(init);

@@ -129,7 +129,7 @@ namespace Platform.Linq
 			return base.VisitMethodCall(methodCallExpression);
 		}
 
-		protected override IReadOnlyList<T> VisitExpressionList<T>(IReadOnlyList<T> original)
+		protected override ICollection<T> VisitExpressionList<T>(ICollection<T> original)
 		{
 			if (original == null)
 			{
@@ -141,7 +141,7 @@ namespace Platform.Linq
 			return base.VisitExpressionList<T>(original);
 		}
 
-		protected override ReadOnlyCollection<Expression> VisitExpressionList(ReadOnlyCollection<Expression> original)
+		protected override ICollection<Expression> VisitExpressionList(ICollection<Expression> original)
 		{
 			if (original == null)
 			{
@@ -188,7 +188,7 @@ namespace Platform.Linq
 			return base.VisitMemberListBinding(binding);
 		}
 
-		protected override IEnumerable<MemberBinding> VisitBindingList(ReadOnlyCollection<MemberBinding> original)
+		protected override ICollection<MemberBinding> VisitBindingList(ICollection<MemberBinding> original)
 		{
 			if (original == null)
 			{
@@ -200,7 +200,7 @@ namespace Platform.Linq
 			return base.VisitBindingList(original);
 		}
 
-		protected override IEnumerable<ElementInit> VisitElementInitializerList(ReadOnlyCollection<ElementInit> original)
+		protected override ICollection<ElementInit> VisitElementInitializerList(ICollection<ElementInit> original)
 		{
 			if (original == null)
 			{

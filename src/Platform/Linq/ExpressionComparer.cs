@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
@@ -314,51 +315,41 @@ namespace Platform.Linq
 
 			return methodCallExpression;
 		}
-
-		protected override IReadOnlyList<T> VisitExpressionList<T>(IReadOnlyList<T> original)
+		
+		protected override ICollection<Expression> VisitExpressionList(ICollection<Expression> original)
 		{
-			IReadOnlyList<Expression> current;
+			ICollection<Expression> current;
 
 			if (!this.TryGetCurrent(original, out current))
 			{
 				return original;
 			}
 
-			for (var i = 0; i < original.Count; i++)
+			if (current.Count != original.Count)
 			{
-				this.currentObject = current[i];
+				this.result = false;
 
-				this.Visit(original[i]);
-
-				if (!this.result)
-				{
-					break;
-				}
+                return original;
 			}
 
-			this.currentObject = current;
-
-			return original;
-		}
-
-		protected override ReadOnlyCollection<Expression> VisitExpressionList(ReadOnlyCollection<Expression> original)
-		{
-			ReadOnlyCollection<Expression> current;
-
-			if (!this.TryGetCurrent(original, out current))
+			using (var enum1 = current.GetEnumerator())
 			{
-				return original;
-			}
-
-			for (var i = 0; i < original.Count; i++)
-			{
-				this.currentObject = current[i];
-
-				this.Visit(original[i]);
-
-				if (!this.result)
+				using (var enum2 = original.GetEnumerator())
 				{
-					break;
+					while (enum1.MoveNext() && enum2.MoveNext())
+					{
+						var currentItem = enum1.Current;
+						var originalItem = enum2.Current;
+
+						this.currentObject = currentItem;
+
+						this.Visit(originalItem);
+
+						if (!this.result)
+						{
+							break;
+						}
+					}
 				}
 			}
 
@@ -433,9 +424,9 @@ namespace Platform.Linq
 			return binding;
 		}
 
-		protected override IEnumerable<MemberBinding> VisitBindingList(ReadOnlyCollection<MemberBinding> original)
+		protected override ICollection<MemberBinding> VisitBindingList(ICollection<MemberBinding> original)
 		{
-			ReadOnlyCollection<MemberBinding> current;
+			ICollection<MemberBinding> current;
 
 			if (!this.TryGetCurrent(original, out current))
 			{
@@ -446,10 +437,16 @@ namespace Platform.Linq
 
 			if (this.result)
 			{
-				for (var i = 0; i < original.Count; i++)
+				using (var enum1 = current.GetEnumerator())
 				{
-					this.currentObject = current[i];
-					this.VisitBinding(original[i]);
+					using (var enum2 = original.GetEnumerator())
+					{
+						while (enum1.MoveNext() && enum2.MoveNext())
+						{
+							this.currentObject = enum1.Current;
+							this.VisitBinding(enum2.Current);
+						}
+					}
 				}
 
 				this.currentObject = current;
@@ -458,9 +455,9 @@ namespace Platform.Linq
 			return original;
 		}
 
-		protected override IEnumerable<ElementInit> VisitElementInitializerList(ReadOnlyCollection<ElementInit> original)
+		protected override ICollection<ElementInit> VisitElementInitializerList(ICollection<ElementInit> original)
 		{
-			ReadOnlyCollection<ElementInit> current;
+			ICollection<ElementInit> current;
 
 			if (!this.TryGetCurrent(original, out current))
 			{
@@ -471,10 +468,16 @@ namespace Platform.Linq
 
 			if (this.result)
 			{
-				for (var i = 0; i < original.Count; i++)
+				using (var enum1 = current.GetEnumerator())
 				{
-					this.currentObject = current[i];
-					this.VisitElementInitializer(original[i]);
+					using (var enum2 = current.GetEnumerator())
+					{
+						while (enum1.MoveNext() && enum2.MoveNext())
+						{
+							this.currentObject = enum1.Current;
+							this.VisitElementInitializer(enum2.Current);
+						}
+					}
 				}
 
 				this.currentObject = current;
@@ -502,11 +505,17 @@ namespace Platform.Linq
 
 			if (this.result)
 			{
-				for (var i = 0; i < current.Parameters.Count; i++)
+				using (var enum1 = current.Parameters.GetEnumerator())
 				{
-					this.currentObject = current.Parameters[i];
+					using (var enum2 = expression.Parameters.GetEnumerator())
+					{
+						while (enum1.MoveNext() && enum2.MoveNext())
+						{
+							this.currentObject = enum1.Current;
 
-					this.Visit(expression.Parameters[i]);
+							this.Visit(enum2.Current);
+						}
+					}
 				}
 
 				this.currentObject = current;
@@ -529,11 +538,17 @@ namespace Platform.Linq
 
 			if (this.result)
 			{
-				for (var i = 0; i < current.Arguments.Count; i++)
+				using (var enum1 = current.Arguments.GetEnumerator())
 				{
-					this.currentObject = current.Arguments[i];
+					using (var enum2 = expression.Arguments.GetEnumerator())
+					{
+						while (enum1.MoveNext() && enum2.MoveNext())
+						{
+							this.currentObject = enum1.Current;
 
-					this.Visit(expression.Arguments[i]);
+							this.Visit(enum2.Current);
+						}
+					}
 				}
 
 				this.currentObject = current;

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Platform.Collections
@@ -7,6 +8,7 @@ namespace Platform.Collections
 		: IReadOnlyList<T>
 	{
 		private readonly IList<T> innerList;
+		
 		public int Count => this.innerList.Count;
 		public T this[int index] => this.innerList[index];
 
