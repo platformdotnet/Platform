@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Xml;
 using Platform.Collections;
 
 namespace Platform.Xml.Serialization
@@ -96,5 +97,23 @@ namespace Platform.Xml.Serialization
 
 			return serializer;
 		}
-	}
+
+        public override XmlSerializer<object> NewXmlSerializer(Type type, SerializerOptions options, Formatting formatting)
+        {
+            XmlSerializer<object> serializer;
+            serializer = this.NewXmlSerializer(type, null);
+            serializer.Formatting = formatting;
+
+            return serializer;
+        }
+
+        public override XmlSerializer<T> NewXmlSerializer<T>(Formatting formatting)
+        {
+            XmlSerializer<T> serializer;
+            serializer = this.NewXmlSerializer<T>(null);
+            serializer.Formatting = formatting;
+
+            return serializer;
+        }
+    }
 }

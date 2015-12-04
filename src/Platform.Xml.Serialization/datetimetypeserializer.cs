@@ -42,7 +42,7 @@ namespace Platform.Xml.Serialization
 
 		public override string Serialize(object obj, SerializationContext state)
 		{
-			return ((DateTime)obj).ToString(formatAttribute.Format);
+			return ((DateTime)obj).ToString(formatAttribute.Format, formatAttribute.CultureInfo);
 		}
 
 		public override object Deserialize(string value, SerializationContext state)
@@ -51,7 +51,7 @@ namespace Platform.Xml.Serialization
 			{
 				try
 				{
-					return DateTime.ParseExact(value, formatAttribute.Format, System.Globalization.CultureInfo.CurrentCulture);
+					return DateTime.ParseExact(value, formatAttribute.Format, formatAttribute.CultureInfo);
 				}
 				catch 
 				{				

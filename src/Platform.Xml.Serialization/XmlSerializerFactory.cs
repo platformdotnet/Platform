@@ -47,12 +47,28 @@ namespace Platform.Xml.Serialization
 		/// <returns>A new <see cref="XmlSerializer{T}"/></returns>
 		public abstract XmlSerializer<object> NewXmlSerializer(Type type);
 
-		/// <summary>
-		/// Creates a new <see cref="XmlSerializer{T}"/>
-		/// </summary>
-		/// <param name="type">The type supported by the serializer</param>
-		/// <param name="options">The options for the serializer</param>
-		/// <returns>A new <see cref="XmlSerializer{T}"/></returns>
-		public abstract XmlSerializer<object> NewXmlSerializer(Type type, SerializerOptions options);
-	}
+        /// <summary>
+        /// Creates a new <see cref="XmlSerializer{T}"/>
+        /// </summary>
+        /// <param name="type">The type supported by the serializer</param>
+        /// <param name="options">The options for the serializer</param>
+        /// <returns>A new <see cref="XmlSerializer{T}"/></returns>
+        public abstract XmlSerializer<object> NewXmlSerializer(Type type, SerializerOptions options);
+
+        /// <summary>
+        /// Creates a new <see cref="XmlSerializer{T}"/>
+        /// </summary>
+        /// <param name="formatting">The formatting for the serializer.Formatting</param>
+        /// <returns>A new <see cref="XmlSerializer{T}"/></returns>
+        public abstract XmlSerializer<T> NewXmlSerializer<T>(Formatting formatting);
+
+        /// <summary>
+        /// Creates a new <see cref="XmlSerializer{T}"/>
+        /// </summary>
+        /// <param name="type">The type supported by the serializer</param>
+        /// <param name="options">The options for the serializer</param>
+        /// <param name="formatting">The formatting for the serializer.Formatting</param>
+        /// <returns>A new <see cref="XmlSerializer{T}"/></returns>
+        public abstract XmlSerializer<object> NewXmlSerializer(Type type, SerializerOptions options, Formatting formatting);
+    }
 }
