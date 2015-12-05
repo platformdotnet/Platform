@@ -145,7 +145,7 @@ namespace Platform.Xml.Serialization
 			}
 			else
 			{
-				throw new ArgumentException(String.Format("Unsupported member type: {0}", memberInfo.MemberType.ToString()));
+				throw new ArgumentException($"Unsupported member type: {this.memberInfo.MemberType.ToString()}");
 			}
 
 			// Get the [XmlExclude] [XmlAttribute] or [XmlElement] attribute
@@ -268,7 +268,7 @@ namespace Platform.Xml.Serialization
 
 					if (!returnType.IsAssignableFrom(typeSerializer.SupportedType))
 					{
-						throw new InvalidOperationException(String.Format("Explicitly specified serializer ({0}) doesn't support serializing of associated program element.", ((XmlTypeSerializerTypeAttribute) attribute).SerializerType.Name));
+						throw new InvalidOperationException($"Explicitly specified serializer ({((XmlTypeSerializerTypeAttribute)attribute).SerializerType.Name}) doesn't support serializing of associated program element.");
 					}
 				}
 			}

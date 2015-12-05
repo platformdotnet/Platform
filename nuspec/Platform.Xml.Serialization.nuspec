@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A cross-platform, clean and extensible XML serializer for .NET</description>
     <releaseNotes>$releasenotes$</releaseNotes>
-    <copyright>Copyright (c) 2003-2013 Thong Nguyen (tumtumtum@gmail.com)</copyright>
+    <copyright>Copyright (c) 2003-2015 Thong Nguyen (tumtumtum@gmail.com)</copyright>
     <tags>platform xml serialization serializer</tags>
     <dependencies>
       <dependency id="Platform.NET" version="$version$"/>

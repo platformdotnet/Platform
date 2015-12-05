@@ -13,7 +13,7 @@ namespace Platform.Validation
         
 		public static string CreateExceptionString(IPropertyValidationContext context)
 		{
-			return String.Format("The property '{0}.{1}' with the value '{2}' failed {3} validation with result: {4}", context.PropertyInfo.ReflectedType.Name, context.PropertyInfo.Name, context.PropertyValue == null ? "null" : Convert.ToString(context.PropertyValue), context.ValidationAttribute.Name, context.ValidationAttribute.CreateExceptionString(context));
+			return $"The property '{context.PropertyInfo.ReflectedType.Name}.{context.PropertyInfo.Name}' with the value '{(context.PropertyValue == null ? "null" : Convert.ToString(context.PropertyValue))}' failed {context.ValidationAttribute.Name} validation with result: {context.ValidationAttribute.CreateExceptionString(context)}";
 		}
 
 		public ValidationException(IPropertyValidationContext context)

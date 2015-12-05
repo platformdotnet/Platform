@@ -318,14 +318,7 @@ namespace Platform.Network.Time
 						{
 							case 3:	// Version 3, Reference ID is an IPv4 address
 
-						        var address = String.Format
-						        (
-									"{0}.{1}.{2}.{3}",
-									referenceId.Byte1,
-									referenceId.Byte2,
-									referenceId.Byte3,
-									referenceId.Byte4
-						        );
+						        var address = $"{this.referenceId.Byte1}.{this.referenceId.Byte2}.{this.referenceId.Byte3}.{this.referenceId.Byte4}";
 
 								try
 								{

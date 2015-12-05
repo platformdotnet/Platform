@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
-using Platform.Collections;
 
 namespace Platform.Linq
 {
@@ -129,7 +128,7 @@ namespace Platform.Linq
 			return base.VisitMethodCall(methodCallExpression);
 		}
 
-		protected override ICollection<T> VisitExpressionList<T>(ICollection<T> original)
+		protected override IReadOnlyList<T> VisitExpressionList<T>(IReadOnlyList<T> original)
 		{
 			if (original == null)
 			{
@@ -141,7 +140,7 @@ namespace Platform.Linq
 			return base.VisitExpressionList<T>(original);
 		}
 
-		protected override ICollection<Expression> VisitExpressionList(ICollection<Expression> original)
+		protected override IReadOnlyList<Expression> VisitExpressionList(IReadOnlyList<Expression> original)
 		{
 			if (original == null)
 			{
@@ -188,7 +187,7 @@ namespace Platform.Linq
 			return base.VisitMemberListBinding(binding);
 		}
 
-		protected override ICollection<MemberBinding> VisitBindingList(ICollection<MemberBinding> original)
+		protected override IReadOnlyList<MemberBinding> VisitBindingList(IReadOnlyList<MemberBinding> original)
 		{
 			if (original == null)
 			{
@@ -200,7 +199,7 @@ namespace Platform.Linq
 			return base.VisitBindingList(original);
 		}
 
-		protected override ICollection<ElementInit> VisitElementInitializerList(ICollection<ElementInit> original)
+		protected override IReadOnlyList<ElementInit> VisitElementInitializerList(IReadOnlyList<ElementInit> original)
 		{
 			if (original == null)
 			{

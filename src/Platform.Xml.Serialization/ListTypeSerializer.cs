@@ -201,9 +201,7 @@ namespace Platform.Xml.Serialization
 			if (typeToItemMap.Count == 0 && this.dynamicTypeResolver == null)
 			{
 			    throw new InvalidOperationException(
-			        string.Format(
-			            "Must specify at least one XmlListElemenType or an XmlListElementTypeSerializerProvider for field {0}",
-			             ((Type)memberInfo.MemberInfo).FullName));
+				    $"Must specify at least one XmlListElemenType or an XmlListElementTypeSerializerProvider for field {((Type)memberInfo.MemberInfo).FullName}");
 			}
 
 			listType = memberInfo.ReturnType;		

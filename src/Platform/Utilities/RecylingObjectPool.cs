@@ -101,7 +101,7 @@ namespace Platform.Utilities
 		{
 			if (!typeof(V).IsAssignableFrom(type))
 			{
-				throw new ArgumentException(String.Format("Type {0} does not inherit from {1}", type.Name, typeof(V).Name));
+				throw new ArgumentException($"Type {type.Name} does not inherit from {typeof(V).Name}");
 			}
 
 			if (typeof(V).IsValueType)
@@ -122,7 +122,7 @@ namespace Platform.Utilities
 		{
 			if (!typeof(V).IsAssignableFrom(type))
 			{
-				throw new ArgumentException(String.Format("Type {0} does not inherit from {1}", type.Name, typeof(V).Name));
+				throw new ArgumentException($"Type {type.Name} does not inherit from {typeof(V).Name}");
 			}
 
 			return (V)Activator.CreateInstance(type);

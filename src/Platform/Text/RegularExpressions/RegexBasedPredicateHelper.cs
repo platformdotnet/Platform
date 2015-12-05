@@ -55,7 +55,7 @@ namespace Platform.Text.RegularExpressions
 
 			if (predicateHelper == null)
 			{
-				throw new ArgumentException(String.Format("Must be a predicateHelper created from {0}", typeof(RegexBasedPredicateHelper).Name));
+				throw new ArgumentException($"Must be a predicateHelper created from {typeof(RegexBasedPredicateHelper).Name}");
 			}
 
 			return predicateHelper.Regex;

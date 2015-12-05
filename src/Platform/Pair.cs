@@ -328,7 +328,7 @@ namespace Platform
 		/// <returns>A string representation of the pair</returns>
 		public override string ToString()
 		{
-			return String.Format("[{0}, {1}]", Left, Right);
+			return $"[{this.Left}, {this.Right}]";
 		}
 	}
 }

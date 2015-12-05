@@ -23,7 +23,7 @@ namespace Platform.Collections
 		/// A <see cref="WeakReference{T}"/> that contains a key.
 		/// </summary>
 		public class KeyedWeakReference
-			: WeakReference<V>, IKeyed<K>			
+			: References.WeakReference<V>, IKeyed<K>			
 		{
 			object IKeyed.Key
 			{

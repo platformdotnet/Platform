@@ -14,13 +14,9 @@
 Platform.NET
 
 A cross-platform library of useful classes and extensions for C# and .NET.
-
-This library was initially developed between 2003-2008. It has been updated to use modern C# syntax and released as open source under the BSD license. It is the foundation of my other C# projects including the projects located at the GitHub [Platform.NET](https://github.com/platformdotnet) organisation.
-
-Some notable classes provided are: TimedReferenceDictionary, ExpressionVisitor, NetworkTimeClient, NotifyingWeakReference, TimedReference, ReferenceQueue, ITask, IMeter, InteractiveCryptoStream, TextConversion, InvocationQueue, XmlSerializer, BoundedFifoBuffer, CircularFifoBuffer
 </description>
     <releaseNotes>$releasenotes$</releaseNotes>
-    <copyright>Copyright (c) 2003-2013 Thong Nguyen (tumtumtum@gmail.com)</copyright>
+    <copyright>Copyright (c) 2003-2016 Thong Nguyen (tumtumtum@gmail.com)</copyright>
     <tags>task text utility string extensions base64 ntp invocationqueue utility weakreference meteringstream expressionvisitor linq ringbuffer fifobuffer circular</tags>
   </metadata>
 </package>

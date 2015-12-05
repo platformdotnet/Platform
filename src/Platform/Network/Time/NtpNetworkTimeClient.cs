@@ -44,7 +44,7 @@ namespace Platform.Network.Time
 				
 			public override string ToString()
 			{
-				return String.Format("{0} ({1:0}%)", state, this.Percentage * 100);
+				return $"{this.state} ({this.Percentage * 100:0}%)";
 			}
 		}
 
@@ -142,7 +142,7 @@ namespace Platform.Network.Time
 				{
 					data = null;
 
-					progress.SetState(3, String.Format("Requesting Time (Attempt {0})", i + 1));
+					progress.SetState(3, $"Requesting Time (Attempt {i + 1})");
 
 					udpClient.Send(outdata, outdata.Length);
 
@@ -188,7 +188,7 @@ namespace Platform.Network.Time
 
 		protected override void OnTaskException(TaskExceptionEventArgs eventArgs)
 		{
-			progress.SetState(4, String.Format("Stopped (Error {0})", eventArgs.Exception.ToString()));
+			progress.SetState(4, $"Stopped (Error {eventArgs.Exception.ToString()})");
 
 			base.OnTaskException(eventArgs);
 		}

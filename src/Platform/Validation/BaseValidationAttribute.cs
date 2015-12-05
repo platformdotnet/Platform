@@ -25,7 +25,7 @@ namespace Platform.Validation
 
 		public virtual string CreateExceptionString(IPropertyValidationContext context)
 		{
-			return String.Format(@"{0}", this.Name);
+			return $@"{this.Name}";
 		}
 	}
 }
