@@ -307,6 +307,8 @@ namespace Platform.Linq
 						list.Add(p);
 					}
 				}
+
+				i++;
 			}
 
 			if (list != null)
@@ -429,6 +431,8 @@ namespace Platform.Linq
 
 					list.Add(init);
 				}
+
+				i++;
 			}
 
 			if (list != null)
