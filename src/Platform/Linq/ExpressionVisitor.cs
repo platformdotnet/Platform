@@ -148,7 +148,7 @@ namespace Platform.Linq
 
 		protected virtual Expression VisitTypeIs(TypeBinaryExpression expression)
 		{
-			Expression expr = Visit(expression.Expression);
+			var expr = Visit(expression.Expression);
 
 			if (expr != expression.Expression)
 			{
@@ -217,7 +217,9 @@ namespace Platform.Linq
 				return null;
 			}
 
-			for (var i = 0; i < original.Count; i++)
+			var count = original.Count;
+
+			for (var i = 0; i < count; i++)
 			{
 				var item = original[i];
 
@@ -232,11 +234,11 @@ namespace Platform.Linq
 				}
 				else if (p != item)
 				{
-					list = new List<Expression>(original.Count);
+					list = new List<Expression>(count);
 
 					for (var j = 0; j < i; j++)
 					{
-						list.Add(original[i]);
+						list.Add(original[j]);
 					}
 
 					if (p != null)
@@ -259,7 +261,9 @@ namespace Platform.Linq
 				return null;
 			}
 
-			for (var i = 0; i <original.Count; i++)
+			var count = original.Count;
+
+			for (var i = 0; i < count; i++)
 			{
 				var item = original[i];
 
@@ -274,7 +278,7 @@ namespace Platform.Linq
 				}
 				else if (p != item)
 				{
-					list = new List<T>(original.Count);
+					list = new List<T>(count);
 
 					for (var j = 0; j < i; i++)
 					{
@@ -316,7 +320,9 @@ namespace Platform.Linq
 		{
 			List<MemberBinding> list = null;
 
-			for (var i = 0; i < original.Count; i++)
+			var count = original.Count;
+
+			for (var i = 0; i < count; i++)
 			{
 				var item = original[i];
 
@@ -328,7 +334,7 @@ namespace Platform.Linq
 				}
 				else if (b != item)
 				{
-					list = new List<MemberBinding>(original.Count);
+					list = new List<MemberBinding>(count);
 
 					for (var j = 0; j < i; j++)
 					{
@@ -346,7 +352,9 @@ namespace Platform.Linq
 		{
 			List<ElementInit> list = null;
 
-			for (var i = 0; i < original.Count; i++)
+			var count = original.Count;
+
+			for (var i = 0; i < count; i++)
 			{
 				var item = original[i];
 				var init = VisitElementInitializer(item);
@@ -357,7 +365,7 @@ namespace Platform.Linq
 				}
 				else if (init != item)
 				{
-					list = new List<ElementInit>(original.Count);
+					list = new List<ElementInit>(count);
 
 					for (var j = 0; j < i; j++)
 					{
