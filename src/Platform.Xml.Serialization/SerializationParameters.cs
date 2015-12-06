@@ -9,13 +9,7 @@ namespace Platform.Xml.Serialization
 
 		private static readonly SerializationParameters empty = new SerializationParameters();
 
-		public static SerializationParameters Empty
-		{
-			get
-			{
-				return empty;
-			}
-		}
+		public static SerializationParameters Empty => empty;
 
 		public XmlSerializerNamespaces Namespaces
 		{

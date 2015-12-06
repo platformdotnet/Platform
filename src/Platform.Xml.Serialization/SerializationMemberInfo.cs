@@ -31,59 +31,27 @@ namespace Platform.Xml.Serialization
 
 		public virtual XmlApproachAttribute ApproachAttribute { get; set; }
 
-		public virtual Type ReturnType
-		{
-			get { return returnType; }
-		}
+		public virtual Type ReturnType => this.returnType;
 
-		public virtual bool TreatAsNullIfEmpty
-		{
-			get { return treatAsNullIfEmpty; }
-		}
+		public virtual bool TreatAsNullIfEmpty => this.treatAsNullIfEmpty;
 
-		public virtual string SerializeAsValueNodeAttributeName
-		{
-			get { return serializeAsValueNodeAttributeName; }
-		}
+		public virtual string SerializeAsValueNodeAttributeName => this.serializeAsValueNodeAttributeName;
 
-		public virtual bool SerializeAsCData
-		{
-			get { return serializeAsCData; }
-		}
+		public virtual bool SerializeAsCData => this.serializeAsCData;
 
-	    public virtual bool SerializeIfNull
-	    {
-	        get { return serializeIfNull; }
-	    }
-		public virtual MemberInfo MemberInfo
-		{
-			get { return memberInfo; }
-		}
+		public virtual bool SerializeIfNull => this.serializeIfNull;
 
-		public virtual XmlNodeType SerializedNodeType
-		{
-			get { return serializedNodeType; }
-		}
+		public virtual MemberInfo MemberInfo => this.memberInfo;
 
-		public virtual string SerializedName
-		{
-			get { return serializedName; }
-		}
+		public virtual XmlNodeType SerializedNodeType => this.serializedNodeType;
 
-		public virtual string Namespace
-		{
-			get { return serializedNamespace; }
-		}
+		public virtual string SerializedName => this.serializedName;
 
-		public virtual bool Serializable
-		{
-			get { return serializedNodeType != XmlNodeType.None; }
-		}
+		public virtual string Namespace => this.serializedNamespace;
 
-		public virtual IXmlDynamicTypeProvider PolymorphicTypeProvider
-		{
-			get { return polymorphicTypeProvider; }
-		}
+		public virtual bool Serializable => this.serializedNodeType != XmlNodeType.None;
+
+		public virtual IXmlDynamicTypeProvider PolymorphicTypeProvider => this.polymorphicTypeProvider;
 
 		public SerializationMemberInfo(MemberInfo memberInfo, SerializerOptions options, TypeSerializerCache cache)
 			: this(memberInfo, options, cache, false)

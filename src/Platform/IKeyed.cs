@@ -19,7 +19,7 @@ namespace Platform
 	/// <summary>
 	/// Interface for objects that contain a <see cref="Key"/> property.
 	/// </summary>
-	public interface IKeyed<T>
+	public interface IKeyed<out T>
 		: IKeyed
 	{
 		/// <summary>

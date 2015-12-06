@@ -12,33 +12,28 @@ namespace Platform
 	{
 		private static Expression Unwrap(this Expression expression)
 		{
-			if (expression.NodeType == ExpressionType.Convert)
-			{
-				return ((UnaryExpression)expression).Operand;
-			}
-
-			return expression;
+			return expression.NodeType == ExpressionType.Convert ? ((UnaryExpression)expression).Operand : expression;
 		}
 
 		public static MemberInfo GetMember<T>(Expression<Func<T>> member)
 		{
 			switch (member.Body.NodeType)
 			{
-				case ExpressionType.Call:
-					return GetMethod(member);
-				case ExpressionType.New:
-					return GetConstructor(member);
-				case ExpressionType.MemberAccess:
-					if (((MemberExpression)member.Body).Member is PropertyInfo)
-					{
-						return GetProperty(member);
-					}
-					else
-					{
-						return GetField(member);
-					}
-				default:
-					throw new ArgumentException($"Argument {nameof(member)} needs to contain a method, property or field", nameof(member));
+			case ExpressionType.Call:
+				return GetMethod(member);
+			case ExpressionType.New:
+				return GetConstructor(member);
+			case ExpressionType.MemberAccess:
+				if (((MemberExpression)member.Body).Member is PropertyInfo)
+				{
+					return GetProperty(member);
+				}
+				else
+				{
+					return GetField(member);
+				}
+			default:
+				throw new ArgumentException($"Argument {nameof(member)} needs to contain a method, property or field", nameof(member));
 			}
 		}
 
@@ -86,19 +81,19 @@ namespace Platform
 		{
 			switch (member.Body.NodeType)
 			{
-				case ExpressionType.Call:
-					return GetMethod(member);
-				case ExpressionType.MemberAccess:
-					if (((MemberExpression)member.Body).Member is PropertyInfo)
-					{
-						return GetProperty(member);
-					}
-					else
-					{
-						return GetField(member);
-					}
-				default:
-					throw new ArgumentException($"Argument {nameof(member)} needs to contain a method, property or field", nameof(member));
+			case ExpressionType.Call:
+				return GetMethod(member);
+			case ExpressionType.MemberAccess:
+				if (((MemberExpression)member.Body).Member is PropertyInfo)
+				{
+					return GetProperty(member);
+				}
+				else
+				{
+					return GetField(member);
+				}
+			default:
+				throw new ArgumentException($"Argument {nameof(member)} needs to contain a method, property or field", nameof(member));
 			}
 		}
 
@@ -325,7 +320,7 @@ namespace Platform
 
 			var interfaces = sequenceType.GetInterfaces();
 
-			if (interfaces != null && interfaces.Length > 0)
+			if (interfaces.Length > 0)
 			{
 				foreach (var element in interfaces
 					.Select(FindSequenceElementType)
@@ -495,20 +490,20 @@ namespace Platform
 
 				switch (Type.GetTypeCode(type))
 				{
-					case TypeCode.Int16:
-						return (short)0;
-					case TypeCode.Int32:
-						return 0;
-					case TypeCode.Int64:
-						return (long)0;
-					case TypeCode.UInt16:
-						return (ushort)0;
-					case TypeCode.UInt32:
-						return (uint)0;
-					case TypeCode.UInt64:
-						return (ulong)0;
-					default:
-						return Activator.CreateInstance(type);
+				case TypeCode.Int16:
+					return (short)0;
+				case TypeCode.Int32:
+					return 0;
+				case TypeCode.Int64:
+					return (long)0;
+				case TypeCode.UInt16:
+					return (ushort)0;
+				case TypeCode.UInt32:
+					return (uint)0;
+				case TypeCode.UInt64:
+					return (ulong)0;
+				default:
+					return Activator.CreateInstance(type);
 				}
 			}
 			else

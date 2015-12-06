@@ -15,37 +15,10 @@ namespace Platform
 		private class NullMeter
 			: AbstractMeter
 		{
-			public override object CurrentValue
-			{
-				get
-				{
-					return null;
-				}
-			}
-
-			public override object MaximumValue
-			{
-				get
-				{
-					return null;
-				}
-			}
-
-			public override object MinimumValue
-			{
-				get
-				{
-					return null;
-				}
-			}
-
-			public override string Units
-			{
-				get
-				{
-					return "";
-				}
-			}
+			public override object CurrentValue => null;
+			public override object MaximumValue => null;
+			public override object MinimumValue => null;
+			public override string Units => "";
 		}
 				
 		#endregion
@@ -53,14 +26,7 @@ namespace Platform
 		/// <summary>
 		/// An <see cref="IMeter"/> implementation that does nothing.
 		/// </summary>
-		public static IMeter Null
-		{
-			get
-			{
-				return nullMeter;
-			}
-		}
-		private static readonly IMeter nullMeter = new NullMeter();
+		public static IMeter Null { get; set; } = new NullMeter();
 
 		/// <summary>
 		/// An event that is raised when the meter's value changes.
@@ -73,10 +39,7 @@ namespace Platform
 		/// <param name="eventArgs">The arguments for the event</param>
         protected virtual void OnValueChanged(MeterEventArgs eventArgs)
 		{
-			if (this.ValueChanged != null)
-			{
-				this.ValueChanged(this, eventArgs);
-			}
+			this.ValueChanged?.Invoke(this, eventArgs);
 		}
 
 		/// <summary>
@@ -146,62 +109,32 @@ namespace Platform
 		/// <summary>
 		/// Gets the current value.
 		/// </summary>
-		public abstract object CurrentValue
-		{
-			get;
-		}
+		public abstract object CurrentValue { get; }
 
 		/// <summary>
 		/// Gets the units for this meter.
 		/// </summary>
-		public abstract string Units
-		{
-			get;
-		}
+		public abstract string Units { get; }
 
 		/// <summary>
 		/// Gets the current value.
 		/// </summary>
-		object IValued.Value
-		{
-			get
-			{
-				return this.CurrentValue;
-			}
-		}
+		object IValued.Value => this.CurrentValue;
 
 		/// <summary>
 		/// Gets the maximum value.
 		/// </summary>
-		object IMeter.MaximumValue
-		{
-			get
-			{
-				return this.MaximumValue;
-			}
-		}
+		object IMeter.MaximumValue => this.MaximumValue;
 
 		/// <summary>
 		/// Gets the minimum value.
 		/// </summary>
-		object IMeter.MinimumValue
-		{
-			get
-			{
-				return this.MinimumValue;
-			}
-		}
+		object IMeter.MinimumValue => this.MinimumValue;
 
 		/// <summary>
 		/// Gets the current value.
 		/// </summary>
-		object IMeter.CurrentValue
-		{
-			get
-			{
-				return this.CurrentValue;
-			}
-		}
+		object IMeter.CurrentValue => this.CurrentValue;
 
 		/// <summary>
 		/// Gets how far along the current value is between the minimum
@@ -226,7 +159,7 @@ namespace Platform
 					z = Convert.ToDouble(MinimumValue);
 				}
 
-				if (y == 0)
+				if (Math.Abs(y) < double.Epsilon)
 				{
 					return 0;
 				}
@@ -243,15 +176,14 @@ namespace Platform
 		public override string ToString()
 		{
 			string formatString;
-			object[] arguments;
-									
-			arguments = new object[]
-				{
-					this.CurrentValue,
-					this.MaximumValue,
-					this.Units,
-					0
-				};
+
+			var arguments = new[]
+			{
+				this.CurrentValue,
+				this.MaximumValue,
+				this.Units,
+				0
+			};
 
 			if (this.CurrentValue == null || this.MaximumValue == null)
 			{
@@ -281,7 +213,7 @@ namespace Platform
 			{				
 			}
 
-			return String.Format(formatString, arguments);
+			return string.Format(formatString, arguments);
 		}
 	}
 }

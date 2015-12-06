@@ -34,7 +34,7 @@ namespace Platform
 
 		public static Pair<string, string> GetSchemeAndPath(string uri)
 		{
-			var x = uri.IndexOf("://");
+			var x = uri.IndexOf("://", StringComparison.Ordinal);
 
 			if (x < 0)
 			{
@@ -48,7 +48,7 @@ namespace Platform
 
 		public static string GetPath(string uri)
 		{
-			int x = uri.IndexOf("://");
+			int x = uri.IndexOf("://", StringComparison.Ordinal);
 
 			if (x < 0)
 			{
@@ -62,7 +62,7 @@ namespace Platform
 
 		public static string GetScheme(string uri)
 		{
-			int x = uri.IndexOf("://");
+			int x = uri.IndexOf("://", StringComparison.Ordinal);
 
 			if (x < 0)
 			{
@@ -75,10 +75,10 @@ namespace Platform
 		}
 
 		/// <summary>
-		/// <see cref="NormalizePath(string, char[])"/>
+		/// <see cref="NormalizePath(string, int, int)"/>
 		/// </summary>
 		/// <remarks>
-		/// Calls <see cref="NormalizePath(string, char[])"/> with the array
+		/// Calls <see cref="NormalizePath(string, int, int)"/> with the array
 		/// <see cref="AcceptableSeperatorChars"/> which contains <c>'/'</c> and <c>'\'</c>.
 		/// </remarks>
 		public static string NormalizePath(string path)
@@ -93,9 +93,9 @@ namespace Platform
 
 		private static bool CharArrayContains(char[] array, char c)
 		{
-			for (int i = 0; i < array.Length; i++)
+			for (var i = 0; i < array.Length; i++)
 			{
-				if (array[i] == c)
+				if (i == c)
 				{
 					return true;
 				}
@@ -105,7 +105,7 @@ namespace Platform
 		}
 
 		[ThreadStatic]
-		private static int[] backtrackStack = new int[0x100];
+		private static int[] backtrackStack;
 
 		/// <summary>
 		/// Normalises a given path and returns the new normalised version.
@@ -153,7 +153,7 @@ namespace Platform
 				}
 			}
 
-			int[] localBackTrackStack = StringUriUtils.backtrackStack;
+			var localBackTrackStack = StringUriUtils.backtrackStack;
 
 			localBackTrackStack[xi] = startIndex;
 
@@ -372,14 +372,12 @@ namespace Platform
 
 		public static System.Collections.Generic.IEnumerable<Pair<string, string>> ParseQuery(string query)
 		{
-			string[] ss;
-						
 			if (query == "")
 			{
 				yield break;
 			}
 
-			ss = query.Split('&');
+			var ss = query.Split('&');
 
 			for (var i = 0; i < ss.Length; i++)
 			{

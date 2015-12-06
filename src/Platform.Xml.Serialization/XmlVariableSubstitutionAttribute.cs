@@ -6,11 +6,7 @@ namespace Platform.Xml.Serialization
 	public class XmlVariableSubstitutionAttribute
 		: XmlSerializationAttribute
 	{
-		public virtual Type SubstitutorType
-		{
-			get;
-			set;
-		}
+		public Type SubstitutorType { get; set; }
 
 		public XmlVariableSubstitutionAttribute()
 			: this(typeof(XmlEnvironmentVariableSubstitutor))

@@ -31,13 +31,7 @@ namespace Platform.Utilities
 		/// <summary>
 		/// The object used to synchronize this object pool.
 		/// </summary>
-		public virtual object SyncLock
-		{
-			get
-			{
-				return this;
-			}
-		}
+		public virtual object SyncLock => this;
 
 		/// <summary>
 		/// The <see cref="ObjectActivator"/> used by the pool to create new
@@ -64,11 +58,11 @@ namespace Platform.Utilities
 
 		public virtual IEnumerator<V> GetEnumerator()
 		{
-			foreach (IDictionary<Type, Queue<V>> dictionary in pool.Values)
+			foreach (var dictionary in pool.Values)
 			{
-				foreach (Queue<V> queue in dictionary.Values)
+				foreach (var queue in dictionary.Values)
 				{
-					foreach (V obj in queue)
+					foreach (var obj in queue)
 					{
 						yield return obj;
 					}
@@ -87,10 +81,7 @@ namespace Platform.Utilities
 		/// <summary>
 		/// Gets an enumerator for all the objects in the pool.
 		/// </summary>
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-		{
-			return this.GetEnumerator();
-		}
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => this.GetEnumerator();
 
 		/// <summary>
 		/// An <see cref="ObjectActivator"/> that returns null or the default value for the type
@@ -231,10 +222,7 @@ namespace Platform.Utilities
 		/// An <see cref="ObjectActivator"/> that will be used to create the object if none already exist in the pool
 		/// </param>
 		/// <returns>An object (either from the pool or newly created)</returns>
-		public virtual T GetObject<T>(ObjectActivator<V> objectActivator)
-		{
-			return (T)GetObject(typeof(T), objectActivator);
-		}
+		public virtual T GetObject<T>(ObjectActivator<V> objectActivator) => (T)this.GetObject(typeof(T), objectActivator);
 
 		/// <summary>
 		/// Gets an object from the pool's default set.
@@ -245,10 +233,7 @@ namespace Platform.Utilities
 		/// An <see cref="ObjectActivator"/> that will be used to create the object if none already exist in the pool
 		/// </param>
 		/// <returns>An object (either from the pool or newly created)</returns>
-		public virtual object GetObject(Type type, ObjectActivator<V> objectActivator)
-		{
-			return GetObject(null, type, objectActivator);
-		}
+		public virtual object GetObject(Type type, ObjectActivator<V> objectActivator) => this.GetObject(null, type, objectActivator);
 
 		/// <summary>
 		/// Gets an object from the pool's default set.  Uses the pool's default
@@ -256,10 +241,7 @@ namespace Platform.Utilities
 		/// </summary>
 		/// <typeparam name="T">The type of object to create</typeparam>
 		/// <returns>An object(either from the pool or newly created)</returns>
-		public virtual T GetObject<T>()
-		{
-			return (T)GetObject(typeof(T));
-		}
+		public virtual T GetObject<T>() => (T)this.GetObject(typeof(T));
 
 		/// <summary>
 		/// Gets an object from the pool's default set.  Uses the pool's default
@@ -267,9 +249,6 @@ namespace Platform.Utilities
 		/// </summary>
 		/// <param name="type">The type of object to create</param>
 		/// <returns>An object(either from the pool or newly created)</returns>
-		public virtual object GetObject(Type type)
-		{
-			return GetObject(type, this.ObjectActivator);
-		}
+		public virtual object GetObject(Type type) => this.GetObject(type, this.ObjectActivator);
 	}
 }

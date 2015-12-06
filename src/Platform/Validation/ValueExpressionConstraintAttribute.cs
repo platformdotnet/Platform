@@ -8,12 +8,8 @@ namespace Platform.Validation
 	public class ValueExpressionConstraintAttribute
 		: ValidationAttribute
 	{
-		public string ConstraintExpression
-		{
-			get;
-			set;
-		}
-		
+		public string ConstraintExpression { get; set; }
+
 		public ValueExpressionConstraintAttribute(string constraintExpression)
 		{
 			this.ConstraintExpression = constraintExpression;

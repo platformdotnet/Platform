@@ -8,21 +8,9 @@ namespace Platform.Xml.Serialization
 	public class ListTypeSerializer
 		: ComplexTypeTypeSerializer
 	{
-		public override bool MemberBound
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool MemberBound => true;
 
-		public override Type SupportedType
-		{
-			get
-			{
-				return listType;
-			}
-		}
+		public override Type SupportedType => this.listType;
 
 		private Type listType; 
 		private readonly IDictionary<Type, ListItem> typeToItemMap;
@@ -30,22 +18,28 @@ namespace Platform.Xml.Serialization
 
 	    private class ListItem
 	    {
-	        private string _alias;
+	        private string alias;
 
-	        public string Alias
-	        {
-	            get
-	            {
-	                if (this.Attribute == null)
-	                    return _alias;
-	                if (this.Attribute.MakeNameLowercase)
-	                    return _alias.ToLower();
-	                return _alias;
-	            }
-	            set { _alias = value; }
-	        }
+		    public string Alias
+		    {
+			    get
+			    {
+				    if (this.Attribute == null)
+				    {
+					    return this.alias;
+				    }
 
-			public XmlListElementAttribute Attribute;
+				    if (this.Attribute.MakeNameLowercase)
+				    {
+					    return this.alias.ToLower();
+				    }
+
+				    return this.alias;
+			    }
+			    set { this.alias = value; }
+		    }
+
+		    public XmlListElementAttribute Attribute;
 			public TypeSerializer Serializer;			
 		}
 
@@ -118,8 +112,9 @@ namespace Platform.Xml.Serialization
 				attributes.Add(a);
 			}
 			
-			foreach (XmlListElementAttribute attribute in attributes)
+			foreach (var attribute1 in attributes)
 			{
+				var attribute = (XmlListElementAttribute)attribute1;
 				var listItem = new ListItem();
 				
 				if (attribute.Type == null)

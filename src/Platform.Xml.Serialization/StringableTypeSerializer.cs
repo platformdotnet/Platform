@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 
 namespace Platform.Xml.Serialization
 {
@@ -15,45 +14,28 @@ namespace Platform.Xml.Serialization
 
         private readonly XmlFormatAttribute formatAttribute;
 
-        public override bool MemberBound
-        {
-            get
-            {
-                return true;
-            }
-        }
-		
-		public override Type SupportedType
-		{
-			get
-			{
-				return supportedType;
-			}
-		}
+        public override bool MemberBound => true;
 
-	    public static List<Type> SupportedTypes
-	    {
-	        get
-	        {
-	            return new List<Type>()
-	            {
-	                typeof(bool),
-                    typeof(byte),
-                    typeof(char),
-                    typeof(decimal),
-                    typeof(double),
-                    typeof(float),
-                    typeof(int),
-                    typeof(long),
-                    typeof(sbyte),
-                    typeof(short),
-                    typeof(string),
-                    typeof(uint),
-                    typeof(ulong),
-                    typeof(ushort)
-	            };
-	        }
-	    } 
+		public override Type SupportedType => this.supportedType;
+
+		public static List<Type> SupportedTypes => new List<Type>()
+		{
+			typeof(bool),
+			typeof(byte),
+			typeof(char),
+			typeof(decimal),
+			typeof(double),
+			typeof(float),
+			typeof(int),
+			typeof(long),
+			typeof(sbyte),
+			typeof(short),
+			typeof(string),
+			typeof(uint),
+			typeof(ulong),
+			typeof(ushort)
+		};
+
 		private readonly Type supportedType;
 
         public StringableTypeSerializer(Type type, SerializationMemberInfo memberInfo, TypeSerializerCache cache, SerializerOptions options)
@@ -76,8 +58,11 @@ namespace Platform.Xml.Serialization
 		    {
                 return (obj as IFormattable).ToString(formatAttribute.Format, formatAttribute.CultureInfo);
 		    }
-		    if (obj == null)
-		        return string.Empty;
+
+			if (obj == null)
+			{
+				return string.Empty;
+			}
 
 			return obj.ToString();
 		}
@@ -91,8 +76,8 @@ namespace Platform.Xml.Serialization
 		    {
 		        return Convert.ChangeType(value, supportedType, formatAttribute.CultureInfo);
 		    }
-		    return Convert.ChangeType(value, supportedType);
 
+		    return Convert.ChangeType(value, supportedType);
 		}
 	}
 }

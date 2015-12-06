@@ -39,19 +39,13 @@ namespace Platform
 		/// Locks the current object's monitor.
 		/// </summary>
 		/// <returns>The current object</returns>
-		public virtual AutoLock Lock()
-		{
-			return (AutoLock)((IAutoLock)this).Lock();
-		}
+		public virtual AutoLock Lock() => (AutoLock)((IAutoLock)this).Lock();
 
 		/// <summary>
 		/// Unlocks the current object's monitor.
 		/// </summary>
 		/// <returns>The current object</returns>
-		public virtual AutoLock Unlock()
-		{
-			return (AutoLock)((IAutoLock)this).Unlock();
-		}
+		public virtual AutoLock Unlock() => (AutoLock)((IAutoLock)this).Unlock();
 
 		/// <summary>
 		/// Locks the current object's monitor.
@@ -78,9 +72,6 @@ namespace Platform
 		/// <summary>
 		/// Unlocks the current object's monitor.
 		/// </summary>
-		void IDisposable.Dispose()
-		{
-			Unlock();
-		}
+		void IDisposable.Dispose() => this.Unlock();
 	}
 }

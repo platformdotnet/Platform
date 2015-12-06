@@ -10,8 +10,8 @@ namespace Platform.Validation
 	public class SizeConstraintAttribute
 		: ValidationAttribute
 	{
-		private int minimumLength = Int32.MinValue;
-		private int maximumLength = Int32.MaxValue;
+		private int minimumLength = int.MinValue;
+		private int maximumLength = int.MaxValue;
 
 		public SizeFlexibility SizeFlexibility
 		{

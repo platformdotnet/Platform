@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Platform
 {
@@ -26,7 +27,7 @@ namespace Platform
 		{
 			var retval = new U[self.Length];
 
-			for (int i = 0; i < self.Length; i++)
+			for (var i = 0; i < self.Length; i++)
 			{
 				retval[i] = convert(self[i]);
 			}
@@ -121,11 +122,7 @@ namespace Platform
 			var list = new List<T>(Math.Max(16, array1.Length * 2));
 
 			list.AddRange(array1);
-
-			foreach (T value in enumerable)
-			{
-				list.Add(value);
-			}
+			list.AddRange(enumerable);
 
 			return list.ToArray();
 		}
@@ -197,7 +194,7 @@ namespace Platform
 		/// <returns>A new array</returns>
 		public static T[] NewArray<T>(this T[] array, int offset, int length)
 		{
-			T[] retval = new T[length];
+			var retval = new T[length];
 
 			Array.Copy(array, 0, retval, 0, length);
 
@@ -231,7 +228,7 @@ namespace Platform
 
 			var retval = new D[collection.Count];
 
-			foreach (T value in collection)
+			foreach (var value in collection)
 			{
 				retval[i++] = convert(value);
 			}
@@ -247,14 +244,7 @@ namespace Platform
 		/// <returns></returns>
 		public static T[] NewArray<T>(IEnumerable<T> enumerable)
 		{
-			var list = new List<T>();
-
-			foreach (T value in enumerable)
-			{
-				list.Add(value);
-			}
-
-			return list.ToArray();
+			return enumerable.ToArray();
 		}
 
 		/// <summary>
@@ -265,14 +255,7 @@ namespace Platform
 		/// <returns></returns>
 		public static T[] NewArray<T>(System.Collections.IEnumerable enumerable)
 		{
-			var list = new List<T>();
-
-			foreach (T value in enumerable)
-			{
-				list.Add(value);
-			}
-
-			return list.ToArray();
+			return enumerable.Cast<T>().ToArray();
 		}
 	}
 }

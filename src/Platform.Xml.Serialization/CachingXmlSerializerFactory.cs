@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Platform.Collections;
 
 namespace Platform.Xml.Serialization
 {
@@ -14,7 +13,7 @@ namespace Platform.Xml.Serialization
 		private IDictionary<Pair<Type, SerializerOptions>, object> cacheForDynamic;
 
 		/// <summary>
-		/// <see cref="XmlSerializerFactory.NewXmlSerializer{T}()<>"/>
+		/// <see cref="XmlSerializerFactory.NewXmlSerializer{T}()"/>
 		/// </summary>
 		public override XmlSerializer<T> NewXmlSerializer<T>()
 		{

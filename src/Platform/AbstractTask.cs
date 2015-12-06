@@ -43,17 +43,7 @@ namespace Platform
             /// </summary>
             private TaskState taskState;
 
-            /// <summary>
-            /// <see cref="TaskStateLock"/>
-            /// </summary>
-            private object taskStateLock;
-
-            /// <summary>
-            /// <see cref="TaskThread"/>
-            /// </summary>
-            private Thread taskThread;
-
-            /// <summary>
+	        /// <summary>
             /// 
             /// </summary>
             /// <param name="task"></param>
@@ -63,8 +53,8 @@ namespace Platform
                 taskState = TaskState.NotStarted;
 
                 requestedTaskState = TaskState.Unknown;
-                taskThread = null;
-                taskStateLock = new object();
+                this.TaskThread = null;
+                this.TaskStateLock = new object();
 
                 TaskStateChanged = null;
                 RequestedTaskStateChanged = null;
@@ -75,62 +65,30 @@ namespace Platform
             /// </summary>
             [Browsable(false)]
             [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-            public TaskState TaskState
-            {
-                get
-                {
-                    return taskState;
-                }
-            }
+            public TaskState TaskState => this.taskState;
 
-            /// <summary>
+	        /// <summary>
             /// RequestedTaskState
             /// </summary>
             [Browsable(false)]
             [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-            public TaskState RequestedTaskState
-            {
-                get
-                {
-                    return requestedTaskState;
-                }
-            }
+            public TaskState RequestedTaskState => this.requestedTaskState;
 
-            /// <summary>
+	        /// <summary>
             /// TaskStateLock
             /// </summary>
             [Browsable(false)]
             [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-            public object TaskStateLock
-            {
-                get
-                {
-                    return taskStateLock;
-                }
-                set
-                {
-                    taskStateLock = value;
-                }
-            }
+            public object TaskStateLock { get; set; }
 
-            /// <summary>
+	        /// <summary>
             /// TaskThread
             /// </summary>
             [Browsable(false)]
             [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-            public Thread TaskThread
-            {
-                get
-                {
-                    return taskThread;
-                }
-                set
-                {
-                    taskThread = value;
-                }
-            }
+            public Thread TaskThread { get; set; }
 
-            /// <summary>
+	        /// <summary>
             /// TaskStateChanged Event.
             /// </summary>
             public event TaskEventHandler TaskStateChanged;
@@ -141,13 +99,10 @@ namespace Platform
             /// <param name="eventArgs">The <see cref="TaskEventArgs"/> that contains the event data.</param>
             private void OnTaskStateChanged(TaskEventArgs eventArgs)
             {
-                if (TaskStateChanged != null)
-                {
-                    TaskStateChanged(task, eventArgs);
-                }
+	            this.TaskStateChanged?.Invoke(this.task, eventArgs);
             }
 
-            /// <summary>
+	        /// <summary>
             /// RequestedTaskStateChanged Event.
             /// </summary>
             public event TaskEventHandler RequestedTaskStateChanged;
@@ -158,27 +113,22 @@ namespace Platform
             /// <param name="eventArgs">The <see cref="TaskEventArgs"/> that contains the event data.</param>
             private void OnRequestedTaskStateChanged(TaskEventArgs eventArgs)
             {
-                if (RequestedTaskStateChanged != null)
-                {
-                    RequestedTaskStateChanged(task, eventArgs);
-                }
+	            this.RequestedTaskStateChanged?.Invoke(this.task, eventArgs);
             }
 
-            protected internal virtual void SetRequestedTaskState(TaskState value)
-            {
-                TaskState oldValue;
+	        protected internal virtual void SetRequestedTaskState(TaskState value)
+	        {
+		        var oldValue = this.requestedTaskState;
 
-                oldValue = requestedTaskState;
-
-				if (oldValue != value)
+		        if (oldValue != value)
                 {
 					requestedTaskState = value;
 
                     OnRequestedTaskStateChanged(new TaskEventArgs(oldValue, value));
                 }
-            }
+	        }
 
-            /// <summary>
+	        /// <summary>
             /// 
             /// </summary>
             /// <param name="newState"></param>
@@ -206,8 +156,7 @@ namespace Platform
 
             private void Start(TimeSpan waitTimeOut)
             {
-                Thread thread;
-                TaskState originalState;
+	            TaskState originalState;
 
                 lock (TaskStateLock)
                 {
@@ -218,14 +167,15 @@ namespace Platform
 
                     originalState = TaskState;
 
-                    switch (task.TaskAsynchronisity)
+	                Thread thread;
+	                switch (task.TaskAsynchronisity)
                     {
                         case TaskAsynchronisity.AsyncWithSystemPoolThread:
                             Action routine;
 
                             routine = delegate
                                       {
-                                          taskThread = Thread.CurrentThread;
+                                          this.TaskThread = Thread.CurrentThread;
 
                                           task.Run();
                                       };
@@ -236,7 +186,7 @@ namespace Platform
                         case TaskAsynchronisity.AsyncWithForegroundThread:
                             thread = new Thread(task.Run);
 
-                            taskThread = thread;
+                            this.TaskThread = thread;
 
                             thread.SetApartmentState(task.ApartmentState);
                             thread.IsBackground = false;
@@ -246,7 +196,7 @@ namespace Platform
                         case TaskAsynchronisity.AsyncWithBackgroundThread:
                             thread = new Thread(task.Run);
 
-                            taskThread = thread;
+                            this.TaskThread = thread;
                             thread.SetApartmentState(task.ApartmentState);
                             thread.IsBackground = true;
                             thread.Start();
@@ -266,7 +216,7 @@ namespace Platform
                                 break;
                             }
 
-                            Monitor.Wait(taskStateLock, waitTimeOut);
+                            Monitor.Wait(this.TaskStateLock, waitTimeOut);
                         }
                     }
                 }
@@ -451,15 +401,12 @@ namespace Platform
         /// </summary>
 		private Action innerRunAction;
 
-        private TaskAsynchronisity taskAsynchronisity;
-
-        /// <summary>
+	    /// <summary>
         /// Create a new AbstractTask
         /// </summary>
-        public AbstractTask()
+        protected AbstractTask()
         {
-            ApartmentState = ApartmentState.Unknown;
-            implementationHelper = new TaskAsyncStateAndImplementationHelper(this);
+	        implementationHelper = new TaskAsyncStateAndImplementationHelper(this);
 
             innerRunAction = DoRun;
         }
@@ -509,60 +456,27 @@ namespace Platform
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual IMeter Progress
-        {
-            get
-            {
-                return AbstractMeter.Null;
-            }
-        }
+        public virtual IMeter Progress => AbstractMeter.Null;
 
-        public virtual ApartmentState ApartmentState
-        {
-            get;
-            set;
-        }
+	    public virtual ApartmentState ApartmentState { get; set; } = ApartmentState.Unknown;
 
-        [Browsable(false)]
+	    [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual TaskAsynchronisity TaskAsynchronisity
-        {
-            get
-            {
-                return taskAsynchronisity;
-            }
-            set
-            {
-                taskAsynchronisity = value;
-            }
-        }
+        public virtual TaskAsynchronisity TaskAsynchronisity { get; set; }
 
-        public virtual void Start()
-        {
-            RequestTaskState(TaskState.Running);
-        }
+	    public virtual void Start() => this.RequestTaskState(TaskState.Running);
 
-        public virtual void Pause()
-        {
-            RequestTaskState(TaskState.Paused);
-        }
+	    public virtual void Pause() => this.RequestTaskState(TaskState.Paused);
 
-        public virtual void Resume()
-        {
-            RequestTaskState(TaskState.Running);
-        }
+	    public virtual void Resume() => this.RequestTaskState(TaskState.Running);
 
-        public virtual void Stop()
-        {
-            RequestTaskState(TaskState.Stopped);
-        }
+	    public virtual void Stop() => this.RequestTaskState(TaskState.Stopped);
 
-        public virtual void Run()
+	    public virtual void Run()
         {
             try
             {
                 InitializeRun();
-
                 InnerRunAction();
             }
             catch (StopRequestedException)
@@ -601,85 +515,37 @@ namespace Platform
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual string Name
-        {
-            get
-            {
-                return GetType().Name;
-            }
-        }
+        public virtual string Name => this.GetType().Name;
 
-        [Browsable(false)]
+	    [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual TaskState TaskState
-        {
-            get
-            {
-                return implementationHelper.TaskState;
-            }
-        }
+        public virtual TaskState TaskState => this.implementationHelper.TaskState;
 
-        [Browsable(false)]
+	    [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual TaskState RequestedTaskState
-        {
-            get
-            {
-                return implementationHelper.RequestedTaskState;
-            }
-        }
+        public virtual TaskState RequestedTaskState => this.implementationHelper.RequestedTaskState;
 
-        [Browsable(false)]
+	    [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual bool SupportsStart
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public virtual bool SupportsStart => true;
 
-        [Browsable(false)]
+	    [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual bool SupportsPause
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public virtual bool SupportsPause => true;
 
-        [Browsable(false)]
+	    [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual bool SupportsResume
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public virtual bool SupportsResume => true;
 
-        [Browsable(false)]
+	    [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual bool SupportsStop
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public virtual bool SupportsStop => true;
 
-        [Browsable(false)]
+	    [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual object TaskStateLock
-        {
-            get
-            {
-                return implementationHelper.TaskStateLock;
-            }
-        }
+        public virtual object TaskStateLock => this.implementationHelper.TaskStateLock;
 
-        public virtual bool CanRequestTaskState(TaskState taskState)
+	    public virtual bool CanRequestTaskState(TaskState taskState)
         {
             return true;
         }
@@ -720,19 +586,16 @@ namespace Platform
         /// </summary>
         public virtual event EventHandler<TaskExceptionEventArgs> TaskException;
 
-        /// <summary>
-        /// Raises the TaskException event.
-        /// </summary>
-        /// <param name="eventArgs">The <see cref="EventHandler<TaskExceptionEventArgs>"/> that contains the event data.</param>
-        protected virtual void OnTaskException(TaskExceptionEventArgs eventArgs)
+		/// <summary>
+		/// Raises the TaskException event.
+		/// </summary>
+		/// <param name="eventArgs">The <see cref="EventHandler{TaskExceptionEventArgs}"/> that contains the event data.</param>
+		protected virtual void OnTaskException(TaskExceptionEventArgs eventArgs)
         {
-            if (TaskException != null)
-            {
-                TaskException(this, eventArgs);
-            }
+	        this.TaskException?.Invoke(this, eventArgs);
         }
 
-        public abstract void DoRun();
+	    public abstract void DoRun();
 
         public virtual void SetTaskThread(Thread value)
         {
@@ -759,40 +622,6 @@ namespace Platform
             {
                 Monitor.Wait(TaskStateLock, timeout);
                 Monitor.PulseAll(TaskStateLock);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Class that holds event information for task events.
-    /// </summary>
-    /// <seealso cref="ITask"/>
-    /// <seealso cref="AbstractTask"/>
-    public class TaskExceptionEventArgs
-        : EventArgs
-    {
-        /// <summary>
-        /// <see cref="Exception"/>
-        /// </summary>
-        private Exception exception;
-
-        public TaskExceptionEventArgs(Exception exception)
-        {
-            this.exception = exception;
-        }
-
-        /// <summary>
-        /// Exception
-        /// </summary>
-        public virtual Exception Exception
-        {
-            get
-            {
-                return exception;
-            }
-            set
-            {
-                exception = value;
             }
         }
     }

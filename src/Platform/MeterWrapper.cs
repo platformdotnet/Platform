@@ -7,29 +7,9 @@ namespace Platform
 	public class MeterWrapper
 		: IMeter
 	{
-		public virtual double Percentage
-		{
-			get
-			{
-				return this.Wrappee.Percentage;
-			}
-		}
-
-		public virtual object Value
-		{
-			get
-			{
-				return this.CurrentValue;
-			}
-		}
-
-		public virtual IMeter Wrappee
-		{
-			get
-			{
-				return wrappee;
-			}
-		}
+		public virtual double Percentage => this.Wrappee.Percentage;
+		public virtual object Value => this.CurrentValue;
+		public virtual IMeter Wrappee => this.wrappee;
 		private IMeter wrappee;
 
 		protected virtual void SetWrappee(IMeter value)
@@ -75,10 +55,7 @@ namespace Platform
 
 		private void DelegateMajorChange(object sender, EventArgs eventArgs)
 		{
-			if (MajorChangeEvent != null)
-			{
-				MajorChangeEvent(this, eventArgs);
-			}
+			this.MajorChangeEvent?.Invoke(this, eventArgs);
 		}
 
 		public virtual event EventHandler<MeterEventArgs> ValueChanged
@@ -117,55 +94,19 @@ namespace Platform
 
 		private void DelegateValueChanged(object sender, MeterEventArgs eventArgs)
 		{
-			if (ValueChangedEvent != null)
-			{
-				ValueChangedEvent(this, eventArgs);
-			}
+			this.ValueChangedEvent?.Invoke(this, eventArgs);
 		}
 
-		public virtual object MaximumValue
-		{
-			get
-			{
-				return this.Wrappee.MaximumValue;
-			}
-		}
-
-		public virtual object MinimumValue
-		{
-			get
-			{
-				return this.Wrappee.MinimumValue;
-			}
-		}
-
-		public object CurrentValue
-		{
-			get
-			{
-				return this.Wrappee.CurrentValue;
-			}
-		}
-
-		public virtual string Units
-		{
-			get
-			{
-				return this.Wrappee.Units;
-			}
-		}
+		public virtual object MaximumValue => this.Wrappee.MaximumValue;
+		public virtual object MinimumValue => this.Wrappee.MinimumValue;
+		public object CurrentValue => this.Wrappee.CurrentValue;
+		public virtual string Units => this.Wrappee.Units;
 
 		#endregion
 
 		#region IOwned Members
 
-		public virtual object Owner
-		{
-			get
-			{
-				return this.Wrappee.Owner;
-			}
-		}
+		public virtual object Owner => this.Wrappee.Owner;
 
 		#endregion
 

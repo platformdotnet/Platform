@@ -26,9 +26,6 @@ namespace Platform.Xml.Serialization
 			return Environment.GetEnvironmentVariable(name);
 		}
 
-		public virtual string Substitute(string value)
-		{
-			return staticRegex.Replace(value, EnvironmentVariableMatchEvaluator);
-		}
+		public virtual string Substitute(string value) => staticRegex.Replace(value, EnvironmentVariableMatchEvaluator);
 	}
 }

@@ -8,13 +8,7 @@ namespace Platform.Validation
 	{
 		public static readonly ValidationResult Success = new ValidationResult(new ValidationException[0]);
 
-		public bool IsSuccess
-		{
-			get
-			{
-				return this.ValidationExceptions.Count == 0;
-			}
-		}
+		public bool IsSuccess => this.ValidationExceptions.Count == 0;
 
 		public List<ValidationException> ValidationExceptions { get; private set; }
 

@@ -1,28 +1,16 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
 
 namespace Platform.Xml.Serialization
 {
 	/// <summary>
 	/// Maintains state required to perform serialization.
 	/// </summary>
-	public class SerializationContext
+	public sealed class SerializationContext
 	{
 		private readonly IList stack = new ArrayList();
-
-		public SerializationParameters Parameters
-		{
-			get;
-			private set;
-		}
-
-		public virtual SerializerOptions SerializerOptions
-		{
-			get;
-			set;
-		}
+		public SerializationParameters Parameters { get; }
+		public SerializerOptions SerializerOptions { get; set; }
 
 		public SerializationContext(SerializerOptions options, SerializationParameters parameters)
 		{			
@@ -96,22 +84,14 @@ namespace Platform.Xml.Serialization
 		{
 			var listener = obj as IXmlDeserializationStartListener;
 
-			if (listener != null)
-			{
-				listener.XmlDeserializationStart(Parameters);
-			}
+			listener?.XmlDeserializationStart(this.Parameters);
 		}
 
 		public void DeserializationEnd(object obj)
 		{
-			IXmlDeserializationEndListener listener;
-			
-			listener = obj as IXmlDeserializationEndListener;
+			var listener = obj as IXmlDeserializationEndListener;
 
-			if (listener != null)
-			{
-				listener.XmlDeserializationEnd(Parameters);
-			}
+			listener?.XmlDeserializationEnd(this.Parameters);
 		}
 
 		/// <summary>
@@ -128,10 +108,7 @@ namespace Platform.Xml.Serialization
 
 			var listener = obj as IXmlSerializationStartListener;
 
-			if (listener != null)
-			{
-				listener.XmlSerializationStart(Parameters);
-			}
+			listener?.XmlSerializationStart(this.Parameters);
 		}
 
 		/// <summary>
@@ -143,8 +120,6 @@ namespace Platform.Xml.Serialization
 		/// <param name="obj"></param>
 		public void SerializationEnd(object obj)
 		{
-			IXmlSerializationEndListener listener;			
-
 			if (stack[stack.Count - 1] != obj)
 			{
 				stack.RemoveAt(stack.Count - 1);
@@ -154,12 +129,9 @@ namespace Platform.Xml.Serialization
 
 			stack.RemoveAt(stack.Count - 1);
 
-			listener = obj as IXmlSerializationEndListener;
+			var listener = obj as IXmlSerializationEndListener;
 
-			if (listener != null)
-			{
-				listener.XmlSerializationEnd(Parameters);
-			}
+			listener?.XmlSerializationEnd(this.Parameters);
 		}
 	}
 }

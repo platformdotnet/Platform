@@ -46,7 +46,6 @@ namespace Platform.References
 		public TimedReference(T target, TimeSpan timeout, IReferenceQueue<T> queue)
 			: this(target, timeout, queue, false)
 		{
-			
 		}
 
 		/// <summary>
@@ -79,12 +78,12 @@ namespace Platform.References
 			lock (this)
 			{
 				timer = new Timer
-					(
-						delegate { Timedout(); },
-						null,
-						TimeSpan.FromMilliseconds(timeOut.TotalMilliseconds / 2),
-						TimeSpan.FromMilliseconds(timeOut.TotalMilliseconds / 2)
-					);
+				(
+					delegate { Timedout(); },
+					null,
+					TimeSpan.FromMilliseconds(timeOut.TotalMilliseconds / 2),
+					TimeSpan.FromMilliseconds(timeOut.TotalMilliseconds / 2)
+				);
 			}
 		}
 

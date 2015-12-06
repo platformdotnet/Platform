@@ -22,13 +22,8 @@ namespace Platform
 		/// <summary>
 		/// Handler
 		/// </summary>
-		public virtual D RealHandler
-		{
-			get
-			{
-				return realHandlerRef.Target;
-			}
-		}
+		public virtual D RealHandler => this.realHandlerRef.Target;
+
 		/// <summary>
 		/// <see cref="RealHandler"/>
 		/// </summary>
@@ -37,13 +32,8 @@ namespace Platform
 		/// <summary>
 		/// ProxiedHandler
 		/// </summary>
-		public virtual D ProxiedHandler
-		{
-			get
-			{
-				return proxiedHandler;
-			}
-		}
+		public virtual D ProxiedHandler => this.proxiedHandler;
+
 		/// <summary>
 		/// <see cref="ProxiedHandler"/>
 		/// </summary>
@@ -76,12 +66,9 @@ namespace Platform
 
 		private void Deregister()
 		{
-			E e;
-			Action<E, D> routine;
+			var e = this.eventSource.Target;
 
-			e = eventSource.Target;
-
-			routine = deregister;
+			var routine = this.deregister;
 
 			if (e != null)
 			{
@@ -94,16 +81,13 @@ namespace Platform
 
 		private void CreateProxyMethod()
 		{
-		    ILGenerator generator;
-			Delegate handlerDelegate;
 			DynamicMethod dynamicMethod;
-			ParameterInfo[] parameters;
 
 			if (!c_DynamicMethodCache.TryGetValue(typeof(D), out dynamicMethod))
 			{
-				handlerDelegate = (Delegate)((object)realHandlerRef.Target);
+				var handlerDelegate = (Delegate)((object)this.realHandlerRef.Target);
 
-				parameters = handlerDelegate.Method.GetParameters();
+				var parameters = handlerDelegate.Method.GetParameters();
 
 				dynamicMethod = new DynamicMethod
 				(
@@ -113,7 +97,7 @@ namespace Platform
 					this.GetType()
 				);
 
-				generator = dynamicMethod.GetILGenerator();
+				var generator = dynamicMethod.GetILGenerator();
 
 				var elselabel = generator.DefineLabel();
 

@@ -22,5 +22,5 @@ namespace Platform
 	/// a child of <see cref="V"/>
 	/// </param>
 	/// <returns>The newly created object</returns>
-	public delegate V ObjectActivator<V>(Type type);
+	public delegate V ObjectActivator<out V>(Type type);
 }

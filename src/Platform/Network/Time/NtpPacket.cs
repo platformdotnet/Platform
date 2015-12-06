@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 using Platform.Runtime.Interop;
@@ -141,11 +140,9 @@ namespace Platform.Network.Time
 		{
 			get
 			{
-				byte x;
-				
 				// Bits 3 - 5
 
-				x = (byte)((headerByte1 & 0x38) >> 3);
+				var x = (byte)((this.headerByte1 & 0x38) >> 3);
 
 				return x;
 			}

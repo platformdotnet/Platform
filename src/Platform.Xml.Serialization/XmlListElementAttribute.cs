@@ -31,18 +31,7 @@ namespace Platform.Xml.Serialization
 			}
 		}
 
-		public virtual Type ItemType
-		{
-			get
-			{
-				return this.Type;
-			}
-			
-			set
-			{
-				this.Type = value;
-			}
-		}
+		public virtual Type ItemType { get { return this.Type; } set { this.Type = value; } }
 
 		/// <summary>
 		/// Specifies a list item's type.

@@ -14,11 +14,7 @@ namespace Platform
 		/// <summary>
 		/// Gets or sets the function that generates a string for the current meter.
 		/// </summary>
-		public virtual Func<MutableMeter, Func<string>, string> ToStringGenerator
-		{
-			get;
-			set;
-		}
+		public virtual Func<MutableMeter, Func<string>, string> ToStringGenerator { get; set; }
 
 		/// <summary>
 		/// Constructs a new blank <see cref="MutableMeter"/>.
@@ -61,34 +57,24 @@ namespace Platform
 		/// <summary>
 		/// Gets the current owner.
 		/// </summary>
-		public override object Owner
-		{
-			get
-			{
-				return owner;
-			}
-		}
+		public override object Owner => this.owner;
+
 		private object owner;
 
 		/// <summary>
 		/// Sets the owner of the meter.
 		/// </summary>
-		/// <param name="owner">The owner</param>
-		public virtual void SetOwner(object owner)
+		/// <param name="value">The owner</param>
+		public virtual void SetOwner(object value)
 		{
-			this.owner = owner;
+			this.owner = value;
 		}
         
 		/// <summary>
 		/// Gets the units.
 		/// </summary>
-		public override string Units
-		{
-			get
-			{
-				return units;
-			}
-		}
+		public override string Units => this.units;
+
 		private string units;
 
 		/// <summary>
@@ -128,13 +114,8 @@ namespace Platform
 		/// <summary>
 		/// Gets the maximum value.
 		/// </summary>
-		public override object MaximumValue
-		{
-			get
-			{
-				return maximumValue;
-			}
-		}
+		public override object MaximumValue => this.maximumValue;
+
 		private object maximumValue;
 
 		/// <summary>
@@ -151,13 +132,8 @@ namespace Platform
 		/// <summary>
 		/// Gets the current value.
 		/// </summary>
-		public override object CurrentValue
-		{
-			get
-			{
-				return currentValue;
-			}
-		}
+		public override object CurrentValue => this.currentValue;
+
 		private object currentValue;
 
 		/// <summary>
@@ -165,10 +141,8 @@ namespace Platform
 		/// </summary>
 		/// <param name="value">The current value</param>
 		public virtual void SetCurrentValue(object value)
-		{	
-			object oldValue;
-			
-			oldValue = currentValue;
+		{
+			var oldValue = this.currentValue;
 
 			currentValue = value;
 
@@ -182,11 +156,9 @@ namespace Platform
 		/// <param name="maximumValue">The maximum value</param>
 		public virtual void SetCurrentAndMaximumValue(object value, object maximumValue)
 		{
-			object oldValue;
-
 			this.maximumValue = maximumValue;
 
-			oldValue = currentValue;
+			var oldValue = this.currentValue;
 
 			currentValue = value;
 
@@ -208,10 +180,8 @@ namespace Platform
 			{
 				return ToStringGenerator(this, base.ToString);
 			}
-			else
-			{
-				return base.ToString();
-			}
+
+			return base.ToString();
 		}
 	}
 }

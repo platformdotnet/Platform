@@ -13,19 +13,14 @@ namespace Platform.Network.Time
 		/// <summary>
 		/// Provides progress information for the <see cref="NtpNetworkTimeClient"/>
 		/// </summary>
-		public override IMeter Progress
-		{
-			get
-			{
-				return progress;
-			}
-		}
+		public override IMeter Progress => this.progress;
+
 		private readonly ProgressMeter progress;
 
 		/// <summary>
 		/// A meter for the progress.
 		/// </summary>
-		private class ProgressMeter
+		private sealed class ProgressMeter
 			: MutableMeter
 		{
 			private string state;
@@ -36,7 +31,7 @@ namespace Platform.Network.Time
 				SetOwner(owner);
 			}
 
-			public virtual void SetState(int currentValue, string state)
+			public void SetState(int currentValue, string state)
 			{				
 				this.state = state;
 				SetCurrentValue(currentValue);
@@ -93,13 +88,8 @@ namespace Platform.Network.Time
 		/// <summary>
 		/// <see cref="NetworkTimeClient.Value"/>
 		/// </summary>
-		public override TimeSpan? Value
-		{
-			get
-			{
-				return value;
-			}
-		}
+		public override TimeSpan? Value => this.value;
+
 		private TimeSpan? value;
 
 		/// <summary>
@@ -112,8 +102,6 @@ namespace Platform.Network.Time
 
 		public override void DoRun()
 		{
-			UdpClient udpClient;
-
 			SetTaskState(TaskState.Running);
 
 			try
@@ -122,7 +110,7 @@ namespace Platform.Network.Time
 
 				System.Threading.Thread.Sleep(1000);
 
-				udpClient = CreateUdpClient();
+				var udpClient = this.CreateUdpClient();
 
 				progress.SetState(2, "Connected");
 

@@ -16,80 +16,27 @@ namespace Platform
 		/// <summary>
 		/// The first element in the tuple.
 		/// </summary>
-		public A First
-		{
-			get
-			{
-				return first;
-			}
-			set
-			{
-				first = value;
-			}
-		}
-		private A first;
+		public A First { get; set; }
 
 		/// <summary>
 		/// The second element in the tuple.
 		/// </summary>
-		public B Second
-		{
-			get
-			{
-				return second;
-			}
-			set
-			{
-				second = value;
-			}
-		}
-		private B second;
+		public B Second { get; set; }
 
 		/// <summary>
 		/// The second element in the tuple.
 		/// </summary>
-		public B Middle
-		{
-			get
-			{
-				return this.second;
-			}
-			set
-			{
-				this.second = value;
-			}
-		}
+		public B Middle { get { return this.Second; } set { this.Second = value; } }
 
 		/// <summary>
 		/// The third element in the tuple.
 		/// </summary>
-		public C Third
-		{
-			get
-			{
-				return third;
-			}
-			set
-			{
-				third = value;
-			}
-		}
-		private C third;
+		public C Third { get; set; }
 
 		/// <summary>
 		/// The third element in the tuple.
 		/// </summary>
-		public C Last
-		{
-			get
-			{
-				return this.third;
-			}
-			set
-			{
-				this.third = value;
-			}
-		}
+		public C Last { get { return this.Third; } set { this.Third = value; } }
 
 		/// <summary>
 		/// Gets an element at a given index (0, 1 or 2).
@@ -115,13 +62,7 @@ namespace Platform
 		/// <summary>
 		/// Returns 3.
 		/// </summary>
-		public int Size
-		{
-			get
-			{
-				return 3;
-			}
-		}
+		public int Size => 3;
 
 		/// <summary>
 		/// Constructs a new <see cref="Triple{A,B,C}"/>.
@@ -131,9 +72,9 @@ namespace Platform
 		/// <param name="value3">The third element</param>
 		public Triple(A value1, B value2, C value3)
 		{
-			this.first = value1;
-			this.second = value2;
-			this.third = value3;
+			this.First = value1;
+			this.Second = value2;
+			this.Third = value3;
 		}
 
 		/// <summary>
@@ -143,7 +84,7 @@ namespace Platform
 		/// <returns>A hashcode</returns>
 		public override int GetHashCode()
 		{
-			return GetHashCode(this.first) ^ GetHashCode(this.second) ^ GetHashCode(this.third);
+			return GetHashCode(this.First) ^ GetHashCode(this.Second) ^ GetHashCode(this.Third);
 		}
 
 		private static int GetHashCode(object obj)
@@ -165,15 +106,13 @@ namespace Platform
 		/// </summary>
 		public override bool Equals(object obj)
 		{
-			Triple<A, B, C>? tripleObj;
-
-			tripleObj = obj as Triple<A, B, C>?;
+			var tripleObj = obj as Triple<A, B, C>?;
 
 			if (tripleObj != null)
 			{
-				return Object.Equals(this.first, tripleObj.Value.first)
-						&& Object.Equals(this.second, tripleObj.Value.second)
-						&& Object.Equals(this.third, tripleObj.Value.third);
+				return Object.Equals(this.First, tripleObj.Value.First)
+						&& Object.Equals(this.Second, tripleObj.Value.Second)
+						&& Object.Equals(this.Third, tripleObj.Value.Third);
 			}
 
 			return false;

@@ -30,23 +30,12 @@ namespace Platform.Xml.Serialization
         /// <summary>
         /// <see cref="TypeSerializer.SupportedType"/>
         /// </summary>
-        public override Type SupportedType
-        {
-            get
-            {
-                return supportedType;
-            }
-        }
-        private readonly Type supportedType;
+        public override Type SupportedType => this.supportedType;
 
-        public override bool MemberBound
-        {
-            get
-            {
-                return memberBound;
-            }
-        }
-        private readonly bool memberBound = false;
+	    private readonly Type supportedType;
+
+        public override bool MemberBound => this.memberBound;
+	    private readonly bool memberBound = false;
 
         private readonly SerializationMemberInfo serializationMemberInfo;
 

@@ -10,10 +10,7 @@ namespace Platform
 		/// <summary>
 		/// Gets the number of elements held by the tuple.
 		/// </summary>
-		int Size
-		{
-			get;
-		}
+		int Size { get; }
 
 		/// <summary>
 		/// Gets the tuple element at the given index.

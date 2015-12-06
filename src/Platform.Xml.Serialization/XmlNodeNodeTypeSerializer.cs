@@ -8,21 +8,9 @@ namespace Platform.Xml.Serialization
 	{
 		public static readonly XmlNodeNodeTypeSerializer Default = new XmlNodeNodeTypeSerializer();
 
-		public override Type SupportedType
-		{
-			get
-			{
-				return typeof(XmlNode);
-			}
-		}
+		public override Type SupportedType => typeof(XmlNode);
 
-		public override bool MemberBound
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool MemberBound => false;
 
 		private static void WriteNode(XmlReader reader, XmlWriter writer)
 		{

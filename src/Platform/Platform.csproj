@@ -166,6 +166,7 @@
     <Compile Include="Quad.cs" />
     <Compile Include="Reflection\MethodInfoUtils.cs" />
     <Compile Include="ReownedMeter.cs" />
+    <Compile Include="TaskExceptionEventArgs.cs" />
     <Compile Include="TaskUtils.cs" />
     <Compile Include="Network\Time\NtpNetworkTimeClient.cs" />
     <Compile Include="Network\Time\NtpPacket.cs" />

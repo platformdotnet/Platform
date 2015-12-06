@@ -6,38 +6,24 @@ namespace Platform.Xml.Serialization
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Field | AttributeTargets.Property, Inherited = true, AllowMultiple = true)]
     public class XmlFormatAttribute : XmlSerializationAttribute
     {
-        public string Format
-        {
-            get;
-            set;
-        }
+	    public string Format { get; set; }
+	    public bool CultureSet { get; private set; }
 
-        private bool cultureSet = false;
+	    private string culture;
 
-        public bool CultureSet
-        {
-            get { return cultureSet; }
-        }
+	    public string Culture
+	    {
+		    get { return culture; }
+		    set
+		    {
+			    this.CultureSet = true;
+			    culture = value;
+		    }
+	    }
 
-        private string culture;
+	    public CultureInfo CultureInfo => this.CultureSet ? new CultureInfo(this.Culture) : CultureInfo.CurrentCulture;
 
-        public string Culture
-        {
-            get { return culture; }
-            set { cultureSet = true;
-                culture = value;
-            }
-        }
-
-        public CultureInfo CultureInfo
-        {
-            get
-            {
-                return this.CultureSet ? new CultureInfo(this.Culture) : CultureInfo.CurrentCulture;
-            }
-        }
-
-        public XmlFormatAttribute(string format)
+	    public XmlFormatAttribute(string format)
         {
             this.Format = format;
         }

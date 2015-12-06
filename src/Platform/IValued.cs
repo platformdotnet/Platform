@@ -7,21 +7,15 @@ namespace Platform
 	/// </summary>
 	public interface IValued
 	{
-		object Value
-		{
-			get;
-		}
+		object Value { get; }
 	}
 
 	/// <summary>
 	/// Interface implemented by classes which support a readonly <c>Value</c> property.
 	/// </summary>
-	public interface IValued<T>
+	public interface IValued<out T>
 		: IValued
 	{
-		new T Value
-		{
-			get;
-		}
+		new T Value { get; }
 	}
 }

@@ -29,13 +29,8 @@ namespace Platform.Threading
 		/// <remarks>
 		/// This property is read-only and can only be set once using the constructor.
 		/// </remarks>
-		public virtual Predicate<V> AttainedValue
-		{
-			get
-			{
-				return attainedValue;
-			}
-		}
+		public virtual Predicate<V> AttainedValue => this.attainedValue;
+
 		/// <summary>
 		/// <see cref="AttainedValue"/>
 		/// </summary>
@@ -47,17 +42,7 @@ namespace Platform.Threading
 		/// <remarks>
 		/// This property is read-only and can only be set once by the constructor.
 		/// </remarks>
-		public virtual IMeter ValueMeter
-		{
-			get
-			{
-				return valueMeter;
-			}
-		}
-		/// <summary>
-		/// <see cref="ValueMeter"/>
-		/// </summary>
-		private readonly IMeter valueMeter;
+		public virtual IMeter ValueMeter { get; }
 
 		/// <summary>
 		/// Construct a new <see cref="MeterValueEvent{V}"/> based on the specified value.
@@ -90,7 +75,7 @@ namespace Platform.Threading
 
 			lock (this)
 			{
-				valueMeter = meter;
+				this.ValueMeter = meter;
 				this.attainedValue = attainedValue;
 
 				waitHandle = CreateWaitHandle(this.attainedValue((V)meter.CurrentValue));
@@ -159,13 +144,8 @@ namespace Platform.Threading
 		/// <summary>
 		///  The <see cref="WaitHandle"/> that will be set when the <see cref="IMeter"/> attains the required value.
 		/// </summary>
-		public virtual WaitHandle WaitHandle
-		{
-			get
-			{
-				return waitHandle;
-			}
-		}
+		public virtual WaitHandle WaitHandle => this.waitHandle;
+
 		/// <summary>
 		/// <see cref="WaitHandle"/>
 		/// </summary>

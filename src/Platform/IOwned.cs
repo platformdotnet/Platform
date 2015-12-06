@@ -10,9 +10,6 @@ namespace Platform
 		/// <summary>
 		/// Gets the owner of the current object.
 		/// </summary>
-		object Owner
-		{
-			get;
-		}
+		object Owner { get; }
 	}
 }

@@ -7,7 +7,6 @@ namespace Platform.Validation
 		: BaseValidationAttribute
 	{
 		public object Value { get; set; }
-
 		public string ValueExpression { get; set; }
 
 		public UnsetValueAttribute()

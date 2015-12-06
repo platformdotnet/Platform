@@ -30,128 +30,52 @@ namespace Platform
 		/// <summary>
 		/// Returns 2
 		/// </summary>
-		public int Size
-		{
-			get
-			{
-				return 2;
-			}
-		}
+		public int Size => 2;
 
 		/// <summary>
 		/// Returns the left element of the pair.
 		/// </summary>
-		public A Source
-		{
-			get
-			{
-				return this.Left;
-			}
-			set
-			{
-				this.Left = value;
-			}
-		}
+		public A Source { get { return this.Left; } set { this.Left = value; } }
 
 		/// <summary>
 		/// Returns the right element of the pair.
 		/// </summary>
-		public B Destination
-		{
-			get
-			{
-				return this.Right;
-			}
-			set
-			{
-				this.Right = value;
-			}
-		}
+		public B Destination { get { return this.Right; } set { this.Right = value; } }
 
 		/// <summary>
 		/// Returns the left element of the pair.
 		/// </summary>
-		public A Name
-		{
-			get
-			{
-				return this.Left;
-			}
-			set
-			{
-				this.Left = value;
-			}
-		}
+		public A Name { get { return this.Left; } set { this.Left = value; } }
 
 		/// <summary>
 		/// Returns the left element of the pair.
 		/// </summary>
-		public A Key
-		{
-			get
-			{
-				return this.Left;
-			}
-			set
-			{
-				this.Left = value;
-			}
-		}
+		public A Key { get { return this.Left; } set { this.Left = value; } }
 
 		/// <summary>
 		/// Returns the left element of the pair.
 		/// </summary>
-		object IKeyed.Key
-		{
-			get
-			{
-				return this.Key;
-			}
-		}
+		object IKeyed.Key => this.Key;
 
 		/// <summary>
 		/// Returns the right element of the pair.
 		/// </summary>
-		public B Value
-		{
-			get
-			{
-				return this.Right;
-			}
-			set
-			{
-				this.Right = value;
-			}
-		}
+		public B Value { get { return this.Right; } set { this.Right = value; } }
 
 		/// <summary>
 		/// Returns the right element of the pair.
 		/// </summary>
-		object IValued.Value
-		{
-			get
-			{
-				return this.Right;
-			}
-		}
+		object IValued.Value => this.Right;
 
 		/// <summary>
 		/// Returns the left element of the pair.
 		/// </summary>
-        public A Left
-        {
-            get;
-            set;
-        }
+		public A Left { get; set; }
 
 		/// <summary>
 		/// Returns the right element of the pair.
 		/// </summary>
-        public B Right
-        {
-            get;
-            set;
-        }
+		public B Right { get; set; }
 
 		/// <summary>
 		/// Gets a pair element at a given index (0 or 1).
@@ -163,12 +87,12 @@ namespace Platform
 		{
 			switch (index)
 			{
-				case 0:
-					return (T)(object)this.Left;
-				case 1:
-					return (T)(object)this.Right;
-				default:
-					throw new IndexOutOfRangeException();
+			case 0:
+				return (T)(object)this.Left;
+			case 1:
+				return (T)(object)this.Right;
+			default:
+				throw new IndexOutOfRangeException();
 			}
 		}
 
@@ -201,14 +125,12 @@ namespace Platform
 		/// </summary>
 		public override bool Equals(object obj)
 		{
-			Pair<A, B>? pairObj;
-
-			pairObj = obj as Pair<A, B>?;
+			var pairObj = obj as Pair<A, B>?;
 
 			if (pairObj != null)
 			{
-				return Object.Equals(this.Left, pairObj.Value.Left)
-						&& Object.Equals(this.Right, pairObj.Value.Right);
+				return object.Equals(this.Left, pairObj.Value.Left)
+						&& object.Equals(this.Right, pairObj.Value.Right);
 			}
 
 			return false;
@@ -231,8 +153,8 @@ namespace Platform
 		/// </summary>
 		public static bool operator ==(Pair<A, B> p1, Pair<A, B> p2)
 		{
-			return Object.Equals(p1.Left, p2.Left)
-				&& Object.Equals(p1.Right, p2.Right);
+			return object.Equals(p1.Left, p2.Left)
+				&& object.Equals(p1.Right, p2.Right);
 		}
 
 		/// <summary>
@@ -240,8 +162,8 @@ namespace Platform
 		/// </summary>
 		public static bool operator !=(Pair<A, B> p1, Pair<A, B> p2)
 		{
-			return !(Object.Equals(p1.Left, p2.Left)
-				&& Object.Equals(p1.Right, p2.Right));
+			return !(object.Equals(p1.Left, p2.Left)
+				&& object.Equals(p1.Right, p2.Right));
 		}
 
 		/// <summary>

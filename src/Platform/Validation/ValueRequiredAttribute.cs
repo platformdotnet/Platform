@@ -21,7 +21,7 @@ namespace Platform.Validation
 
 		public override string CreateExceptionString(IPropertyValidationContext context)
 		{
-			return String.Format("Must not be null, default or empty string");
+			return "Must not be null, default or empty string";
 		}
 
 		public override Expression<Func<PropertyValidationContext<OBJECT_TYPE, PROPERTY_TYPE>, ValidationResult>> GetValidateExpression<OBJECT_TYPE, PROPERTY_TYPE>()

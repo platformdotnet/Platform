@@ -33,15 +33,9 @@ namespace Platform.Utilities
 		/// <summary>
 		/// The used to synchronize task state changes.
 		/// </summary>
-		public virtual object TaskStateLock
-		{
-			get
-			{
-				return taskImplementationHelper.TaskStateLock;
-			}
-		}
-	
-        public InvocationQueue()
+		public virtual object TaskStateLock => this.taskImplementationHelper.TaskStateLock;
+
+		public InvocationQueue()
         {
 			this.IdleWaitTime = TimeSpan.FromMilliseconds(250);
 			this.TaskAsynchronisity = TaskAsynchronisity.AsyncWithBackgroundThread;
@@ -388,26 +382,13 @@ namespace Platform.Utilities
 		/// <summary>
 		/// Gets or sets how the <see cref="InvocationQueue"/> will run asynchronously.
 		/// </summary>
-		public virtual TaskAsynchronisity TaskAsynchronisity
-		{
-			get; set;
-		}
-		
+		public TaskAsynchronisity TaskAsynchronisity { get; set; }
+
 		/// <summary>
 		/// Returns the current type's name.
 		/// </summary>
-		public virtual string Name
-		{
-			get
-			{
-				return GetType().Name;
-			}
-		}
+		public string Name => this.GetType().Name;
 
-		public ApartmentState ApartmentState
-		{
-			get;
-			set;
-		}
+		public ApartmentState ApartmentState { get; set; }
 	}
 }

@@ -7,11 +7,11 @@ namespace Platform
 {
 	public class ConfigurationBlock<T>
 	{
-		private static readonly IDictionary<string, T> blockCache;
+		private static readonly IDictionary<string, T> BlockCache;
 
 		static ConfigurationBlock()
 		{
-			blockCache = new Dictionary<string, T>();
+			BlockCache = new Dictionary<string, T>();
 		}
 
 		public static T Load(string configurationPath)
@@ -23,11 +23,11 @@ namespace Platform
 		{
 			T retval;
 
-			lock (blockCache)
+			lock (BlockCache)
 			{
 				if (!reload)
 				{
-					if (blockCache.TryGetValue(configurationPath, out retval))
+					if (BlockCache.TryGetValue(configurationPath, out retval))
 					{
 						return retval;
 					}
@@ -35,7 +35,7 @@ namespace Platform
 
 				retval = (T)ConfigurationManager.GetSection(configurationPath);
 				
-				blockCache[configurationPath] = retval;
+				BlockCache[configurationPath] = retval;
 			}
 
 			return retval;

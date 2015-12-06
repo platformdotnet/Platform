@@ -13,42 +13,24 @@ namespace Platform
 		/// <summary>
 		/// Gets the current value (<see cref="NewValue"/>)
 		/// </summary>
-		public virtual object Value
-		{
-			get
-			{
-				return this.NewValue;
-			}
-		}
+		public virtual object Value => this.NewValue;
 
 		/// <summary>
 		/// Gets the current value (<see cref="NewValue"/>)
 		/// </summary>
-		object IValued.Value
-		{
-			get
-			{
-				return this.NewValue;
-			}
-		}
+		object IValued.Value => this.NewValue;
 
 		/// <summary>
 		/// Gets the current value.
 		/// </summary>
 		public virtual object NewValue
 		{
-			get;
-			private set;
-		}
+			get; }
 
 		/// <summary>
 		/// Gets the previous value
 		/// </summary>
-		public virtual object OldValue
-		{
-			get;
-			private set;
-		}
+		public virtual object OldValue { get; private set; }
 
 		/// <summary>
 		/// Constructs a new <see cref="MeterEventArgs"/>.

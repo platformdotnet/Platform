@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Collections;
 using System.Text;
 using Platform.IO;
 

@@ -12,13 +12,7 @@ namespace Platform.Xml.Serialization
 			verifyAttributes = (XmlSerializationAttribute[])memberInfo.GetApplicableAttributes(typeof(XmlVerifyRuntimeTypeAttribute));
 		}
 
-		public override Type SupportedType
-		{
-			get
-			{
-				return typeof(Type);
-			}
-		}
+		public override Type SupportedType => typeof(Type);
 
 		public override string Serialize(object obj, SerializationContext state)
 		{

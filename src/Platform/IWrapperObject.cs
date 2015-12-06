@@ -8,9 +8,6 @@ namespace Platform
 	/// <typeparam name="T">The type of object being wrapped</typeparam>
 	public interface IWrapperObject<out T>
 	{
-		T Wrappee
-		{
-			get;
-		}
+		T Wrappee { get; }
 	}
 }

@@ -5,17 +5,9 @@ namespace Platform.Collections
 	public class ReferenceDictionaryEventArgs<K, V>
 		: EventArgs
 	{
-		public K Key
-		{
-			get;
-			private set;
-		}
+		public K Key { get; private set; }
 
-		public V Value
-		{
-			get;
-			private set;
-		}
+		public V Value { get; private set; }
 
 		public ReferenceDictionaryEventArgs(K key, V value)
 		{

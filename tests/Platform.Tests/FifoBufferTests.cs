@@ -2,7 +2,6 @@
 using System.Text;
 using NUnit.Framework;
 using Platform.Collections;
-using Platform.IO;
 
 namespace Platform.Tests
 {

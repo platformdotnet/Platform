@@ -1,7 +1,4 @@
-using System;
 using System.Xml;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
 
 namespace Platform.Xml.Serialization.Tests

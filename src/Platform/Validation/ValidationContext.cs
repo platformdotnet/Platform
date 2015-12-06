@@ -4,9 +4,9 @@ namespace Platform.Validation
 {
 	public class ValidationContext<OBJECT_TYPE>
 	{
-		public OBJECT_TYPE ObjectValue { get; private set; }
+		public OBJECT_TYPE ObjectValue { get; }
 		public PropertyInfo CurrentPropertyInfo { get; internal set; }
-		public ValidatorOptions ValidatorOptions { get; private set; }
+		public ValidatorOptions ValidatorOptions { get; internal set; }
 
 		public U GetPropertyValue<U>(string propertyName)
 		{

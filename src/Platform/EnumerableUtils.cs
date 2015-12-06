@@ -28,12 +28,9 @@ namespace Platform
 				return null;
 			}
 
-			if (enumerable is ReadOnlyList<T>)
-			{
-				return (ReadOnlyList<T>)enumerable;
-			}
+			var list = enumerable as ReadOnlyList<T>;
 
-			return new ReadOnlyList<T>(enumerable.ToList());
+			return list ?? new ReadOnlyList<T>(enumerable.ToList());
 		}
 
 		public static IEnumerable<T> Concat<T>(this IEnumerable<T> values, T value)
@@ -75,18 +72,13 @@ namespace Platform
 					return false;
 				}
 
-				if (!Object.Equals(value, rightEnumerator.Current))
+				if (!object.Equals(value, rightEnumerator.Current))
 				{
 					return false;
 				}
 			}
 
-			if (rightEnumerator.MoveNext())
-			{
-				return false;
-			}
-
-			return true;
+			return !rightEnumerator.MoveNext();
 		}
 
 		/// <summary>
@@ -96,7 +88,7 @@ namespace Platform
 		/// <param name="action">The action to perform on each item</param>
 		public static void ForEach<T>(this IEnumerable<T> enumerables, Action<T> action)
 		{
-			foreach (T value in enumerables)
+			foreach (var value in enumerables)
 			{
 				action(value);
 			}
@@ -109,7 +101,7 @@ namespace Platform
 		/// <param name="enumerable">The enumerable to print</param>
 		public static void Print<T>(this IEnumerable<T> enumerable)
 		{
-			ForEach(enumerable, (T value) => Console.WriteLine(value) );
+			ForEach(enumerable, value => Console.WriteLine(value) );
 		}
 
 		/// <summary>
@@ -165,14 +157,7 @@ namespace Platform
 				retval = combiner(value);
 			}
 
-			if (retval != null)
-			{
-				return retval();
-			}
-			else
-			{
-				return default(T);
-			}
+			return retval != null ? retval() : default(T);
 		}
 
 		public static T Fold<T>(this IEnumerable<T> enumerable, Func<T, T, T> operation)
@@ -196,9 +181,9 @@ namespace Platform
 
 		public static T Fold<T>(this IEnumerable<T> enumerable, T initial, Func<T, T, T> operation)
 		{
-			T retval = initial;
+			var retval = initial;
 
-			foreach (T value in enumerable)
+			foreach (var value in enumerable)
 			{
 				retval = operation(retval, value);
 			}
@@ -242,9 +227,9 @@ namespace Platform
 
 		public static U Fold<T, U>(this IEnumerable<T> enumerable, Converter<T, U> converter, U initial, Func<U, U, U> operation)
 		{
-			U retval = initial;
+			var retval = initial;
 
-			foreach (T value in enumerable)
+			foreach (var value in enumerable)
 			{
 				retval = operation(retval, converter(value));
 			}
@@ -281,9 +266,9 @@ namespace Platform
 		public static R CopyTo<T, R>(this IEnumerable<T> enumerable)
 			where R : ICollection<T>, new()
 		{
-			R retval = new R();
+			var retval = new R();
 
-			foreach (T value in enumerable)
+			foreach (var value in enumerable)
 			{
 				retval.Add(value);
 			}
@@ -316,7 +301,7 @@ namespace Platform
 		/// </returns>
 		public static bool Contains<T>(this IEnumerable<T> enumerable, T value, Comparison<T> comparison)
 		{
-			foreach (T item in enumerable)
+			foreach (var item in enumerable)
 			{
 				if (comparison(value, item) == 0)
 				{
@@ -328,7 +313,7 @@ namespace Platform
 		}
 
 		/// <summary>
-		/// Creates a new IEnumerable with items sorted based on the <see cref="Comparer<T>.Default"/>
+		/// Creates a new IEnumerable with items sorted based on the <see cref="Comparer{T}.Default"/>
 		/// </summary>
 		public static IEnumerable<T> Sorted<T>(this IEnumerable<T> enumerable)
 		{
@@ -344,7 +329,7 @@ namespace Platform
 
 			list.Sort(comparison);
 
-			foreach (T item in list)
+			foreach (var item in list)
 			{
 				yield return item;
 			}
@@ -360,7 +345,7 @@ namespace Platform
 
 			list.Sort(comparer);
 
-			foreach (T item in list)
+			foreach (var item in list)
 			{
 				yield return item;
 			}
@@ -382,12 +367,12 @@ namespace Platform
 		{
 			IDictionary<T, T> dictionary = new SortedDictionary<T, T>(comparer);
 
-			foreach (T value in enumerable)
+			foreach (var value in enumerable)
 			{
 				dictionary[value] = value;
 			}
 
-			foreach (T value in dictionary.Values)
+			foreach (var value in dictionary.Values)
 			{
 				yield return value;
 			}
@@ -403,11 +388,11 @@ namespace Platform
 		/// </returns>
 		public static bool TryGetLast<T>(this IEnumerable<T> enumerable, out T lastValue)
 		{
-			bool empty = true;
+			var empty = true;
 
 			lastValue = default(T);
 
-			foreach (T value in enumerable)
+			foreach (var value in enumerable)
 			{
 				lastValue = value;
 				empty = false;
@@ -448,7 +433,7 @@ namespace Platform
 		/// <returns>True if the element was found otherwise False</returns>
 		public static bool TryFind<T>(this IEnumerable<T> enumerable, Predicate<T> match, out T retval)
 		{
-			foreach (T item in enumerable)
+			foreach (var item in enumerable)
 			{
 				if (match(item))
 				{

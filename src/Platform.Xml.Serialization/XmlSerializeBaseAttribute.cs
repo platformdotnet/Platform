@@ -6,12 +6,7 @@ namespace Platform.Xml.Serialization
 	public class XmlSerializeBaseAttribute
 		: XmlSerializationAttribute
 	{
-		public bool SerializeBase
-		{
-			get;
-
-			set;
-		}
+		public bool SerializeBase { get; set; }
 
 		public XmlSerializeBaseAttribute()
 		{

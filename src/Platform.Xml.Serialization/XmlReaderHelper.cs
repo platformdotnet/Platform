@@ -8,12 +8,13 @@ namespace Platform.Xml.Serialization
 	/// </summary>
 	internal class XmlReaderHelper
 	{
-		public static readonly XmlNodeType[] ElementOrEndElement = new XmlNodeType[] { XmlNodeType.Element, XmlNodeType.EndElement };		
+		public static readonly XmlNodeType[] ElementOrEndElement = { XmlNodeType.Element, XmlNodeType.EndElement };		
 
 		public static void ReadAndConsumeMatchingEndElement(XmlReader reader)
 		{
 			var x = 0;
 			var start = reader.Name;
+
 			if (reader.IsEmptyElement)
 			{
 				reader.Read();

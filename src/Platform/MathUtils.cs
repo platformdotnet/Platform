@@ -18,9 +18,8 @@ namespace Platform
 		/// <param name="value2">The second value</param>
 		public static void Swap<T>(ref T value1, ref T value2)
 		{
-			T t3;
+			var t3 = value1;
 
-			t3 = value1;
 			value1 = value2;
 			value2 = t3;
 		}
@@ -163,12 +162,12 @@ namespace Platform
 
 		public static int Modulus(int value, int n)
 		{
-			return (int)Modulus((double)value, (double)n);
+			return (int)Modulus(value, (double)n);
 		}
 
 		public static long Modulus(long value, long n)
 		{
-			return (long)Modulus((Decimal)value, (Decimal)n);
+			return (long)Modulus(value, (decimal)n);
 		}
 
 		public static double Modulus(double value, double n)
@@ -176,7 +175,7 @@ namespace Platform
 			return value - n * Math.Floor(value / n);
 		}
 
-		public static Decimal Modulus(Decimal value, Decimal n)
+		public static decimal Modulus(decimal value, decimal n)
 		{
 			return value - n * Math.Floor(value / n);
 		}
