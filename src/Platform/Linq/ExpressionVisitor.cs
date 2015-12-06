@@ -280,7 +280,7 @@ namespace Platform.Linq
 				{
 					list = new List<T>(count);
 
-					for (var j = 0; j < i; i++)
+					for (var j = 0; j < i; j++)
 					{
 						list.Add(original[j]);
 					}
