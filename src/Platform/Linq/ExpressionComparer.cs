@@ -322,32 +322,17 @@ namespace Platform.Linq
 				return original;
 			}
 
-			if (current.Count != original.Count)
+			if (!(this.result = (current.Count == original.Count)))
 			{
-				this.result = false;
-
-                return original;
+			    return original;
 			}
 
-			using (var enum1 = current.GetEnumerator())
+			var count = current.Count;
+
+			for (var i = 0; i < count && this.result; i++)
 			{
-				using (var enum2 = original.GetEnumerator())
-				{
-					while (enum1.MoveNext() && enum2.MoveNext())
-					{
-						var currentItem = enum1.Current;
-						var originalItem = enum2.Current;
-
-						this.currentObject = currentItem;
-
-						this.Visit(originalItem);
-
-						if (!this.result)
-						{
-							break;
-						}
-					}
-				}
+				this.currentObject = current[i];
+				this.Visit(original[i]);
 			}
 
 			this.currentObject = current;
@@ -437,7 +422,7 @@ namespace Platform.Linq
 
 			var count = original.Count;
 
-			for (var i = 0; i < count; i++)
+			for (var i = 0; i < count && this.result; i++)
 			{
 				this.currentObject = current[i];
 				this.VisitBinding(original[i]);
@@ -464,7 +449,7 @@ namespace Platform.Linq
 
 			var count = original.Count;
 
-			for (var i = 0; i < count; i++)
+			for (var i = 0; i < count && this.result; i++)
 			{
 				this.currentObject = current[i];
 				this.VisitElementInitializer(original[i]);
@@ -499,7 +484,7 @@ namespace Platform.Linq
 
 			var count = expression.Parameters.Count;
 
-			for (var i = 0; i < count; i++)
+			for (var i = 0; i < count && this.result; i++)
 			{
 				this.currentObject = current.Parameters[i];
 				this.Visit(expression.Parameters[i]);
@@ -527,7 +512,7 @@ namespace Platform.Linq
 
 			var count = expression.Arguments.Count;
 
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < count && this.result; i++)
             {
 	            this.currentObject = current.Arguments[i];
 	            this.Visit(expression.Arguments[i]);
