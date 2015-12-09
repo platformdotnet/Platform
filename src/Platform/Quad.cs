@@ -17,81 +17,27 @@ namespace Platform
 		/// <summary>
 		/// The first element in the tuple.
 		/// </summary>
-		public A First
-		{
-			get
-			{
-				return first;
-			}
-			set
-			{
-				first = value;
-			}
-		}
-		private A first;
+		public A First { get; set; }
 
 		/// <summary>
 		/// The second element in the tuple.
 		/// </summary>
-		public B Second
-		{
-			get
-			{
-				return second;
-			}
-			set
-			{
-				second = value;
-			}
-		}
-		private B second;
+		public B Second { get; set; }
 
 		/// <summary>
 		/// The third element in the tuple.
 		/// </summary>
-		public C Third
-		{
-			get
-			{
-				return third;
-			}
-			set
-			{
-				third = value;
-			}
-		}
-		private C third;
+		public C Third { get; set; }
 
 		/// <summary>
 		/// The fourth element in the tuple.
 		/// </summary>
-		public D Fourth
-		{
-			get
-			{
-				return fourth;
-			}
-			set
-			{
-				fourth = value;
-			}
-		}
-		private D fourth;
+		public D Fourth { get; set; }
 
 		/// <summary>
 		/// The fourth element in the tuple.
 		/// </summary>
-		public D Last
-		{
-			get
-			{
-				return this.fourth;
-			}
-			set
-			{
-				this.fourth = value;
-			}
-		}
+		public D Last { get { return this.Fourth; } set { this.Fourth = value; } }
 
 		/// <summary>
 		/// Gets an element at a given index (0, 1, 2 or 3).
@@ -104,13 +50,13 @@ namespace Platform
 			switch (index)
 			{
 				case 0:
-					return (T)(object)this.first;
+					return (T)(object)this.First;
 				case 1:
-					return (T)(object)this.second;
+					return (T)(object)this.Second;
 				case 2:
-					return (T)(object)this.third;
+					return (T)(object)this.Third;
 				case 3:
-					return (T)(object)this.fourth;
+					return (T)(object)this.Fourth;
 				default:
 					throw new IndexOutOfRangeException();
 			}
@@ -119,13 +65,7 @@ namespace Platform
 		/// <summary>
 		/// Returns 4.
 		/// </summary>
-		public int Size
-		{
-			get
-			{
-				return 4;
-			}
-		}
+		public int Size => 4;
 
 		/// <summary>
 		/// Constructs a new <see cref="Quad{A,B,C,D}"/>.
@@ -136,10 +76,10 @@ namespace Platform
 		/// <param name="fourth">The fourth element</param>
 		public Quad(A first, B second, C third, D fourth)
 		{
-			this.first = first;
-			this.second = second;
-			this.third = third;
-			this.fourth = fourth;
+			this.First = first;
+			this.Second = second;
+			this.Third = third;
+			this.Fourth = fourth;
 		}
 
 		/// <summary>
@@ -149,12 +89,12 @@ namespace Platform
 		/// <returns>A hashcode</returns>
 		public override int GetHashCode()
 		{
-			return GetHashCode(this.first) ^ GetHashCode(this.second) ^ GetHashCode(this.third) ^ GetHashCode(this.fourth);
+			return GetHashCode(this.First) ^ GetHashCode(this.Second) ^ GetHashCode(this.Third) ^ GetHashCode(this.Fourth);
 		}
 
 		private static int GetHashCode(object obj)
 		{
-			return obj == null ? 0 : obj.GetHashCode();
+			return obj?.GetHashCode() ?? 0;
 		}
 
 		public override bool Equals(object obj)
@@ -163,10 +103,10 @@ namespace Platform
 
 			if (objTuple != null)
 			{
-				return Equals(first, objTuple.Value.first)
-					&& Equals(second, objTuple.Value.second)
-					&& Equals(third, objTuple.Value.third)
-					&& Equals(fourth, objTuple.Value.fourth);
+				return Equals(this.First, objTuple.Value.First)
+					&& Equals(this.Second, objTuple.Value.Second)
+					&& Equals(this.Third, objTuple.Value.Third)
+					&& Equals(this.Fourth, objTuple.Value.Fourth);
 			}
 
 			return false;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using Platform;
 
 namespace Platform.Validation
 {
@@ -15,7 +14,7 @@ namespace Platform.Validation
 
 		public override string CreateExceptionString(IPropertyValidationContext context)
 		{
-			return String.Format(@"Value must be between {0} and {1} (inclusive) but is {2}", this.MinimumValue ?? "MinValue", this.MaximumValue ?? "MaxValue", context.PropertyValue);
+			return $@"Value must be between {this.MinimumValue ?? "MinValue"} and {this.MaximumValue ?? "MaxValue"} (inclusive) but is {context.PropertyValue}";
 		}
 
 		private static object ChangeType(object value, Type type)

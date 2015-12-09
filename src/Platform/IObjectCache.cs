@@ -12,18 +12,12 @@ namespace Platform
 		/// <summary>
 		/// Gets the maximum capacity of the cache (may be 0 if unknown).
 		/// </summary>
-		int MaximumCapacity
-		{
-			get;
-		}
+		int MaximumCapacity { get; }
 
 		/// <summary>
 		/// Gets the amount of objects in the cache.
 		/// </summary>
-		int Count
-		{
-			get;
-		}
+		int Count { get; }
 
 		/// <summary>
 		/// Adds an object to the cache.

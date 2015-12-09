@@ -41,7 +41,7 @@ namespace Platform.Text.RegularExpressions
 
 		public RegexCache(TimeSpan timeout)
 		{
-			cache = new TimedReferenceDictionary<CacheKey, Regex>(timeout);
+			cache = new TimedReferenceDictionary<CacheKey, Regex>(timeout, CacheKeyEqualityComparer.Default);
 		}
 
 		public Regex Create(string regex, RegexOptions options)

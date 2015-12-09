@@ -6,11 +6,7 @@ namespace Platform.Xml.Serialization
 	public class XmlCDataAttribute
 		: XmlSerializationAttribute
 	{
-		public bool Enabled
-		{
-			get;
-			set;
-		}
+		public bool Enabled { get; set; }
 
 		public XmlCDataAttribute()
 		{

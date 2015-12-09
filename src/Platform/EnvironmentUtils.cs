@@ -62,7 +62,7 @@ namespace Platform
 		{
 			var dateTimeString = dateTime.ToUniversalTime().ToString("MM/dd/yyyy HH:mm:ss");
 
-			var startInfo = new ProcessStartInfo("/bin/date", String.Format(@"--utc --set=""{0}""", dateTimeString))
+			var startInfo = new ProcessStartInfo("/bin/date", $@"--utc --set=""{dateTimeString}""")
 			{
 				UseShellExecute = false,
 				RedirectStandardOutput = true,

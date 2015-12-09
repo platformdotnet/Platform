@@ -9,21 +9,9 @@ namespace Platform.Xml.Serialization
 
 		private readonly XmlDateTimeFormatAttribute formatAttribute;
 
-		public override bool MemberBound
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool MemberBound => true;
 
-		public override Type SupportedType
-		{
-			get
-			{
-				return typeof(DateTime);
-			}
-		}
+		public override Type SupportedType => typeof(DateTime);
 
 		public DateTimeTypeSerializer(SerializationMemberInfo memberInfo, TypeSerializerCache cache, SerializerOptions options)
 		{

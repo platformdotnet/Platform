@@ -2,8 +2,6 @@
 
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 #endregion
@@ -18,13 +16,7 @@ namespace Platform.IO
 		private int length;
 		private byte[] buffer;
 
-		public override long Length
-		{
-			get
-			{
-				throw new NotSupportedException();
-			}
-		}
+		public override long Length { get { throw new NotSupportedException(); } }
 
 		public virtual int Available
 		{
@@ -59,29 +51,11 @@ namespace Platform.IO
 			}
 		}
 
-		public override bool CanRead
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool CanRead => true;
 
-		public override bool CanWrite
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool CanWrite => true;
 
-		public override bool CanSeek
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool CanSeek => false;
 
 		public override long Position
 		{
@@ -120,20 +94,16 @@ namespace Platform.IO
 
 		protected virtual void Rebuild(int minimumSize)
 		{
-			int x;
-			int newCapacity;			
-			byte[] newBuffer;
-
-			newCapacity = buffer.Length * 2;
+			var newCapacity = this.buffer.Length * 2;
 
 			while (newCapacity < minimumSize)
 			{
 				newCapacity *= 2;
 			}
 
-			newBuffer = new byte[newCapacity];
+			var newBuffer = new byte[newCapacity];
 
-			x = 0;
+			var x = 0;
 
 			while (length > 0)
 			{

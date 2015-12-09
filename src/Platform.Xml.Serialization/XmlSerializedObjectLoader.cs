@@ -321,13 +321,7 @@ namespace Platform.Xml.Serialization
  		/// Gets the object reflecting the most up to date deserialized
  		/// state of the file monitored by this object monitor.
  		/// </summary>
- 		public object CurrentObject
- 		{
- 			get
- 			{
- 				return currentObject;
- 			}
- 		}
+ 		public object CurrentObject => this.currentObject;
 
 		/// <summary>
 		/// Called when a new object is loaded.

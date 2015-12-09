@@ -15,21 +15,12 @@ namespace Platform
 		/// <summary>
 		/// The cached value.
 		/// </summary>
-		object IValued.Value
-		{
-			get
-			{
-				return this.Value;
-			}			
-		}
+		object IValued.Value => this.Value;
 
 		/// <summary>
 		/// The function that gets the current up-to-date value.
 		/// </summary>
-		public Func<T> ValueGetter
-		{
-			get; private set;
-		}
+		public Func<T> ValueGetter { get; }
 
 		/// <summary>
 		/// The cached value.
@@ -82,6 +73,7 @@ namespace Platform
 		{			
 			gotValue = false;
 			value = default(T);
+
 			this.ValueGetter = valueGetter;
 		}
 

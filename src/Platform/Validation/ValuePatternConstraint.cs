@@ -41,7 +41,7 @@ namespace Platform.Validation
 
 		public override string CreateExceptionString(IPropertyValidationContext context)
 		{
-			return String.Format(@"The value does not match the regex pattern: {0}", this.pattern);
+			return $@"The value does not match the regex pattern: {this.pattern}";
 		}
 
 		public override Expression<Func<PropertyValidationContext<OBJECT_TYPE, PROPERTY_TYPE>, ValidationResult>> GetValidateExpression<OBJECT_TYPE, PROPERTY_TYPE>()

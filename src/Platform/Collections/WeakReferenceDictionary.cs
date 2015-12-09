@@ -20,24 +20,16 @@ namespace Platform.Collections
 		where V : class
 	{
 		/// <summary>
-		/// A <see cref="WeakReference{T}"/> that contains a key.
+		/// A <see cref="References.WeakReference{T}"/> that contains a key.
 		/// </summary>
-		public class KeyedWeakReference
-			: WeakReference<V>, IKeyed<K>			
+		public sealed class KeyedWeakReference
+			: References.WeakReference<V>, IKeyed<K>			
 		{
-			object IKeyed.Key
-			{
-				get
-				{
-					return this.Key;
-				}
-			}
+			object IKeyed.Key => this.Key;
 
-			public virtual K Key
+			public K Key
 			{
-				get;
-				set;
-			}
+				get; }
 
 			public KeyedWeakReference(K key, V reference)
 				: this(key, reference, null)

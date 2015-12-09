@@ -1,8 +1,4 @@
 using System;
-using System.IO;
-using System.Xml;
-using System.Collections;
-using System.Collections.Specialized;
 
 namespace Platform.Xml.Serialization
 {
@@ -11,19 +7,11 @@ namespace Platform.Xml.Serialization
 	/// </summary>
 	public abstract class XmlSerializerFactory
 	{
-		private static readonly XmlSerializerFactory factory = new CachingXmlSerializerFactory();
-
 		/// <summary>
 		/// Gets an instance of the default XmlSerializer.
 		/// </summary>
 		/// <returns></returns>
-		public static XmlSerializerFactory Default
-		{
-			get
-			{
-				return factory;
-			}
-		}
+		public static XmlSerializerFactory Default { get; } = new CachingXmlSerializerFactory();
 
 		/// <summary>
 		/// Creates a new <see cref="XmlSerializer{T}"/>

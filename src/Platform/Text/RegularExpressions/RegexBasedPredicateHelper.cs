@@ -14,17 +14,13 @@ namespace Platform.Text.RegularExpressions
 		/// <summary>
 		/// The regular expression
 		/// </summary>
-		public virtual Regex Regex
-		{
-			get;
-			private set;
-		}
+		public virtual Regex Regex { get; }
 
 		/// <summary>
 		/// Creates a new <see cref="RegexBasedPredicateHelper"/> from the given <see cref="regex"/>.
 		/// </summary>
 		/// <param name="regex">The <see cref="regex"/></param>
-		internal protected RegexBasedPredicateHelper(string regex)
+		protected internal RegexBasedPredicateHelper(string regex)
 			: this(new Regex(regex))
 		{
 		}
@@ -33,14 +29,14 @@ namespace Platform.Text.RegularExpressions
 		/// Creates a new <see cref="RegexBasedPredicateHelper"/> from the given <see cref="regex"/>.
 		/// </summary>
 		/// <param name="regex">The <see cref="regex"/></param>
-		internal protected RegexBasedPredicateHelper(Regex regex)
+		protected internal RegexBasedPredicateHelper(Regex regex)
 		{
 			this.Regex = regex;
 		}
 
 		public static bool IsRegexBasedPredicate(Predicate<string> regexBasedPredicate)
 		{
-			return regexBasedPredicate.Target as RegexBasedPredicateHelper != null;
+			return regexBasedPredicate.Target is RegexBasedPredicateHelper;
 		}
 
 		/// <summary>
@@ -55,7 +51,7 @@ namespace Platform.Text.RegularExpressions
 
 			if (predicateHelper == null)
 			{
-				throw new ArgumentException(String.Format("Must be a predicateHelper created from {0}", typeof(RegexBasedPredicateHelper).Name));
+				throw new ArgumentException($"Must be a predicateHelper created from {typeof(RegexBasedPredicateHelper).Name}");
 			}
 
 			return predicateHelper.Regex;

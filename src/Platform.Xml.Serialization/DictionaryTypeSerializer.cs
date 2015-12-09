@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
-using System.Linq;
 using System.Xml;
-using System.Reflection;
 using System.Collections.Generic;
 
 namespace Platform.Xml.Serialization
@@ -58,21 +56,9 @@ namespace Platform.Xml.Serialization
 	public class DictionaryTypeSerializer
 		: ComplexTypeTypeSerializer
 	{
-		public override bool MemberBound
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool MemberBound => true;
 
-		public override Type SupportedType
-		{
-			get
-			{
-				return typeof(System.Collections.IDictionary);
-			}
-		}
+		public override Type SupportedType => typeof(System.Collections.IDictionary);
 
 		private readonly IDictionary<Type, DictionaryItem> typeToItemMap;
 		private readonly IDictionary<string, DictionaryItem> aliasToItemMap;

@@ -6,53 +6,19 @@ namespace Platform.Validation
 	public struct PropertyValidationContext<OBJECT_TYPE, PROPERTY_TYPE>
 		: IPropertyValidationContext
 	{
-		public BaseValidationAttribute ValidationAttribute
-		{
-			get;
-			private set;
-		}
+		public BaseValidationAttribute ValidationAttribute { get; }
 
-		public ValidationContext<OBJECT_TYPE> ValidationContext
-		{
-			get;
-			private set;
-		}
+		public ValidationContext<OBJECT_TYPE> ValidationContext { get; }
 
-		object IPropertyValidationContext.ObjectValue
-		{
-			get
-			{
-				return this.ObjectValue;
-			}
-		}
+		object IPropertyValidationContext.ObjectValue => this.ObjectValue;
 
-		public OBJECT_TYPE ObjectValue
-		{
-			get
-			{
-				return this.ValidationContext.ObjectValue;
-			}
-		}
+		public OBJECT_TYPE ObjectValue => this.ValidationContext.ObjectValue;
 
-		public PropertyInfo PropertyInfo
-		{
-			get;
-			internal set;
-		}
+		public PropertyInfo PropertyInfo { get; internal set; }
 
-		public PROPERTY_TYPE PropertyValue
-		{
-			get;
-			private set;
-		}
+		public PROPERTY_TYPE PropertyValue { get; }
 
-		object IPropertyValidationContext.PropertyValue
-		{
-			get
-			{
-				return this.PropertyValue;
-			}
-		}
+		object IPropertyValidationContext.PropertyValue => this.PropertyValue;
 
 		public static Expression GetCurrentValueExpression(ParameterExpression propertyValidationContextExpression)
 		{

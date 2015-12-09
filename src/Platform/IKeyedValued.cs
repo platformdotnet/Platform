@@ -7,7 +7,7 @@ namespace Platform
 	{
 	}
 
-	public interface IKeyedValued<K, V>
+	public interface IKeyedValued<out K, V>
 		: IKeyed<K>, IValued<V>
 	{
 	}

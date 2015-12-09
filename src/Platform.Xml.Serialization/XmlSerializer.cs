@@ -358,13 +358,7 @@ namespace Platform.Xml.Serialization
 		{
 			private readonly XmlSerializer<T> serializer;
 
-			public override SerializerOptions Options
-			{
-				get
-				{
-					return serializer.Options;
-				}
-			}
+			public override SerializerOptions Options => this.serializer.Options;
 
 			public DynamicallyTypedXmlSerializer(XmlSerializer<T> serializer)
 			{

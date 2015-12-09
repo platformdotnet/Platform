@@ -6,17 +6,8 @@ namespace Platform.Validation
 	{
 		public static readonly ValidatorOptions Empty = new ValidatorOptions();
 
-		public IDictionary<string, string> Properties
-		{
-			get;
-			private set;
-		}
-
-		public PropertyValidatorProvider PropertyValidatorProvider
-		{
-			get;
-			private set;
-		}
+		public IDictionary<string, string> Properties { get; }
+		public PropertyValidatorProvider PropertyValidatorProvider { get; private set; }
 
 		public ValidatorOptions()
 		{

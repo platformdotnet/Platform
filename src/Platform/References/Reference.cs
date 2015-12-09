@@ -103,12 +103,6 @@ namespace Platform.References
 		/// Returns True if the current reference has already beened enqueued.
 		/// </summary>
 		/// <seealso cref="Enqueue()"/>
-		protected virtual bool IsEnqueued
-		{
-			get
-			{
-				return nextOnQueue != null;
-			}
-		}
+		protected virtual bool IsEnqueued => this.nextOnQueue != null;
 	}
 }

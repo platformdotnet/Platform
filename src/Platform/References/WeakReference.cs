@@ -36,13 +36,13 @@ namespace Platform.References
 		/// <summary>
 		/// The reference target.
 		/// </summary>
-		public override T Target { get { return (T)systemReference.Target; } }
+		public override T Target => (T)this.systemReference.Target;
 
 		/// <summary>
 		/// Gets weather the reference continues to reference the target
 		/// if it has been resurrected.
 		/// </summary>
-		public virtual bool TackResurrection { get { return systemReference.TrackResurrection; } }
+		public virtual bool TackResurrection => this.systemReference.TrackResurrection;
 
 		/// <summary>
 		/// Clears the target that the <see cref="Reference{T}"/> points to.

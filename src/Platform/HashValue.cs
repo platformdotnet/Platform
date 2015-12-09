@@ -11,85 +11,47 @@ namespace Platform
 	public struct HashValue
 		: IValued<byte[]>
 	{
-	    /// <summary>
-	    /// The name of the algorithm used to perform the hash
-	    /// </summary>
-	    public string AlgorithmName
-	    {
-	        get;
-	        private set;
-	    }
+		/// <summary>
+		/// The name of the algorithm used to perform the hash
+		/// </summary>
+		public string AlgorithmName { get; private set; }
 
-	    /// <summary>
+		/// <summary>
 	    /// The offset in the data that was hashed
 	    /// </summary>
 	    public long Offset
 	    {
-	        get;
-	        private set;
-	    }
+	        get; }
 
-	    /// <summary>
-	    /// The length of the data that was hashed
-	    /// </summary>
-	    public long Length
-	    {
-	        get;
-	        private set;
-	    }
+		/// <summary>
+		/// The length of the data that was hashed
+		/// </summary>
+		public long Length { get; }
 
-	    /// <summary>
-	    /// The hash
-	    /// </summary>
-	    public byte[] Value
-	    {
-	        get;
-	        private set;
-	    }
+		/// <summary>
+		/// The hash
+		/// </summary>
+		public byte[] Value { get; }
 
-	    /// <summary>
+		/// <summary>
 		/// A text version of the hash in text hexadecimal notation
 		/// </summary>
-		public string TextValue
-		{
-			get
-			{
-				return TextConversion.ToHexString(this.Value, true);
-			}
-		}
+		public string TextValue => TextConversion.ToHexString(this.Value, true);
 
 		/// <summary>
 		/// A text version of the hash in base64 encoding
 		/// </summary>
-		public string Base64TextValue
-		{
-			get
-			{
-				return TextConversion.ToBase64String(this.Value);
-			}
-		}
+		public string Base64TextValue => TextConversion.ToBase64String(this.Value);
 
 		/// <summary>
 		/// A text version of the hash in base32 encoding
 		/// </summary>
-		public string Base32TextValue
-		{
-			get
-			{
-				return TextConversion.ToBase32String(this.Value);
-			}
-		}
+		public string Base32TextValue => TextConversion.ToBase32String(this.Value);
 
 		/// <summary>
 		/// The hash value (a byte array)
 		/// </summary>
-		object IValued.Value
-		{
-			get
-			{
-				return this.Value;
-			}
-		}
+		object IValued.Value => this.Value;
 
 		/// <summary>
 		/// Constructs a new <see cref="HashValue"/>
@@ -115,12 +77,12 @@ namespace Platform
 		/// </returns>
 		public override int GetHashCode()
 		{
-			int hash = 0;
-			int offset = 0;
+			var hash = 0;
+			var offset = 0;
 
-			for (int i = 0; i < Value.Length; i++)
+			for (var i = 0; i < Value.Length; i++)
 			{
-				hash ^= Value[i] >> (offset * 8);
+				hash ^= i >> (offset * 8);
 
 				offset++;
 				offset %= 4;

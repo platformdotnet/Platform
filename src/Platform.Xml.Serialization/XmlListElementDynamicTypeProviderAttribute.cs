@@ -6,11 +6,7 @@ namespace Platform.Xml.Serialization
 	public class XmlListElementDynamicTypeProviderAttribute
 		: XmlSerializationAttribute
 	{
-		public Type ProviderType
-		{
-			get;
-			set;
-		}
+		public Type ProviderType { get; set; }
 
 		public XmlListElementDynamicTypeProviderAttribute(Type providerType)
 		{

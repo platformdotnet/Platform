@@ -10,8 +10,8 @@ namespace Platform.Validation
 	public class SizeConstraintAttribute
 		: ValidationAttribute
 	{
-		private int minimumLength = Int32.MinValue;
-		private int maximumLength = Int32.MaxValue;
+		private int minimumLength = int.MinValue;
+		private int maximumLength = int.MaxValue;
 
 		public SizeFlexibility SizeFlexibility
 		{
@@ -49,14 +49,14 @@ namespace Platform.Validation
 		{
 			var value = context.PropertyValue as string;
 
-			return String.Format(@"The value's length must be between {0} and {1} (inclusive) but is {2}", this.MinimumLength, this.MaximumLength, value == null ? "null" : value.Length.ToString());
+			return $@"The value's length must be between {this.MinimumLength} and {this.MaximumLength} (inclusive) but is {(value == null ? "null" : value.Length.ToString())}";
 		}
 
 		public override Expression<Func<PropertyValidationContext<OBJECT_TYPE, PROPERTY_TYPE>, ValidationResult>> GetValidateExpression<OBJECT_TYPE, PROPERTY_TYPE>()
 		{
 			if (typeof(PROPERTY_TYPE) != typeof(string))
 			{
-				throw new InvalidOperationException(String.Format("The type {0} must be a string type", typeof(PROPERTY_TYPE).Name));
+				throw new InvalidOperationException($"The type {typeof(PROPERTY_TYPE).Name} must be a string type");
 			}
 
 			var propertyValidationContext = Expression.Parameter(typeof(PropertyValidationContext<OBJECT_TYPE, PROPERTY_TYPE>), "propertyValidationContext");

@@ -16,16 +16,9 @@ namespace Platform
 		public ReownedMeter(object newOwner, IMeter meter)
 			: base(meter)
 		{
-			this.owner = newOwner;
+			this.Owner = newOwner;
 		}
 
-		public override object Owner
-		{
-			get
-			{
-				return owner;
-			}
-		}
-		private readonly object owner;
+		public override object Owner { get; }
 	}
 }

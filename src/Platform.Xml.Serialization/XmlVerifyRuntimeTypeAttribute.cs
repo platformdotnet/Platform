@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Platform.Xml.Serialization
 {
@@ -6,11 +7,7 @@ namespace Platform.Xml.Serialization
 	public class XmlVerifyRuntimeTypeAttribute
 		: XmlSerializationAttribute
 	{
-		public virtual Type[] Types
-		{
-			get;
-			set;
-		}
+		public Type[] Types { get; set; }
 
 		public XmlVerifyRuntimeTypeAttribute(params Type[] types)
 			: this(LogicalOperation.All, types)
@@ -24,15 +21,7 @@ namespace Platform.Xml.Serialization
 
 		public virtual bool VerifiesAgainst(Type type)
 		{
-			foreach (var t in Types)
-			{
-				if (t.IsAssignableFrom(type))
-				{
-					return true;
-				}
-			}
-
-			return false;
+			return this.Types.Any(t => t.IsAssignableFrom(type));
 		}
 	}
 }

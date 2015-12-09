@@ -66,10 +66,10 @@ namespace Platform.Validation
 		public virtual Validator<T> NewValidator<T>(ValidatorOptions options)
 		{
 			var key = new ValidatorKey()
-			          {
-			          	validatorType = typeof(T),
-			          	validatorOptions = options
-			          };
+			{
+				validatorType = typeof(T),
+				validatorOptions = options
+			};
 
 			Validator<T> retval;
             

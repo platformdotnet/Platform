@@ -20,21 +20,12 @@ namespace Platform
 		/// </summary>
 		protected virtual void OnMajorChange()
 		{
-			if (this.MajorChange != null)
-			{
-				this.MajorChange(this, EventArgs.Empty);
-			}
+			this.MajorChange?.Invoke(this, EventArgs.Empty);
 		}
 
 		/// <summary>
 		/// Gets the owner of the current object
 		/// </summary>
-		public virtual object Owner
-		{
-			get
-			{
-				return null;
-			}
-		}
+		public virtual object Owner => null;
 	}
 }

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq.Expressions;
-using Platform.Collections;
 
 namespace Platform.Linq
 {
@@ -316,41 +313,26 @@ namespace Platform.Linq
 			return methodCallExpression;
 		}
 		
-		protected override ICollection<Expression> VisitExpressionList(ICollection<Expression> original)
+		protected override IReadOnlyList<Expression> VisitExpressionList(IReadOnlyList<Expression> original)
 		{
-			ICollection<Expression> current;
+			IReadOnlyList<Expression> current;
 
 			if (!this.TryGetCurrent(original, out current))
 			{
 				return original;
 			}
 
-			if (current.Count != original.Count)
+			if (!(this.result = (current.Count == original.Count)))
 			{
-				this.result = false;
-
-                return original;
+			    return original;
 			}
 
-			using (var enum1 = current.GetEnumerator())
+			var count = current.Count;
+
+			for (var i = 0; i < count && this.result; i++)
 			{
-				using (var enum2 = original.GetEnumerator())
-				{
-					while (enum1.MoveNext() && enum2.MoveNext())
-					{
-						var currentItem = enum1.Current;
-						var originalItem = enum2.Current;
-
-						this.currentObject = currentItem;
-
-						this.Visit(originalItem);
-
-						if (!this.result)
-						{
-							break;
-						}
-					}
-				}
+				this.currentObject = current[i];
+				this.Visit(original[i]);
 			}
 
 			this.currentObject = current;
@@ -424,65 +406,57 @@ namespace Platform.Linq
 			return binding;
 		}
 
-		protected override ICollection<MemberBinding> VisitBindingList(ICollection<MemberBinding> original)
+		protected override IReadOnlyList<MemberBinding> VisitBindingList(IReadOnlyList<MemberBinding> original)
 		{
-			ICollection<MemberBinding> current;
+			IReadOnlyList<MemberBinding> current;
 
 			if (!this.TryGetCurrent(original, out current))
 			{
 				return original;
 			}
 
-			this.result = this.result && (current.Count == original.Count);
-
-			if (this.result)
+			if (!(this.result = this.result && (current.Count == original.Count)))
 			{
-				using (var enum1 = current.GetEnumerator())
-				{
-					using (var enum2 = original.GetEnumerator())
-					{
-						while (enum1.MoveNext() && enum2.MoveNext())
-						{
-							this.currentObject = enum1.Current;
-							this.VisitBinding(enum2.Current);
-						}
-					}
-				}
-
-				this.currentObject = current;
+				return original;
 			}
+
+			var count = original.Count;
+
+			for (var i = 0; i < count && this.result; i++)
+			{
+				this.currentObject = current[i];
+				this.VisitBinding(original[i]);
+			}
+
+			this.currentObject = current;
 
 			return original;
 		}
 
-		protected override ICollection<ElementInit> VisitElementInitializerList(ICollection<ElementInit> original)
+		protected override IReadOnlyList<ElementInit> VisitElementInitializerList(IReadOnlyList<ElementInit> original)
 		{
-			ICollection<ElementInit> current;
+			IReadOnlyList<ElementInit> current;
 
 			if (!this.TryGetCurrent(original, out current))
 			{
 				return original;
 			}
 
-			this.result = this.result && (current.Count == original.Count);
-
-			if (this.result)
+			if (!(this.result = this.result && (current.Count == original.Count)))
 			{
-				using (var enum1 = current.GetEnumerator())
-				{
-					using (var enum2 = current.GetEnumerator())
-					{
-						while (enum1.MoveNext() && enum2.MoveNext())
-						{
-							this.currentObject = enum1.Current;
-							this.VisitElementInitializer(enum2.Current);
-						}
-					}
-				}
-
-				this.currentObject = current;
+				return original;
 			}
 
+			var count = original.Count;
+
+			for (var i = 0; i < count && this.result; i++)
+			{
+				this.currentObject = current[i];
+				this.VisitElementInitializer(original[i]);
+			}
+
+			this.currentObject = current;
+			
 			return original;
 		}
 
@@ -495,32 +469,29 @@ namespace Platform.Linq
 				return expression;
 			}
 
-			this.result = this.result && (current.Parameters.Count == expression.Parameters.Count);
-
-			if (this.result)
+			if (!(this.result = this.result && (current.Parameters.Count == expression.Parameters.Count)))
 			{
-				this.currentObject = current.Body;
-				this.Visit(expression.Body);
+				return expression;
 			}
 
-			if (this.result)
+			this.currentObject = current.Body;
+			this.Visit(expression.Body);
+
+			if (!this.result)
 			{
-				using (var enum1 = current.Parameters.GetEnumerator())
-				{
-					using (var enum2 = expression.Parameters.GetEnumerator())
-					{
-						while (enum1.MoveNext() && enum2.MoveNext())
-						{
-							this.currentObject = enum1.Current;
-
-							this.Visit(enum2.Current);
-						}
-					}
-				}
-
-				this.currentObject = current;
+				return expression;
 			}
 
+			var count = expression.Parameters.Count;
+
+			for (var i = 0; i < count && this.result; i++)
+			{
+				this.currentObject = current.Parameters[i];
+				this.Visit(expression.Parameters[i]);
+			}
+
+			this.currentObject = current;
+			
 			return expression;
 		}
 
@@ -533,26 +504,21 @@ namespace Platform.Linq
 				return expression;
 			}
 
-			this.result = this.result && (current.Constructor == expression.Constructor
-								&& current.Arguments.Count == expression.Arguments.Count);
-
-			if (this.result)
+			if (!(this.result = this.result && (current.Constructor == expression.Constructor
+								&& current.Arguments.Count == expression.Arguments.Count)))
 			{
-				using (var enum1 = current.Arguments.GetEnumerator())
-				{
-					using (var enum2 = expression.Arguments.GetEnumerator())
-					{
-						while (enum1.MoveNext() && enum2.MoveNext())
-						{
-							this.currentObject = enum1.Current;
-
-							this.Visit(enum2.Current);
-						}
-					}
-				}
-
-				this.currentObject = current;
+				return expression;
 			}
+
+			var count = expression.Arguments.Count;
+
+            for (var i = 0; i < count && this.result; i++)
+            {
+	            this.currentObject = current.Arguments[i];
+	            this.Visit(expression.Arguments[i]);
+			}
+
+			this.currentObject = current;
 
 			return expression;
 		}
@@ -566,22 +532,22 @@ namespace Platform.Linq
 				return expression;
 			}
 
-			this.result = this.result && (current.Bindings.Count == expression.Bindings.Count);
+			if (!(this.result = this.result && (current.Bindings.Count == expression.Bindings.Count)))
+			{
+				return expression;
+			}
+
+			this.currentObject = current.NewExpression;
+
+			this.Visit(expression.NewExpression);
 
 			if (this.result)
 			{
-				this.currentObject = current.NewExpression;
-
-				this.Visit(expression.NewExpression);
-
-				if (this.result)
-				{
-					this.currentObject = current.Bindings;
-					this.VisitBindingList(expression.Bindings);
-				}
-
-				this.currentObject = current;
+				this.currentObject = current.Bindings;
+				this.VisitBindingList(expression.Bindings);
 			}
+
+			this.currentObject = current;
 
 			return expression;
 		}

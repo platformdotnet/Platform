@@ -10,11 +10,7 @@ namespace Platform.Xml.Serialization
 			Constraints = "";
 		}
 
-		public string Constraints
-		{
-			get;
-			set;
-		}
+		public string Constraints { get; set; }
 
 		/// <summary>
 		/// Tests if this attribute should be applied/considered when serializing.

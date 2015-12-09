@@ -11,10 +11,7 @@ namespace Platform
 		/// <summary>
 		/// Gets the object used to synchronize the current object.
 		/// </summary>
-		object SyncLock
-		{
-			get;
-		}
+		object SyncLock { get; }
 
 		/// <summary>
 		/// Returns the <see cref="IAutoLock"/> but does not acquire it,

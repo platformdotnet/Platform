@@ -20,43 +20,28 @@ namespace Platform
 		/// <summary>
 		/// The maximum possible value for the meter.
 		/// </summary>
-		object MaximumValue
-		{
-			get;
-		}
+		object MaximumValue { get; }
 
 		/// <summary>
 		/// The minimum possible value for the meter.
 		/// </summary>
-		object MinimumValue
-		{
-			get;
-		}
+		object MinimumValue { get; }
 
 		/// <summary>
 		/// The current value for the meter.
 		/// </summary>
-		object CurrentValue
-		{
-			get;
-		}
+		object CurrentValue { get; }
 
 		/// <summary>
 		/// Returns a value between 0 and 1 that represents how far along the 
 		/// <see cref="CurrentValue"/> is between the <see cref="MinimumValue"/>
 		/// and <see cref="MaximumValue"/>.
 		/// </summary>
-		double Percentage
-		{
-			get;
-		}
+		double Percentage { get; }
 
 		/// <summary>
 		/// Gets the units (as a string) that the meter should be measured in.
 		/// </summary>
-		string Units
-		{
-			get;
-		}
+		string Units { get; }
 	}
 }

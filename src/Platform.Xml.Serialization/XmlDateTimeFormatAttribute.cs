@@ -6,11 +6,7 @@ namespace Platform.Xml.Serialization
 	public class XmlDateTimeFormatAttribute
 		: XmlSerializationAttribute
 	{
-		public string Format
-		{
-			get;
-			set;
-		}
+		public string Format { get; set; }
 
 		public XmlDateTimeFormatAttribute(string format)
 		{

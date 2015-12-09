@@ -78,12 +78,10 @@ namespace Platform
 					{
 						return true;
 					}
-					else
+
+					if (!Monitor.Wait(obj, timeout))
 					{
-						if (!Monitor.Wait(obj, timeout))
-						{
-							return false;
-						}
+						return false;
 					}
 				}
 			}

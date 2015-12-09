@@ -14,7 +14,7 @@ namespace Platform
 		/// </summary>
 		/// <param name="digit">The single hex character</param>
 		/// <returns>The integer</returns>
-		public static int FromHex(char digit)
+		public static int FromHex(this char digit)
 		{
 			if ((((digit < '0') || (digit > '9')) && ((digit < 'A') || (digit > 'F'))) && ((digit < 'a') || (digit > 'f')))
 			{
@@ -23,13 +23,14 @@ namespace Platform
 
 			return FromHexNoCheck(digit);
 		}
+
 		/// <summary>
 		/// Gets an integer from a single hex character without checking whether the character is
 		/// a valid hex character.
 		/// </summary>
 		/// <param name="digit">The single hex character</param>
 		/// <returns>The integer</returns>
-		internal static int FromHexNoCheck(char digit)
+		internal static int FromHexNoCheck(this char digit)
 		{
 			if (digit > '9')
 			{

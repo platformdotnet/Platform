@@ -26,9 +26,6 @@ namespace Platform
 		/// <summary>
 		/// Compares <see cref="x"/> and <see cref="y"/> using the inner <see cref="Comparison{T}"/>.
 		/// </summary>
-		public virtual int Compare(T x, T y)
-		{
-			return comparison(x, y);
-		}
+		public virtual int Compare(T x, T y) => this.comparison(x, y);
 	}
 }

@@ -13,19 +13,14 @@ namespace Platform.Network.Time
 		/// <summary>
 		/// Provides progress information for the <see cref="NtpNetworkTimeClient"/>
 		/// </summary>
-		public override IMeter Progress
-		{
-			get
-			{
-				return progress;
-			}
-		}
+		public override IMeter Progress => this.progress;
+
 		private readonly ProgressMeter progress;
 
 		/// <summary>
 		/// A meter for the progress.
 		/// </summary>
-		private class ProgressMeter
+		private sealed class ProgressMeter
 			: MutableMeter
 		{
 			private string state;
@@ -36,7 +31,7 @@ namespace Platform.Network.Time
 				SetOwner(owner);
 			}
 
-			public virtual void SetState(int currentValue, string state)
+			public void SetState(int currentValue, string state)
 			{				
 				this.state = state;
 				SetCurrentValue(currentValue);
@@ -44,7 +39,7 @@ namespace Platform.Network.Time
 				
 			public override string ToString()
 			{
-				return String.Format("{0} ({1:0}%)", state, this.Percentage * 100);
+				return $"{this.state} ({this.Percentage * 100:0}%)";
 			}
 		}
 
@@ -93,13 +88,8 @@ namespace Platform.Network.Time
 		/// <summary>
 		/// <see cref="NetworkTimeClient.Value"/>
 		/// </summary>
-		public override TimeSpan? Value
-		{
-			get
-			{
-				return value;
-			}
-		}
+		public override TimeSpan? Value => this.value;
+
 		private TimeSpan? value;
 
 		/// <summary>
@@ -112,8 +102,6 @@ namespace Platform.Network.Time
 
 		public override void DoRun()
 		{
-			UdpClient udpClient;
-
 			SetTaskState(TaskState.Running);
 
 			try
@@ -122,7 +110,7 @@ namespace Platform.Network.Time
 
 				System.Threading.Thread.Sleep(1000);
 
-				udpClient = CreateUdpClient();
+				var udpClient = this.CreateUdpClient();
 
 				progress.SetState(2, "Connected");
 
@@ -142,7 +130,7 @@ namespace Platform.Network.Time
 				{
 					data = null;
 
-					progress.SetState(3, String.Format("Requesting Time (Attempt {0})", i + 1));
+					progress.SetState(3, $"Requesting Time (Attempt {i + 1})");
 
 					udpClient.Send(outdata, outdata.Length);
 
@@ -188,7 +176,7 @@ namespace Platform.Network.Time
 
 		protected override void OnTaskException(TaskExceptionEventArgs eventArgs)
 		{
-			progress.SetState(4, String.Format("Stopped (Error {0})", eventArgs.Exception.ToString()));
+			progress.SetState(4, $"Stopped (Error {eventArgs.Exception.ToString()})");
 
 			base.OnTaskException(eventArgs);
 		}

@@ -11,13 +11,7 @@ namespace Platform.Xml.Serialization
 		/// <summary>
 		/// Returns true if this serializer can only be used with a specific member.
 		/// </summary>
-		public virtual bool MemberBound
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public virtual bool MemberBound => false;
 
 		/// <summary>
 		/// Returns the type that this serializer supports.

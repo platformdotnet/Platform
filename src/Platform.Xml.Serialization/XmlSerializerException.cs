@@ -6,7 +6,6 @@ namespace Platform.Xml.Serialization
 		: ApplicationException
 	{
 		public XmlSerializerException()
-			: base()
 		{
 		}
 

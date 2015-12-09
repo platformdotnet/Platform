@@ -16,10 +16,8 @@ namespace Platform.Xml.Serialization
 			{
 				return ((PropertyInfo)this.memberInfo).GetValue(obj, null);
 			}
-			else
-			{
-				return null;
-			}
+
+			return null;
 		}
 
 		public override void SetValue(object obj, object val)

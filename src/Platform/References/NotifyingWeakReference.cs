@@ -20,10 +20,7 @@ namespace Platform.References
 		{
 			var eventHandler = this.ReferenceCollected;
 
-			if (eventHandler != null)
-			{
-				eventHandler(this, eventArgs);
-			}
+			eventHandler?.Invoke(this, eventArgs);
 		}
 
 		private class GarbageCollectionListener

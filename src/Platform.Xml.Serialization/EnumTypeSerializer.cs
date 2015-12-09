@@ -5,13 +5,7 @@ namespace Platform.Xml.Serialization
 	public class EnumTypeSerializer
 		: TypeSerializerWithSimpleTextSupport
 	{
-		public override Type SupportedType
-		{
-			get
-			{
-				return supportedType;
-			}
-		}
+		public override Type SupportedType => this.supportedType;
 
 		private readonly Type supportedType;
 

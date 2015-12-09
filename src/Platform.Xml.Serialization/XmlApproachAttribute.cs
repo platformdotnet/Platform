@@ -6,49 +6,14 @@ namespace Platform.Xml.Serialization
 	public abstract class XmlApproachAttribute
 		: XmlSerializationAttribute
 	{
-		public virtual string Name
-		{
-			get;
-			set;
-		}
-
-		public virtual bool SerializeUnattribted
-		{
-			get;
-			set;
-		}
-
-		public virtual bool MakeNameLowercase
-		{
-			get;
-			set;
-		}
-
-		public virtual bool UseNameFromAttributedType
-		{
-			get;
-			set;
-		}
-
-		public virtual string Namespace
-		{
-			get;
-			set;
-		}
-
-		public virtual Type Type
-		{
-			get;
-			set;
-		}
-
-		public virtual Type SerializerType
-		{
-			get;
-			set;
-		}
-
-        public virtual bool SerializeIfNull { get; set; }
+		public virtual string Name { get; set; }
+		public virtual bool SerializeUnattribted { get; set; }
+		public virtual bool MakeNameLowercase { get; set; }
+		public virtual bool UseNameFromAttributedType { get; set; }
+		public virtual string Namespace { get; set; }
+		public virtual Type Type { get; set; }
+		public virtual Type SerializerType { get; set; }
+		public virtual bool SerializeIfNull { get; set; }
 
 		protected XmlApproachAttribute()
 		{

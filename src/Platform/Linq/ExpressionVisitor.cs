@@ -77,7 +77,7 @@ namespace Platform.Linq
 			case ExpressionType.Extension:
 				return VisitExtension(expression);
 			default:
-				throw new Exception(String.Format("Unhandled expression type: '{0}'", expression.NodeType));
+				throw new Exception($"Unhandled expression type: '{expression.NodeType}'");
 			}
 		}
 
@@ -97,7 +97,7 @@ namespace Platform.Linq
 			case MemberBindingType.ListBinding:
 				return VisitMemberListBinding((MemberListBinding)binding);
 			default:
-				throw new Exception(string.Format("Unhandled binding type '{0}'", binding.BindingType));
+				throw new Exception($"Unhandled binding type '{binding.BindingType}'");
 			}
 		}
 
@@ -148,7 +148,7 @@ namespace Platform.Linq
 
 		protected virtual Expression VisitTypeIs(TypeBinaryExpression expression)
 		{
-			Expression expr = Visit(expression.Expression);
+			var expr = Visit(expression.Expression);
 
 			if (expr != expression.Expression)
 			{
@@ -208,7 +208,7 @@ namespace Platform.Linq
 			return methodCallExpression;
 		}
 
-		protected virtual ICollection<Expression> VisitExpressionList(ICollection<Expression> original)
+		protected virtual IReadOnlyList<Expression> VisitExpressionList(IReadOnlyList<Expression> original)
 		{
 			List<Expression> list = null;
 
@@ -217,10 +217,12 @@ namespace Platform.Linq
 				return null;
 			}
 
-			var i = 0;
+			var count = original.Count;
 
-			foreach (var item in original)
+			for (var i = 0; i < count; i++)
 			{
+				var item = original[i];
+
 				var p = Visit(item);
 
 				if (list != null)
@@ -232,18 +234,11 @@ namespace Platform.Linq
 				}
 				else if (p != item)
 				{
-					list = new List<Expression>(original.Count);
+					list = new List<Expression>(count);
 
-					var j = 0;
-
-					foreach (var item2 in original)
+					for (var j = 0; j < i; j++)
 					{
-						list.Add(item2);
-
-						if (++j >= i)
-						{
-							break;
-						}
+						list.Add(original[j]);
 					}
 
 					if (p != null)
@@ -251,19 +246,12 @@ namespace Platform.Linq
 						list.Add(p);
 					}
 				}
-
-				i++;
 			}
 
-			if (list != null)
-			{
-				return list.AsReadOnly();
-			}
-
-			return original;
+			return list?.AsReadOnly() ?? original;
 		}
 
-		protected virtual ICollection<T> VisitExpressionList<T>(ICollection<T> original)
+		protected virtual IReadOnlyList<T> VisitExpressionList<T>(IReadOnlyList<T> original)
 			where T : Expression
 		{
 			List<T> list = null;
@@ -273,10 +261,12 @@ namespace Platform.Linq
 				return null;
 			}
 
-			var i = 0;
+			var count = original.Count;
 
-			foreach (var item in original)
+			for (var i = 0; i < count; i++)
 			{
+				var item = original[i];
+
 				var p = (T)Visit(item);
 
 				if (list != null)
@@ -288,18 +278,11 @@ namespace Platform.Linq
 				}
 				else if (p != item)
 				{
-					list = new List<T>(original.Count);
+					list = new List<T>(count);
 
-					var j = 0;
-
-					foreach (var item2 in original)
+					for (var j = 0; j < i; j++)
 					{
-						list.Add(item2);
-
-						if (++j >= i)
-						{
-							break; 
-						}
+						list.Add(original[j]);
 					}
 
 					if (p != null)
@@ -309,58 +292,40 @@ namespace Platform.Linq
 				}
 			}
 
-			if (list != null)
-			{
-				return new ReadOnlyCollection<T>(list);
-			}
-
-			return original;
+			return list != null ? new ReadOnlyCollection<T>(list) : original;
 		}
 
 		protected virtual MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
 		{
 			var e = Visit(assignment.Expression);
 
-			if (e != assignment.Expression)
-			{
-				return Expression.Bind(assignment.Member, e);
-			}
-
-			return assignment;
+			return e != assignment.Expression ? Expression.Bind(assignment.Member, e) : assignment;
 		}
 
 		protected virtual MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding binding)
 		{
 			var bindings = VisitBindingList(binding.Bindings);
 
-			if (bindings != binding.Bindings)
-			{
-				return Expression.MemberBind(binding.Member, bindings);
-			}
-
-			return binding;
+			return bindings != binding.Bindings ? Expression.MemberBind(binding.Member, bindings) : binding;
 		}
 
 		protected virtual MemberListBinding VisitMemberListBinding(MemberListBinding binding)
 		{
 			var initializers = VisitElementInitializerList(binding.Initializers);
 
-			if (initializers != binding.Initializers)
-			{
-				return Expression.ListBind(binding.Member, initializers);
-			}
-
-			return binding;
+			return initializers != binding.Initializers ? Expression.ListBind(binding.Member, initializers) : binding;
 		}
 
-		protected virtual ICollection<MemberBinding> VisitBindingList(ICollection<MemberBinding> original)
+		protected virtual IReadOnlyList<MemberBinding> VisitBindingList(IReadOnlyList<MemberBinding> original)
 		{
 			List<MemberBinding> list = null;
 
-			var i = 0;
+			var count = original.Count;
 
-			foreach (var item in original)
+			for (var i = 0; i < count; i++)
 			{
+				var item = original[i];
+
 				var b = VisitBinding(item);
 
 				if (list != null)
@@ -369,42 +334,29 @@ namespace Platform.Linq
 				}
 				else if (b != item)
 				{
-					list = new List<MemberBinding>(original.Count);
+					list = new List<MemberBinding>(count);
 
-					var j = 0;
-
-					foreach (var item2 in original)
+					for (var j = 0; j < i; j++)
 					{
-						list.Add(item2);
-
-						if (++j >= i)
-						{
-							break;
-						}
+						list.Add(original[j]);
 					}
 
 					list.Add(b);
 				}
-
-				i++;
 			}
 
-			if (list != null)
-			{
-				return list;
-			}
-
-			return original;
+			return list ?? original;
 		}
 
-		protected virtual ICollection<ElementInit> VisitElementInitializerList(ICollection<ElementInit> original)
+		protected virtual IReadOnlyList<ElementInit> VisitElementInitializerList(IReadOnlyList<ElementInit> original)
 		{
 			List<ElementInit> list = null;
 
-			var i = 0;
+			var count = original.Count;
 
-			foreach (var item in original)
+			for (var i = 0; i < count; i++)
 			{
+				var item = original[i];
 				var init = VisitElementInitializer(item);
 
 				if (list != null)
@@ -413,42 +365,25 @@ namespace Platform.Linq
 				}
 				else if (init != item)
 				{
-					list = new List<ElementInit>(original.Count);
+					list = new List<ElementInit>(count);
 
-					var j = 0;
-
-					foreach (var item2 in original)
+					for (var j = 0; j < i; j++)
 					{
-						list.Add(item2);
-
-						if (++j >= i)
-						{
-							break;
-						}
+						list.Add(original[j]);
 					}
 
 					list.Add(init);
 				}
 			}
 
-			if (list != null)
-			{
-				return list;
-			}
-
-			return original;
+			return list ?? original;
 		}
 
 		protected virtual Expression VisitLambda(LambdaExpression expression)
 		{
 			var body = Visit(expression.Body);
 
-			if (body != expression.Body)
-			{
-				return Expression.Lambda(expression.Type, body, expression.Parameters);
-			}
-
-			return expression;
+			return body != expression.Body ? Expression.Lambda(expression.Type, body, expression.Parameters) : expression;
 		}
 
 		protected virtual Expression VisitNew(NewExpression expression)
@@ -461,10 +396,8 @@ namespace Platform.Linq
 				{
 					return Expression.New(expression.Constructor, args, expression.Members);
 				}
-				else
-				{
-					return Expression.New(expression.Constructor, args);
-				}
+
+				return Expression.New(expression.Constructor, args);
 			}
 
 			return expression;
@@ -508,10 +441,7 @@ namespace Platform.Linq
 					return Expression.NewArrayInit(expression.Type.GetElementType(), exprs);
 				}
 
-				else
-				{
-					return Expression.NewArrayBounds(expression.Type.GetElementType(), exprs);
-				}
+				return Expression.NewArrayBounds(expression.Type.GetElementType(), exprs);
 			}
 
 			return expression;

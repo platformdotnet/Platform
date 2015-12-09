@@ -10,9 +10,6 @@ namespace Platform
 		/// <summary>
 		/// Gets the name of the object.
 		/// </summary>
-		string Name
-		{
-			get;
-		}
+		string Name { get; }
 	}
 }

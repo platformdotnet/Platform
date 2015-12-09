@@ -9,13 +9,7 @@ namespace Platform.Xml.Serialization
 
 		private readonly Dictionary<string, object> options = new Dictionary<string, object>();
 
-		public static SerializerOptions Empty
-		{
-			get
-			{
-				return empty;
-			}
-		}
+		public static SerializerOptions Empty => empty;
 
 		public object GetOption(string name)
 		{

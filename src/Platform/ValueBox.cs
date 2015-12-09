@@ -12,27 +12,18 @@ namespace Platform
 	/// <typeparam name="T">
 	/// The type of value to contain.
 	/// </typeparam>
-	public class ValueBox<T>
+	public sealed class ValueBox<T>
 		: IValued<T>
 	{
 		/// <summary>
 		/// Gets or sets the contained value.
 		/// </summary>
-		public virtual T Value
-		{
-			get; set;
-		}
+		public T Value { get; set; }
 
 		/// <summary>
 		/// Gets the contained value.
 		/// </summary>
-		object IValued.Value
-		{
-			get
-			{
-				return this.Value;
-			}
-		}
+		object IValued.Value => this.Value;
 
 		/// <summary>
 		/// Constructs a new <see cref="ValueBox{T}"/> with the default

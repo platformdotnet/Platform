@@ -8,12 +8,8 @@ namespace Platform.Validation
 	public class ValueExpressionConstraintAttribute
 		: ValidationAttribute
 	{
-		public string ConstraintExpression
-		{
-			get;
-			set;
-		}
-		
+		public string ConstraintExpression { get; set; }
+
 		public ValueExpressionConstraintAttribute(string constraintExpression)
 		{
 			this.ConstraintExpression = constraintExpression;
@@ -21,7 +17,7 @@ namespace Platform.Validation
 
 		public override string CreateExceptionString(IPropertyValidationContext context)
 		{
-			return String.Format(@"Value is '{0}' but must satisfy: {1}", context.PropertyValue, this.ConstraintExpression);
+			return $@"Value is '{context.PropertyValue}' but must satisfy: {this.ConstraintExpression}";
 		}
 
 		public override Expression<Func<PropertyValidationContext<OBJECT_TYPE, PROPERTY_TYPE>, ValidationResult>> GetValidateExpression<OBJECT_TYPE, PROPERTY_TYPE>()
