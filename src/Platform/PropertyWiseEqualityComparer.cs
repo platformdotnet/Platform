@@ -10,8 +10,10 @@ namespace Platform
 		: IEqualityComparer<T>
 	{
 		private readonly Func<Type, object> equalityComparerFromType;
+		public static readonly PropertyWiseEqualityComparer<T> Default = new PropertyWiseEqualityComparer<T>();
+		public static readonly PropertyWiseEqualityComparer<T> DefaultUsingReferenceEqualty = new PropertyWiseEqualityComparer<T>(c => typeof(ObjectReferenceIdentityEqualityComparer<>).MakeGenericType(c).GetProperty("Default", BindingFlags.Public | BindingFlags.Static).GetValue(null, null));
+
 		private Func<T, T, bool> comparerFunction;
-		public static PropertyWiseEqualityComparer<T> Default = new PropertyWiseEqualityComparer<T>();
 
 		public PropertyWiseEqualityComparer()
 			: this(c => typeof(EqualityComparer<>).MakeGenericType(c).GetProperty("Default", BindingFlags.Public | BindingFlags.Static).GetValue(null, null))
@@ -33,9 +35,7 @@ namespace Platform
 				
 				foreach (var property in typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public))
 				{
-					var z = TypeUtils.GetMethod<IEqualityComparer<object>>(c => c.Equals(null, null)).GetMethodFromTypeWithNewGenericArg(property.PropertyType);
-
-                    var expression = Expression.Call(Expression.Constant(equalityComparerFromType(property.PropertyType)), TypeUtils.GetMethod<IEqualityComparer<object>>(c => c.Equals(null, null)).GetMethodFromTypeWithNewGenericArg(property.PropertyType), Expression.Property(left, property), Expression.Property(right, property));
+					var expression = Expression.Call(Expression.Constant(equalityComparerFromType(property.PropertyType)), TypeUtils.GetMethod<IEqualityComparer<object>>(c => c.Equals(null, null)).GetMethodFromTypeWithNewGenericArg(property.PropertyType), Expression.Property(left, property), Expression.Property(right, property));
 
 					if (body == null)
 					{
