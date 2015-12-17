@@ -10,6 +10,11 @@ namespace Platform
 {
 	public static class TypeUtils
 	{
+		public static Type GetGenericTypeDefinitionOrNull(this Type type)
+		{
+			return type.IsGenericType ? type.GetGenericTypeDefinition() : null;
+		}
+
 		private static Expression Unwrap(this Expression expression)
 		{
 			return expression.NodeType == ExpressionType.Convert ? ((UnaryExpression)expression).Operand : expression;
