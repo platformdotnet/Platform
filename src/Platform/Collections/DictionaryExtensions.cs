@@ -4,7 +4,7 @@ namespace Platform.Collections
 {
 	public static class DictionaryExtensions
 	{
-		public static V ItemOrDefault<K, V>(this Dictionary<K, V> dictionary, K key)
+		public static V GetValueOrDefault<K, V>(this Dictionary<K, V> dictionary, K key)
 		{
 			V result;
 
@@ -16,7 +16,7 @@ namespace Platform.Collections
 			return default(V);
 		}
 
-		public static V? ItemOrNull<K, V>(this Dictionary<K, V> dictionary, K key)
+		public static V? GetValueOrNull<K, V>(this Dictionary<K, V> dictionary, K key)
 			where V : struct
 		{
 			V result;
