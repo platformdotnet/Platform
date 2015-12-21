@@ -7,45 +7,6 @@ namespace Platform.Reflection
 {
 	public static class MethodInfoUtils
 	{
-		private class ParameterTypeComparer
-			: IEqualityComparer<Type>
-		{
-			private readonly Type[] genericTypes;
-
-			public ParameterTypeComparer(Type[] genericTypes)
-			{
-				this.genericTypes = genericTypes;
-			}
-
-			public bool Equals(Type x, Type y)
-			{
-				if (x == y)
-				{
-					return true;
-				}
-
-				if (y.IsGenericParameter && x == genericTypes[y.GenericParameterPosition])
-				{
-					return true;
-				}
-
-				if (y.ContainsGenericParameters && y.HasElementType && y.IsByRef)
-				{
-					if (x == genericTypes[y.GetElementType().GenericParameterPosition])
-					{
-						return true;
-					}
-				}
-
-				return false;
-			}
-
-			public int GetHashCode(Type obj)
-			{
-				return obj?.GetHashCode() ?? 0;
-			}
-		}
-
 		private static IEnumerable<Type> NormalizeGenericTypes(ParameterInfo[] values, Type[] genericParameters)
 		{
 			return values.Select(c => (c.ParameterType.IsGenericParameter || c.ParameterType.ContainsGenericParameters) ? genericParameters[c.Position] : c.ParameterType);

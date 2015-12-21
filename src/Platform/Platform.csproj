@@ -164,7 +164,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyWiseEqualityComparer.cs" />
     <Compile Include="Quad.cs" />
+    <Compile Include="Reflection\ConstructorInfoUtils.cs" />
     <Compile Include="Reflection\MethodInfoUtils.cs" />
+    <Compile Include="Reflection\ParameterTypeComparer.cs" />
     <Compile Include="ReownedMeter.cs" />
     <Compile Include="TaskExceptionEventArgs.cs" />
     <Compile Include="TaskUtils.cs" />
