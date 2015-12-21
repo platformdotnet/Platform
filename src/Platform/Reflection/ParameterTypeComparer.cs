@@ -20,6 +20,11 @@ namespace Platform.Reflection
 				return true;
 			}
 
+			if (y.ContainsGenericParameters && x.ContainsGenericParameters)
+			{
+				;
+			}
+
 			if (y.IsGenericParameter && x == this.genericTypes[y.GenericParameterPosition])
 			{
 				return true;
