@@ -534,5 +534,42 @@ namespace Platform
 
 			return false;
 		}
+
+		internal static Type[] Substitute(IEnumerable<Type> types, Dictionary<Type, Type> realisedTypeFromGenericParam)
+		{
+			return types.Select(c => Substitute(c, realisedTypeFromGenericParam)).ToArray();
+		}
+
+		internal static Type Substitute(Type type, Dictionary<Type, Type> realisedTypeFromGenericParam)
+		{
+			if (!type.ContainsGenericParameters)
+			{
+				return type;
+			}
+
+			if (type.IsGenericParameter)
+			{
+				return realisedTypeFromGenericParam[type];
+			}
+
+			if (type.IsByRef)
+			{
+				return Substitute(type.GetElementType(), realisedTypeFromGenericParam).MakeByRefType();
+			}
+
+			if (type.IsArray)
+			{
+				return Substitute(type.GetElementType(), realisedTypeFromGenericParam).MakeArrayType();
+			}
+
+			var newInners = new List<Type>();
+
+			foreach (var inner in type.GetGenericArguments())
+			{
+				newInners.Add(Substitute(inner, realisedTypeFromGenericParam));
+			}
+
+			return type.GetGenericTypeDefinition().MakeGenericType(newInners.ToArray());
+		}
 	}
 }

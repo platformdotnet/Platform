@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -7,27 +6,12 @@ namespace Platform.Reflection
 {
 	public static class ConstructorInfoUtils
 	{
-		private static IEnumerable<Type> NormalizeGenericTypes(ParameterInfo[] values, Type[] genericParameters)
+		public static ConstructorInfo GetConstructorOnGenericType(this ConstructorInfo constructorInfo)
 		{
-			return values.Select(c => (c.ParameterType.IsGenericParameter || c.ParameterType.ContainsGenericParameters) ? genericParameters[c.Position] : c.ParameterType);
+			return constructorInfo.GetConstructorOnTypeReplacingTypeGenericArgs();
 		}
-
-		public static ConstructorInfo GetGenericTypeDefinitionConstructor(this ConstructorInfo constructorInfo)
-		{
-			return constructorInfo.GetConstructorFromTypeWithNewGenericArgs();
-		}
-
-		public static ConstructorInfo GetConstructorFromTypeWithNewGenericArg<T>(this ConstructorInfo constructorInfo)
-		{
-			return constructorInfo.GetConstructorFromTypeWithNewGenericArgs(typeof(T));
-		}
-
-		public static ConstructorInfo GetConstructorFromTypeWithNewGenericArg(this ConstructorInfo constructorInfo, Type type)
-		{
-			return GetConstructorFromTypeWithNewGenericArgs(constructorInfo, type);
-		}
-
-		public static ConstructorInfo GetConstructorFromTypeWithNewGenericArgs(this ConstructorInfo constructorInfo, params Type[] types)
+		
+		public static ConstructorInfo GetConstructorOnTypeReplacingTypeGenericArgs(this ConstructorInfo constructorInfo, params Type[] types)
 		{
 			if (constructorInfo.DeclaringType == null)
 			{
@@ -49,25 +33,27 @@ namespace Platform.Reflection
 			}
 
 			var constructorInfoParameters = constructorInfo.GetParameters();
-			var constructorInfoParameterTypes = constructorInfoParameters.Select(c => c.ParameterType).ToArray();
+			
+			var realisedTypeFromGenericParam1 = genericDeclaringType.GetGenericArguments()
+				.Select((k, i) => new { k, v = constructorInfo.DeclaringType?.GetGenericArguments()[i] })
+				.ToDictionary(c => c.k, c => c.v);
 
-			var result = genericDeclaringType
+			var realisedTypeFromGenericParam2 = genericDeclaringType.GetGenericArguments()
+				.Select((k, i) => new { k, v = types[i] })
+				.ToDictionary(c => c.k, c => c.v);
+
+			var result1 = genericDeclaringType
 				.GetConstructors()
 				.Where(c => c.GetParameters().Length == constructorInfoParameters.Length)
-				.Select(c => new { constructor = c, currentTypes = NormalizeGenericTypes(c.GetParameters(), constructorInfoParameterTypes).ToArray(), matchedConstructor = c })
-				.SingleOrDefault(c => c.currentTypes.SequenceEqual(constructorInfo.GetParameters().Select(d => d.ParameterType)));
+				.Select(c => new { constructor = c, currentTypes = TypeUtils.Substitute(c.GetParameters().Select(d => d.ParameterType), realisedTypeFromGenericParam1), newTypes = TypeUtils.Substitute(c.GetParameters().Select(d => d.ParameterType), realisedTypeFromGenericParam2) })
+				.SingleOrDefault(c => c.currentTypes.SequenceEqual(constructorInfoParameters.Select(d => d.ParameterType)));
 
-			if (result == null)
+			if (result1 == null)
 			{
 				return null;
 			}
 
-			var newParams = result.matchedConstructor.GetParameters().Select(c => c.ParameterType).ToArray();
-
-			return genericDeclaringType
-				.MakeGenericType(types)
-				.GetConstructors(BindingFlags.Instance | (constructorInfo.IsPublic ? BindingFlags.Public : BindingFlags.NonPublic))
-				.SingleOrDefault(c => c.GetParameters().Select(d => d.ParameterType).SequenceEqual(newParams, new ParameterTypeComparer(types)));
+			return genericDeclaringType.MakeGenericType(types).GetConstructor(result1.newTypes);
 		}
 	}
 }

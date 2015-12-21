@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -7,74 +6,60 @@ namespace Platform.Reflection
 {
 	public static class MethodInfoUtils
 	{
-		private static IEnumerable<Type> NormalizeGenericTypes(ParameterInfo[] values, Type[] genericParameters)
-		{
-			return values.Select(c => (c.ParameterType.IsGenericParameter || c.ParameterType.ContainsGenericParameters) ? genericParameters[c.Position] : c.ParameterType);
-		}
-
 		public static MethodInfo GetGenericMethodOrRegular(this MethodInfo methodInfo)
 		{
 			return methodInfo.IsGenericMethod ? methodInfo.GetGenericMethodDefinition() : methodInfo;
 		}
 		
-		public static MethodInfo GetGenericTypeDefinitionMethod(this MethodInfo methodInfo)
+		public static MethodInfo GetMethodOnGenericType(this MethodInfo methodInfo)
 		{
-			return methodInfo.GetMethodFromTypeWithNewGenericArgs();
+			return methodInfo.GetMethodOnTypeReplacingTypeGenericArgs();
 		}
-
-		public static MethodInfo GetMethodFromTypeWithNewGenericArg<T>(this MethodInfo methodInfo)
-		{
-			return methodInfo.GetMethodFromTypeWithNewGenericArgs(typeof(T));
-		}
-
-		public static MethodInfo GetMethodFromTypeWithNewGenericArg(this MethodInfo methodInfo, Type type)
-		{
-			return GetMethodFromTypeWithNewGenericArgs(methodInfo, type);
-		}
-
-		public static MethodInfo GetMethodFromTypeWithNewGenericArgs(this MethodInfo methodInfo, params Type[] types)
+		
+		public static MethodInfo GetMethodOnTypeReplacingTypeGenericArgs(this MethodInfo methodInfo, params Type[] types)
 		{
 			if (methodInfo.DeclaringType == null)
 			{
 				throw new ArgumentException("Does not have a declaring genericArgument", nameof(methodInfo));
 			}
 
-	        if (!methodInfo.DeclaringType.IsGenericType)
-	        {
-		        throw new ArgumentException("Declaring type of method is not generic", nameof(methodInfo));
-	        }
+			if (!methodInfo.DeclaringType.IsGenericType)
+			{
+				throw new ArgumentException("Declaring type of method is not generic", nameof(methodInfo));
+			}
 
-	        var genericDeclaringType = methodInfo
-		        .DeclaringType
-		        .GetGenericTypeDefinition();
+			var genericDeclaringType = methodInfo
+				.DeclaringType
+				.GetGenericTypeDefinition();
 
-	        if (types == null || types.Length == 0)
-	        {
-		        types = genericDeclaringType.GetGenericArguments();
-	        }
+			if (types == null || types.Length == 0)
+			{
+				types = genericDeclaringType.GetGenericArguments();
+			}
 
 			var methodInfoParameters = methodInfo.GetParameters();
-			var methodInfoParameterTypes = methodInfoParameters.Select(c => c.ParameterType).ToArray();
 
-	        var result = genericDeclaringType
+			var realisedTypeFromGenericParam1 = genericDeclaringType.GetGenericArguments()
+				.Select((k, i) => new { k, v = methodInfo.DeclaringType?.GetGenericArguments()[i] })
+				.ToDictionary(c => c.k, c => c.v);
+
+			var realisedTypeFromGenericParam2 = genericDeclaringType.GetGenericArguments()
+				.Select((k, i) => new { k, v = types[i] })
+				.ToDictionary(c => c.k, c => c.v);
+
+			var result1 = genericDeclaringType
 				.GetMethods()
 				.Where(c => c.Name == methodInfo.Name)
 				.Where(c => c.GetParameters().Length == methodInfoParameters.Length)
-				.Select(c => new { method = c, currentTypes = NormalizeGenericTypes(c.GetParameters(), methodInfoParameterTypes).ToArray(), matchedMethod = c})
-		        .SingleOrDefault(c => c.currentTypes.SequenceEqual(methodInfo.GetParameters().Select(d => d.ParameterType)));
+				.Select(c => new { constructor = c, currentTypes = TypeUtils.Substitute(c.GetParameters().Select(d => d.ParameterType), realisedTypeFromGenericParam1), newTypes = TypeUtils.Substitute(c.GetParameters().Select(d => d.ParameterType), realisedTypeFromGenericParam2) })
+				.SingleOrDefault(c => c.currentTypes.SequenceEqual(methodInfoParameters.Select(d => d.ParameterType)));
 
-			if (result == null)
+			if (result1 == null)
 			{
 				return null;
 			}
 
-			var newParams = result.matchedMethod.GetParameters().Select(c => c.ParameterType).ToArray();
-
-			return genericDeclaringType
-				.MakeGenericType(types)
-				.GetMethods((methodInfo.IsStatic ? BindingFlags.Static : BindingFlags.Instance) | (methodInfo.IsPublic ? BindingFlags.Public : BindingFlags.NonPublic))
-				.Where(c => c.Name == result.method.Name)
-				.SingleOrDefault(c => c.GetParameters().Select(d => d.ParameterType).SequenceEqual(newParams, new ParameterTypeComparer(types)));
+			return genericDeclaringType.MakeGenericType(types).GetMethod(methodInfo.Name, result1.newTypes);
 		}
 	}
 }

@@ -17,12 +17,12 @@ namespace Platform
 
 		public PropertyWiseEqualityComparer()
 			: this((x, y) => Expression.Call(Expression.Property(null, typeof(EqualityComparer<>).MakeGenericType(x.Type).GetProperty("Default", BindingFlags.Public | BindingFlags.Static)),
-								TypeUtils.GetMethod<IEqualityComparer<object>>(c => c.Equals(null, null)).GetMethodFromTypeWithNewGenericArg(x.Type), x, y))
+								TypeUtils.GetMethod<IEqualityComparer<object>>(c => c.Equals(null, null)).GetMethodOnTypeReplacingTypeGenericArgs(x.Type), x, y))
 		{
         }
 
 		public PropertyWiseEqualityComparer(Func<Type, object> equalityComparerFromType)
-			: this((x, y) => Expression.Call(Expression.Constant(equalityComparerFromType(x.Type)), TypeUtils.GetMethod<IEqualityComparer<object>>(c => c.Equals(null, null)).GetMethodFromTypeWithNewGenericArg(x.Type), x, y))
+			: this((x, y) => Expression.Call(Expression.Constant(equalityComparerFromType(x.Type)), TypeUtils.GetMethod<IEqualityComparer<object>>(c => c.Equals(null, null)).GetMethodOnTypeReplacingTypeGenericArgs(x.Type), x, y))
 		{
 		}
 
