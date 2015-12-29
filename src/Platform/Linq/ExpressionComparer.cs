@@ -22,6 +22,16 @@ namespace Platform.Linq
 
 		public static bool Equals(Expression left, Expression right, ExpressionComparerOptions options = ExpressionComparerOptions.None, Func<Expression, Expression, bool?> prefilter = null)
 		{
+			if (left == null && right == null)
+			{
+				return true;
+			}
+
+			if (left == null || right == null)
+			{
+				return false;
+			}
+
 			var visitor = new ExpressionComparer(right, options, prefilter);
 
 			visitor.Visit(left);

@@ -25,6 +25,7 @@ namespace Platform.Tests
 		{
 			string x;
 
+			
 			var method = TypeUtils.GetMethod<Dictionary<string, string>>(c => c.TryGetValue("", out x));
 
 			var method2 = method.GetMethodOnGenericType();
