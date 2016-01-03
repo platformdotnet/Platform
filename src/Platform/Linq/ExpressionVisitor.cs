@@ -76,9 +76,53 @@ namespace Platform.Linq
 				return VisitListInit((ListInitExpression)expression);
 			case ExpressionType.Extension:
 				return VisitExtension(expression);
+			case ExpressionType.Block:
+				return this.VisitBlock((BlockExpression)expression);
+			case ExpressionType.Assign:
+				return this.VisitBinary((BinaryExpression)expression);
+			case ExpressionType.Goto:
+				return this.VisitGoto((GotoExpression)expression);
+			case ExpressionType.Label:
+				return this.VisitLabel((LabelExpression)expression);
 			default:
 				throw new Exception($"Unhandled expression type: '{expression.NodeType}'");
 			}
+		}
+
+		protected virtual Expression VisitLabel(LabelExpression labelExpression)
+		{
+			var defaultValue = this.Visit(labelExpression.DefaultValue);
+
+			if (defaultValue != labelExpression.DefaultValue)
+			{
+				return Expression.Label(labelExpression.Target, defaultValue);
+			}
+
+			return labelExpression;
+		}
+
+		protected virtual Expression VisitGoto(GotoExpression gotoExpression)
+		{
+			var value = this.Visit(gotoExpression.Value);
+
+			if (value != gotoExpression.Value)
+			{
+				return Expression.Goto(gotoExpression.Target, value);
+			}
+
+			return gotoExpression;
+		}
+
+		protected virtual Expression VisitBlock(BlockExpression blockExpression)
+		{
+			var expressionList = this.VisitExpressionList(blockExpression.Expressions);
+
+			if (expressionList != blockExpression.Expressions)
+			{
+				return Expression.Block(blockExpression.Variables, expressionList);
+			}
+
+			return blockExpression;
 		}
 
 		protected virtual Expression VisitExtension(Expression expression)
