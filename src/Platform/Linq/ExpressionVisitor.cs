@@ -254,45 +254,7 @@ namespace Platform.Linq
 
 		protected virtual IReadOnlyList<Expression> VisitExpressionList(IReadOnlyList<Expression> original)
 		{
-			List<Expression> list = null;
-
-			if (original == null)
-			{
-				return null;
-			}
-
-			var count = original.Count;
-
-			for (var i = 0; i < count; i++)
-			{
-				var item = original[i];
-
-				var p = Visit(item);
-
-				if (list != null)
-				{
-					if (p != null)
-					{
-						list.Add(p);
-					}
-				}
-				else if (p != item)
-				{
-					list = new List<Expression>(count);
-
-					for (var j = 0; j < i; j++)
-					{
-						list.Add(original[j]);
-					}
-
-					if (p != null)
-					{
-						list.Add(p);
-					}
-				}
-			}
-
-			return list?.AsReadOnly() ?? original;
+			return this.VisitExpressionList<Expression>(original);
 		}
 
 		protected virtual IReadOnlyList<T> VisitExpressionList<T>(IReadOnlyList<T> original)
@@ -336,7 +298,7 @@ namespace Platform.Linq
 				}
 			}
 
-			return list != null ? new ReadOnlyCollection<T>(list) : original;
+			return list?.AsReadOnly() ?? original;
 		}
 
 		protected virtual MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
