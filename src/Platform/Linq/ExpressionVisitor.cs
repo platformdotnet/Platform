@@ -395,7 +395,7 @@ namespace Platform.Linq
 				return Expression.Lambda(expression.Type.IsAssignableFrom(body.Type) ? expression.Type : body.Type, body, expression.Parameters);
 			}
 
-			return body;
+			return expression;
 		}
 
 		protected virtual Expression VisitNew(NewExpression expression)
