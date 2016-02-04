@@ -388,8 +388,14 @@ namespace Platform.Linq
 		protected virtual Expression VisitLambda(LambdaExpression expression)
 		{
 			var body = Visit(expression.Body);
+			var parameters = VisitExpressionList(expression.Parameters);
 
-			return body != expression.Body ? Expression.Lambda(expression.Type, body, expression.Parameters) : expression;
+			if (body != expression.Body || parameters != expression.Parameters)
+			{
+				return Expression.Lambda(expression.Type.IsAssignableFrom(body.Type) ? expression.Type : body.Type, body, expression.Parameters);
+			}
+
+			return body;
 		}
 
 		protected virtual Expression VisitNew(NewExpression expression)
