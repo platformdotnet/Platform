@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Platform.Linq
@@ -392,7 +393,7 @@ namespace Platform.Linq
 
 			if (body != expression.Body || parameters != expression.Parameters)
 			{
-				if (expression.Body.Type.IsAssignableFrom(body.Type))
+				if (expression.Body.Type.IsAssignableFrom(body.Type) && parameters.Select(c => c.Type).SequenceEqual(expression.Parameters.Select(c => c.Type)))
 				{
 					return Expression.Lambda(expression.Type, body, expression.Name, expression.TailCall, parameters);
 				}
