@@ -392,7 +392,14 @@ namespace Platform.Linq
 
 			if (body != expression.Body || parameters != expression.Parameters)
 			{
-				return Expression.Lambda(body, expression.Name, expression.TailCall,  parameters);
+				if (expression.Body.Type.IsAssignableFrom(body.Type))
+				{
+					return Expression.Lambda(expression.Type, body, expression.Name, expression.TailCall, parameters);
+				}
+				else
+				{
+					return Expression.Lambda(body, expression.Name, expression.TailCall, parameters);
+				}
 			}
 
 			return expression;
