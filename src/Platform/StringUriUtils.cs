@@ -95,7 +95,7 @@ namespace Platform
 		{
 			for (var i = 0; i < array.Length; i++)
 			{
-				if (i == c)
+				if (array[i] == c)
 				{
 					return true;
 				}
