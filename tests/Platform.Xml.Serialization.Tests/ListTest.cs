@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Platform.Xml.Serialization.Tests
@@ -32,9 +33,33 @@ namespace Platform.Xml.Serialization.Tests
             var obj = XmlSerializer<ListHolder>.New().Deserialize(xml);
             Assert.IsTrue(obj.Count == 1, "List should contain one element");
         }
+
+	    [Test]
+	    public void Test_Serialize_List()
+	    {
+		    var foo = new Foo() { As = new [] { new B() } };
+
+		    XmlSerializer<Foo>.New().SerializeToString(foo);
+	    }
     }
 
-    [XmlElement(MakeNameLowercase=true)]
+	public class A
+	{	
+	}
+
+	public class B : A
+	{	
+	}
+
+	[XmlElement]
+	public class Foo
+	{
+		[XmlElement]
+		[XmlListElement("A", ItemType = typeof(A), SerializeAsValueNode = true, ValueNodeAttributeName = "Name")]
+		public A[] As { get; set; }
+	}
+
+	[XmlElement(MakeNameLowercase=true)]
     [XmlListElement(typeof(ListItemLower),MakeNameLowercase=true)]
     public class ListHolderLower : List<ListItemLower>
     {

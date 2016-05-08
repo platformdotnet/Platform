@@ -202,6 +202,26 @@ namespace Platform.Xml.Serialization
 			listType = memberInfo.ReturnType;		
 		}
 
+		private bool TryGetItemByType(Type type, out ListItem listItem)
+		{
+			if (typeToItemMap.TryGetValue(type, out listItem))
+			{
+				return true;
+			}
+			
+			foreach (var keyValue in typeToItemMap)
+			{
+				if (keyValue.Key.IsAssignableFrom(type))
+				{
+					listItem = keyValue.Value;
+
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		protected override void SerializeElements(object obj, XmlWriter writer, SerializationContext state)
 		{
 			base.SerializeElements (obj, writer, state);
@@ -212,7 +232,7 @@ namespace Platform.Xml.Serialization
 				{
 					ListItem listItem;
 
-					if (typeToItemMap.TryGetValue(item.GetType(), out listItem))
+					if (TryGetItemByType(item.GetType(), out listItem))
 					{
 						writer.WriteStartElement(listItem.Alias);
 
