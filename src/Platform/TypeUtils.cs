@@ -20,7 +20,7 @@ namespace Platform
 			return expression.NodeType == ExpressionType.Convert ? ((UnaryExpression)expression).Operand : expression;
 		}
 
-		static FieldInfo GetMostDerivedField(this Type type, string name, bool includeNonPublic = false)
+		public static FieldInfo GetMostDerivedField(this Type type, string name, bool includeNonPublic = false)
 		{
 			while (type != null)
 			{
@@ -38,7 +38,7 @@ namespace Platform
 			return null;
 		}
 
-		static PropertyInfo GetMostDerivedProperty(this Type type, string name, bool includeNonPublic = false)
+		public static PropertyInfo GetMostDerivedProperty(this Type type, string name, bool includeNonPublic = false)
 		{
 			while (type != null)
 			{
