@@ -47,14 +47,14 @@ namespace Platform
 
 			if (count < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(count), "Argument n should be non-negative.");
+				throw new ArgumentOutOfRangeException(nameof(count), $"Argument {nameof(count)} should be non-negative");
 			}
 
 			var buffer = new Queue<T>(count + 1);
 
-			foreach (var x in source)
+			foreach (var item in source)
 			{
-				buffer.Enqueue(x);
+				buffer.Enqueue(item);
 
 				if (buffer.Count == count + 1)
 				{
