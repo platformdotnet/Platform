@@ -21,6 +21,48 @@ namespace Platform
 			yield break;
 		}
 
+		public static IEnumerable<T> DropLast<T>(this IEnumerable<T> source)
+		{
+			var value = default(T);
+			var gotValue = false;
+
+			foreach (var item in source)
+			{
+				if (gotValue)
+				{
+					yield return value;
+				}
+
+				value = item;
+				gotValue = true;
+			}
+		}
+
+		public static IEnumerable<T> DropLast<T>(this IEnumerable<T> source, int count)
+		{
+			if (source == null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			if (count < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(count), "Argument n should be non-negative.");
+			}
+
+			var buffer = new Queue<T>(count + 1);
+
+			foreach (var x in source)
+			{
+				buffer.Enqueue(x);
+
+				if (buffer.Count == count + 1)
+				{
+					yield return buffer.Dequeue();
+				}
+			}
+		}
+		
 		internal static ReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> enumerable)
 		{
 			if (enumerable == null)
