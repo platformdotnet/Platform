@@ -21,6 +21,9 @@ namespace Platform
 			yield break;
 		}
 
+		/// <summary>
+		/// Returns an enumerable without the last item 
+		/// </summary>
 		public static IEnumerable<T> DropLast<T>(this IEnumerable<T> source)
 		{
 			var value = default(T);
@@ -38,6 +41,13 @@ namespace Platform
 			}
 		}
 
+		/// <summary>
+		/// Returns an enumerable without the last <c>count</c> items.
+		/// </summary>
+		/// <typeparam name="T">The type of each item in source</typeparam>
+		/// <param name="source">The enumerable</param>
+		/// <param name="count">The number of items at the end of the enumerable to skip</param>
+		/// <returns></returns>
 		public static IEnumerable<T> DropLast<T>(this IEnumerable<T> source, int count)
 		{
 			if (source == null)
@@ -63,16 +73,25 @@ namespace Platform
 			}
 		}
 		
-		internal static ReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> enumerable)
+		/// <summary>
+		/// Returns a <see cref="ReadOnlyList{T}"/>
+		/// </summary>
+		/// <remarks>
+		/// If the source is already a ReadOnlyList then the method returns the source.
+		/// </remarks>
+		/// <typeparam name="T">The element type of the source</typeparam>
+		/// <param name="source">The source enumerable</param>
+		/// <returns>A <see cref="ReadOnlyList{T}"/></returns>
+		internal static ReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> source)
 		{
-			if (enumerable == null)
+			if (source == null)
 			{
 				return null;
 			}
 
-			var list = enumerable as ReadOnlyList<T>;
+			var list = source as ReadOnlyList<T>;
 
-			return list ?? new ReadOnlyList<T>(enumerable.ToList());
+			return list ?? new ReadOnlyList<T>(source.ToList());
 		}
 
 		public static IEnumerable<T> Concat<T>(this IEnumerable<T> values, T value)
