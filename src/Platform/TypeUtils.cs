@@ -20,6 +20,60 @@ namespace Platform
 			return expression.NodeType == ExpressionType.Convert ? ((UnaryExpression)expression).Operand : expression;
 		}
 
+		public static FieldInfo GetMostDerivedField(this Type type, string name, bool includeNonPublic = false)
+		{
+			while (type != null)
+			{
+				var flags = BindingFlags.DeclaredOnly | BindingFlags.Instance | (includeNonPublic ? (BindingFlags.NonPublic | BindingFlags.Public) : BindingFlags.Public);
+				var field = type.GetField(name, flags);
+
+				if (field != null)
+				{
+					return field;
+				}
+
+				type = type.BaseType;
+			}
+
+			return null;
+		}
+
+		public static PropertyInfo GetMostDerivedProperty(this Type type, string name, bool includeNonPublic = false)
+		{
+			while (type != null)
+			{
+				var flags = BindingFlags.DeclaredOnly | BindingFlags.Instance | (includeNonPublic ? (BindingFlags.NonPublic | BindingFlags.Public) : BindingFlags.Public);
+				var property = type.GetProperty(name, flags);
+
+				if (property != null)
+				{
+					return property;
+				}
+
+				type = type.BaseType;
+			}
+
+			return null;
+		}
+
+		public static MethodInfo GetMostDerivedMethod(this Type type, string name, bool includeNonPublic = false)
+		{
+			while (type != null)
+			{
+				var flags = BindingFlags.DeclaredOnly | BindingFlags.Instance | (includeNonPublic ? (BindingFlags.NonPublic | BindingFlags.Public) : BindingFlags.Public);
+				var method = type.GetMethod(name, flags);
+
+				if (method != null)
+				{
+					return method;
+				}
+
+				type = type.BaseType;
+			}
+
+			return null;
+		}
+
 		public static MemberInfo GetMember<T>(Expression<Func<T>> member)
 		{
 			switch (member.Body.NodeType)

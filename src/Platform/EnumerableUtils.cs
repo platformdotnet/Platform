@@ -21,16 +21,77 @@ namespace Platform
 			yield break;
 		}
 
-		internal static ReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> enumerable)
+		/// <summary>
+		/// Returns an enumerable without the last item 
+		/// </summary>
+		public static IEnumerable<T> DropLast<T>(this IEnumerable<T> source)
 		{
-			if (enumerable == null)
+			var value = default(T);
+			var gotValue = false;
+
+			foreach (var item in source)
+			{
+				if (gotValue)
+				{
+					yield return value;
+				}
+
+				value = item;
+				gotValue = true;
+			}
+		}
+
+		/// <summary>
+		/// Returns an enumerable without the last <c>count</c> items.
+		/// </summary>
+		/// <typeparam name="T">The type of each item in source</typeparam>
+		/// <param name="source">The enumerable</param>
+		/// <param name="count">The number of items at the end of the enumerable to skip</param>
+		/// <returns></returns>
+		public static IEnumerable<T> DropLast<T>(this IEnumerable<T> source, int count)
+		{
+			if (source == null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			if (count < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(count), $"Argument {nameof(count)} should be non-negative");
+			}
+
+			var buffer = new Queue<T>(count + 1);
+
+			foreach (var item in source)
+			{
+				buffer.Enqueue(item);
+
+				if (buffer.Count == count + 1)
+				{
+					yield return buffer.Dequeue();
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Returns a <see cref="ReadOnlyList{T}"/>
+		/// </summary>
+		/// <remarks>
+		/// If the source is already a ReadOnlyList then the method returns the source.
+		/// </remarks>
+		/// <typeparam name="T">The element type of the source</typeparam>
+		/// <param name="source">The source enumerable</param>
+		/// <returns>A <see cref="ReadOnlyList{T}"/></returns>
+		internal static ReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> source)
+		{
+			if (source == null)
 			{
 				return null;
 			}
 
-			var list = enumerable as ReadOnlyList<T>;
+			var list = source as ReadOnlyList<T>;
 
-			return list ?? new ReadOnlyList<T>(enumerable.ToList());
+			return list ?? new ReadOnlyList<T>(source.ToList());
 		}
 
 		public static IEnumerable<T> Concat<T>(this IEnumerable<T> values, T value)
