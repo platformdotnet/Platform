@@ -214,6 +214,7 @@ namespace Platform.Xml.Serialization
 				if (keyValue.Key.IsAssignableFrom(type))
 				{
 					listItem = keyValue.Value;
+					listItem = keyValue.Value;
 
 					return true;
 				}

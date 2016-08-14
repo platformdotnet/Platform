@@ -43,7 +43,20 @@ namespace Platform
 			yield return value;
 		}
 
-		public static IEnumerable<T> Prepend<T>(this IEnumerable<T> values,  T value)
+        public static IEnumerable<T> ConcatUnlessNull<T>(this IEnumerable<T> values, T value)
+        {
+            foreach (var obj in values)
+            {
+                yield return obj;
+            }
+
+            if (value != null)
+            {
+                yield return value;
+            }
+        }
+
+        public static IEnumerable<T> Prepend<T>(this IEnumerable<T> values,  T value)
 		{
 			yield return value;
 
@@ -53,15 +66,28 @@ namespace Platform
 			}
 		}
 
-		/// <summary>
-		/// Compares two enumerables to see if their elements are equal
-		/// </summary>
-		/// <param name="left">The first enumerable to compare</param>
-		/// <param name="right">The second enumerable to compare</param>
-		/// <returns>
-		/// True if the elements in both enumerables are equal
-		/// </returns>
-		public static bool ElementsAreEqual(this IEnumerable left, IEnumerable right)
+        public static IEnumerable<T> PrependUnlessNull<T>(this IEnumerable<T> values, T value)
+        {
+            if (value != null)
+            {
+                yield return value;
+            }
+
+            foreach (var obj in values)
+            {
+                yield return obj;
+            }
+        }
+
+        /// <summary>
+        /// Compares two enumerables to see if their elements are equal
+        /// </summary>
+        /// <param name="left">The first enumerable to compare</param>
+        /// <param name="right">The second enumerable to compare</param>
+        /// <returns>
+        /// True if the elements in both enumerables are equal
+        /// </returns>
+        public static bool ElementsAreEqual(this IEnumerable left, IEnumerable right)
 		{
 			var rightEnumerator = right.GetEnumerator();
 
