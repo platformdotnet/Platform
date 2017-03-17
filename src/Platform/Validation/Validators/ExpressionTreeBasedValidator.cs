@@ -91,7 +91,7 @@ namespace Platform.Validation.Validators
 				var defaultValueAttribute = propertyInfo.GetFirstCustomAttribute<DefaultValueAttribute>(true);
 				
 				var propertyValue = Expression.Property(currentObject, propertyInfo.GetGetMethod());
-                
+				
 				propertyInfos.Add(propertyInfo);
 
 				if (defaultValueAttribute != null)
@@ -314,8 +314,8 @@ namespace Platform.Validation.Validators
 					generator.MarkLabel(label);
 				}
 			}
-            
-            // Create "SetDefaults" method and add it to body
+			
+			// Create "SetDefaults" method and add it to body
 			if (setDefaultsDynamicMethod != null)
 			{
 				generator.MarkLabel(endLabel);
@@ -326,7 +326,7 @@ namespace Platform.Validation.Validators
 
 				body = Expression.Call(Expression.Constant(setDefaultsFunc), setDefaultsFunc.GetType().GetMethod("Invoke"), body ?? Expression.Constant(ValidationResult.Success), currentObject, Expression.Constant(delegates), Expression.Constant(propertyInfos), Expression.Constant(defaultAttributes), validationContext);
 			}
-            
+			
 			if (body == null)
 			{
 				body = Expression.Constant(ValidationResult.Success);
@@ -358,7 +358,7 @@ namespace Platform.Validation.Validators
 				}
 			}
 		}
-        
+		
 		public override ValidationResult Validate(T value)
 		{
 			return this.ValidationFunc(new ValidationContext<T>(value));
