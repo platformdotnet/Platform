@@ -6,17 +6,8 @@ namespace Platform.Validation
 	public class DefaultValueAttribute
 		: BaseValidationAttribute
 	{
-		public object Value
-		{
-			get;
-			set;
-		}
-
-		public string ValueExpression
-		{
-			get;
-			set;
-		}
+		public object Value { get; set; }
+		public string ValueExpression { get; set; }
 
 		public DefaultValueAttribute()
 		{
@@ -25,10 +16,6 @@ namespace Platform.Validation
 		public DefaultValueAttribute(object value)
 		{
 			this.Value = value;
-		}
-
-		public DefaultValueAttribute(string valueExpression)
-		{
 		}
 	}
 }
