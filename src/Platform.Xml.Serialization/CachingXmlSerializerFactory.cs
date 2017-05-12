@@ -74,7 +74,7 @@ namespace Platform.Xml.Serialization
 					value = new XmlSerializer<object>(typeof(T), options);
 				}
 
-				this.cache = new Dictionary<Pair<Type, SerializerOptions>, object>(this.cacheForDynamic) { [key] = value };
+				this.cache = new Dictionary<Pair<Type, SerializerOptions>, object>(this.cache) { [key] = value };
 			}
 
 			return (XmlSerializer<T>)value;
