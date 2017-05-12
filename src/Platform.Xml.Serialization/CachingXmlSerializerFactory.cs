@@ -67,11 +67,11 @@ namespace Platform.Xml.Serialization
 			{
 				if (options == null)
 				{
-					value = new XmlSerializer<object>(typeof(T));
+					value = new XmlSerializer<T>();
 				}
 				else
 				{
-					value = new XmlSerializer<object>(typeof(T), options);
+					value = new XmlSerializer<T>(options);
 				}
 
 				this.cache = new Dictionary<Pair<Type, SerializerOptions>, object>(this.cache) { [key] = value };
