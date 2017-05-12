@@ -8,9 +8,10 @@ namespace Platform
 		: IConfigurationSectionHandler
 		where T : new()
 	{
-		public object Create(object parent, object configContext, System.Xml.XmlNode section)
+		public object Create(object parent, object configContext, XmlNode section)
 		{
 			var serializer = XmlSerializer<T>.New();
+
 			var retval = serializer.Deserialize(new XmlNodeReader(section));
 
 			return retval;

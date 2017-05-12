@@ -9,8 +9,8 @@ namespace Platform.Xml.Serialization
 	public class CachingXmlSerializerFactory
 		: XmlSerializerFactory
 	{
-		private IDictionary<Pair<Type, SerializerOptions>, object> cache;
-		private IDictionary<Pair<Type, SerializerOptions>, object> cacheForDynamic;
+		private Dictionary<Pair<Type, SerializerOptions>, object> cache = new Dictionary<Pair<Type, SerializerOptions>, object>();
+		private Dictionary<Pair<Type, SerializerOptions>, object> cacheForDynamic = new Dictionary<Pair<Type, SerializerOptions>, object>();
 
 		/// <summary>
 		/// <see cref="XmlSerializerFactory.NewXmlSerializer{T}()"/>
@@ -34,32 +34,24 @@ namespace Platform.Xml.Serialization
 		public override XmlSerializer<object> NewXmlSerializer(Type type, SerializerOptions options)
 		{
 			object value;
-			XmlSerializer<object> serializer;
-
+			
 			var key = new Pair<Type, SerializerOptions>(type, options);
 
-			if (this.cacheForDynamic == null)
+			if (!this.cacheForDynamic.TryGetValue(key, out value))
 			{
-				this.cacheForDynamic = new Dictionary<Pair<Type, SerializerOptions>, object>();
+				if (options == null)
+				{
+					value = new XmlSerializer<object>(type);
+				}
+				else
+				{
+					value = new XmlSerializer<object>(type, options);
+				}
+
+				this.cacheForDynamic = new Dictionary<Pair<Type, SerializerOptions>, object>(this.cacheForDynamic) { [key] = value };
 			}
 
-			if (this.cacheForDynamic.TryGetValue(key, out value))
-			{
-				return (XmlSerializer<object>)value;
-			}
-
-			if (options == null)
-			{
-				serializer = new XmlSerializer<object>(type);
-			}
-			else
-			{
-				serializer = new XmlSerializer<object>(type, options);
-			}
-
-			this.cacheForDynamic[key] = serializer;
-
-			return serializer;
+			return (XmlSerializer<object>)value;
 		}
 
 		/// <summary>
@@ -68,32 +60,24 @@ namespace Platform.Xml.Serialization
 		public override XmlSerializer<T> NewXmlSerializer<T>(SerializerOptions options)
 		{
 			object value;
-			XmlSerializer<T> serializer;
 
 			var key = new Pair<Type, SerializerOptions>(typeof(T), options);
 
-			if (this.cache == null)
+			if (!this.cache.TryGetValue(key, out value))
 			{
-				this.cache = new Dictionary<Pair<Type, SerializerOptions>, object>();
+				if (options == null)
+				{
+					value = new XmlSerializer<object>(typeof(T));
+				}
+				else
+				{
+					value = new XmlSerializer<object>(typeof(T), options);
+				}
+
+				this.cache = new Dictionary<Pair<Type, SerializerOptions>, object>(this.cacheForDynamic) { [key] = value };
 			}
 
-			if (this.cache.TryGetValue(key, out value))
-			{
-				return (XmlSerializer<T>)value;
-			}
-
-			if (options == null)
-			{
-				serializer = new XmlSerializer<T>();
-			}
-			else
-			{
-				serializer = new XmlSerializer<T>(options);
-			}
-
-			this.cache[key] = serializer;
-
-			return serializer;
+			return (XmlSerializer<T>)value;
 		}
 	}
 }
