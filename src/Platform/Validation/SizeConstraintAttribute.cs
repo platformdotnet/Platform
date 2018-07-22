@@ -4,9 +4,9 @@ using System.Linq.Expressions;
 namespace Platform.Validation
 {
 	/// <summary>
-	/// An attribute that specifies the size contrains for a certain property.
+	/// An attribute that specifies the size contraints for a certain type or property.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
+	[AttributeUsage(AttributeTargets.Class| AttributeTargets.Property | AttributeTargets.Parameter)]
 	public class SizeConstraintAttribute
 		: ValidationAttribute
 	{
