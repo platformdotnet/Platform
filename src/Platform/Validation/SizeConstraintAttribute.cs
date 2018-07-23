@@ -6,7 +6,7 @@ namespace Platform.Validation
 	/// <summary>
 	/// An attribute that specifies the size contraints for a certain type or property.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class| AttributeTargets.Property | AttributeTargets.Parameter)]
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Property | AttributeTargets.Parameter)]
 	public class SizeConstraintAttribute
 		: ValidationAttribute
 	{
