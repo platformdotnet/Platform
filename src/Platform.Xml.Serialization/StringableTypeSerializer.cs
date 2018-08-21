@@ -72,12 +72,25 @@ namespace Platform.Xml.Serialization
 		/// </summary>
 		public override object Deserialize(string value, SerializationContext state)
 		{
-		    if (formatSpecified)
-		    {
-		        return Convert.ChangeType(value, supportedType, formatAttribute.CultureInfo);
-		    }
+         
+            try
+            {
+                if (formatSpecified)
+                {
+                    return Convert.ChangeType(value, supportedType, formatAttribute.CultureInfo);
+                }
 
-		    return Convert.ChangeType(value, supportedType);
+                return Convert.ChangeType(value, supportedType);
+            }
+            catch(Exception ex)
+            {
+                var memberInfo = state.GetCurrentMemberInfo().MemberInfo;
+                throw new Exception(string.Format("Can't deserialize property {0} of class {1}. Could not convert value '{2}' to type {3}",
+                    memberInfo.Name,
+                    memberInfo.DeclaringType.FullName,
+                    value,
+                    supportedType), ex);
+            }
 		}
 	}
 }
