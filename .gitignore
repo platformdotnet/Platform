@@ -150,3 +150,5 @@ $RECYCLE.BIN/
 # NuGet Packages
 lib/Packages/
 src/packages/
+
+.idea/
