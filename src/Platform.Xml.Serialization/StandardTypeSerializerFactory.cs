@@ -48,10 +48,6 @@ namespace Platform.Xml.Serialization
             {
                 return new GuidSerializer(supportedType, memberInfo, cache, options);
             }
-            else if (supportedType == typeof(Color))
-            {
-                return new ColorSerializer(supportedType, memberInfo, cache, options);
-            }
             else if (supportedType == typeof(DateTime))
             {
                 return new DateTimeTypeSerializer(memberInfo, cache, options);
@@ -74,7 +70,7 @@ namespace Platform.Xml.Serialization
 
                 implementsGenericList = supportedType.FindInterfaces
                 (
-                    (type, criterea) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(System.Collections.Generic.IList<>),
+                    (type, criteria) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(System.Collections.Generic.IList<>),
                     null
                 ).Length > 0;
 

@@ -37,19 +37,22 @@ namespace Platform.Tests
 			Assert.AreEqual('E', buffer.Last);
 		}
 
-		[Test, ExpectedException(typeof(BufferUnderflowException))]
+		[Test]
 		public void Test_Last3()
 		{
-			var buffer = new CircularFifoBuffer<byte>(3);
+			Assert.Throws<BufferUnderflowException>(() =>
+			{
+				var buffer = new CircularFifoBuffer<byte>(3);
 
-			buffer.Write(Encoding.ASCII.GetBytes("ABC"));
-			buffer.Write(Encoding.ASCII.GetBytes("DE"));
-			buffer.Read();
-			buffer.Read();
-			buffer.Read();
-			buffer.Read();
-			buffer.Read();
-			var x = buffer.Last;
+				buffer.Write(Encoding.ASCII.GetBytes("ABC"));
+				buffer.Write(Encoding.ASCII.GetBytes("DE"));
+				buffer.Read();
+				buffer.Read();
+				buffer.Read();
+				buffer.Read();
+				buffer.Read();
+				var x = buffer.Last;
+			});
 		}
 
 		[Test]
@@ -135,21 +138,27 @@ namespace Platform.Tests
 			}
 		}
 
-		[Test, ExpectedException(typeof(BufferOverflowException))]
+		[Test]
 		public void Test_Overflow()
 		{
-			var ringBuffer = new BoundedFifoBuffer<byte>(5);
+			Assert.Throws<BufferOverflowException>(() =>
+			{
+				var ringBuffer = new BoundedFifoBuffer<byte>(5);
 
-			ringBuffer.Write(GetBytes("ABC"));
-			ringBuffer.Write(GetBytes("DEF"));
+				ringBuffer.Write(GetBytes("ABC"));
+				ringBuffer.Write(GetBytes("DEF"));
+			});
 		}
 
-		[Test, ExpectedException(typeof(BufferOverflowException))]
+		[Test]
 		public void Test_Overflow_On_Initial()
 		{
-			var ringBuffer = new BoundedFifoBuffer<byte>(5);
+			Assert.Throws<BufferOverflowException>(() =>
+			{
+				var ringBuffer = new BoundedFifoBuffer<byte>(5);
 
-			ringBuffer.Write(GetBytes("ABCDEF"));
+				ringBuffer.Write(GetBytes("ABCDEF"));
+			});
 		}
 
 		[Test]

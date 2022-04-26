@@ -1,0 +1,16 @@
+<Project>
+	<PropertyGroup>
+		<AssemblyVersion>2.0.0.0</AssemblyVersion>
+		<Version>2.0.0</Version>
+		<FileVersion>$(Version)</FileVersion>
+		<Authors>Thong Nguyen</Authors>
+		<Company />
+		<Product>Platform.NET</Product>
+		<Copyright>Copyright 2003-$([System.DateTime]::Now.Year) Thong Nguyen</Copyright>
+		<PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/platformdotnet/Platform</PackageProjectUrl>
+		<PackageReleaseNotes>
+
+		</PackageReleaseNotes>
+	</PropertyGroup>
+</Project>
